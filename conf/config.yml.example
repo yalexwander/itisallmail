@@ -1,0 +1,5 @@
+mailbox : "mailboxes/default"
+update_interval: 300
+drivers :
+  - "Habr"
+  - "Forumhouse"
