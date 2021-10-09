@@ -1,16 +1,17 @@
 <?php
 
+namespace ItIsAllMail\Utils;
+
 /**
  * Mail headers are pretty strict when it comes to symbols it can contain. So
  * putting the data you parsed from site into a header is not a good
  * idea. There are we have few functions to solve thise issue.
  */
 
-namespace ItIsAllMail\Utils;
 
 class MailHeaderProcessor
 {
-    public static function rusTranslit(string $value) : string
+    public static function rusTranslit(string $value): string
     {
         $converter = array(
             'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',

@@ -38,9 +38,10 @@ class ForumhouseDriver implements DriverInterface
     {
         $posts = [];
 
-        $url = URLProcessor::normalizeStartURL($source["url"]);
-        $topicPage = 0;
-        $threadId = $this->getThreadIdFromURL($url);
+        $startUrl = URLProcessor::normalizeStartURL($source["url"]);
+        $threadId = $this->getThreadIdFromURL($startUrl);
+
+        $url = $this->getLastURLVisited($threadId) ?? $startUrl;
 
         while ($url) {
             Debug::log("Processing $url");
@@ -61,7 +62,7 @@ class ForumhouseDriver implements DriverInterface
                 $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
 
                 $parent = $this->getParent($post, $threadId);
-                $created = new \DateTime();
+                $created = $this->extractDateFromPost($post);
 
                 $postId = "";
                 if ($parent === $threadId) {
@@ -97,10 +98,11 @@ class ForumhouseDriver implements DriverInterface
             }
 
             $nextPage = $dom->filter('div.pageNavLinkGroup a.text')->last();
-            if ($nextPage and strstr($nextPage->text(), "Вперёд")) {
+            if ($nextPage->count() and strstr($nextPage->text(), "Вперёд")) {
                 $url = $nextPage->getNode(0)->baseURI . $nextPage->attr("href");
                 Debug::debug("New url: $url");
             } else {
+                $this->setLastURLVisited($threadId, $url);
                 $url = false;
             }
         }
@@ -182,5 +184,45 @@ class ForumhouseDriver implements DriverInterface
         }
 
         return $title;
+    }
+
+    /**
+     * Try to extract post date. We have at least 2 html formats here. For old
+     * topics and new ones. Probably more, so fallback to current date.
+     */
+    protected function extractDateFromPost(Crawler $post): \DateTime
+    {
+        $dateWidget = $post->filter("a.datePermalink>span")->first();
+        $dateString = "";
+        $postDate = null;
+
+        if ($dateWidget->count()) {
+            $dateString = $dateWidget->attr('title');
+        } else {
+            $dateWidget = $post->filter("a.datePermalink>abbr")->first();
+            $dateString = $dateWidget->html();
+        }
+
+        $dateString = preg_replace('/в /', "", $dateString);
+        $postDate = \DateTime::createFromFormat("d.m.y H:i", $dateString);
+
+        return $postDate;
+    }
+
+
+    /**
+     * Check if we visited this page of the thread
+     */
+    protected function getLastURLVisited(string $threadId): ?string
+    {
+        return Storage::get($this->driverCode, $threadId . "_last_page");
+    }
+
+    /**
+     * To prevent multiple refetches
+     */
+    protected function setLastURLVisited(string $threadId, string $url): void
+    {
+        Storage::set($this->driverCode, $threadId . "_last_page", $url);
     }
 }
