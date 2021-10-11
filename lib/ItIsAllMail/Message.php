@@ -20,6 +20,15 @@ class Message
     protected $thread;
     protected $attachements = [];
 
+    // this is list of extra headers, that can be useful in many places
+    protected $extraHeaders = ['mentions'];
+
+    // maximal length of subject
+    protected $subjectMaxChars = 64;
+
+    // list of all users of given site/network/messenger mention in this message
+    protected $mentions;
+
     public function __construct(array $source)
     {
         $this->subject = $source["subject"];
@@ -30,6 +39,7 @@ class Message
         $this->body = $source["body"];
         $this->thread = $source["thread"];
         $this->attachements = $source["attachements"] ?? [];
+        $this->mentions = $source["mentions"] ?? [];
     }
 
 
@@ -55,6 +65,8 @@ EOT;
             ->addIdHeader('Message-id', [ $this->getId() ])
             ->addMailboxListHeader('From', [ $this->from ]);
 
+        $this->setExtraHeaders($headers);
+
         if ($this->parent !== null) {
             $headers->addIdHeader('References', [ $this->getParentId() ]);
         }
@@ -78,7 +90,11 @@ EOT;
 
     public function getSubject(): string
     {
-        return mb_substr($this->subject, 0, 64) . "...";
+        if (mb_strlen($this->subject) > $this->subjectMaxChars) {
+            return mb_substr($this->subject, 0, $this->subjectMaxChars) . "...";
+        } else {
+            return $this->subject;
+        }
     }
 
     public function getParentId(): string
@@ -94,5 +110,16 @@ EOT;
 
         $this->attachements[] = new DataPart($data, $title, null);
         return $this;
+    }
+
+
+    protected function setExtraHeaders(Headers $headers): void
+    {
+        // if (count($this->mentions)) {
+        //     $mentionHeader = "";
+        //     foreach ($this->mentions as $mention) {
+        //         $mentionHeader .=
+        //     }
+        // }
     }
 }

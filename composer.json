@@ -4,6 +4,7 @@
     "require": {
 	"nesbot/carbon" : "^2.0",
         "symfony/dom-crawler": "^5.2",
+        "paquettg/php-html-parser": "^2.1.0",
         "symfony/mime": "^5.2",
         "symfony/css-selector": "^5.2",
         "egulias/email-validator": "^3.0",
