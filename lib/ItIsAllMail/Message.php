@@ -21,13 +21,25 @@ class Message
     protected $attachements = [];
 
     // this is list of extra headers, that can be useful in many places
-    protected $extraHeaders = ['mentions'];
+    protected $extraHeaders = [
+        'mentions', 'likes', 'dislikes', 'reference'
+    ];
 
     // maximal length of subject
     protected $subjectMaxChars = 64;
 
     // list of all users of given site/network/messenger mention in this message
     protected $mentions;
+
+    // count of likes if presented
+    protected $likes;
+
+    // count of dislikes if presented
+    protected $dislikes;
+
+    // list of message IDs this message references to
+    protected $reference;
+
 
     public function __construct(array $source)
     {

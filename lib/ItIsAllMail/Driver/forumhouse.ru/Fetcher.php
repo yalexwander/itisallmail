@@ -2,34 +2,19 @@
 
 namespace ItIsAllMail\Driver\Habr;
 
-use ItIsAllMail\DriverInterface;
+use ItIsAllMail\Interfaces\FetchDriverInterface;
+use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
-use ItIsAllMail\Utils\Storage;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 use ItIsAllMail\Utils\URLProcessor;
 use Symfony\Component\DomCrawler\Crawler;
 
-class ForumhouseDriver implements DriverInterface
+class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $crawler;
     protected $driverCode = "forumhouse.ru";
-
-    public function getCode(): string
-    {
-        return $this->driverCode;
-    }
-
-    public function matchURL(string $url): bool
-    {
-        if (preg_match("/" . $this->getCode() . "/", $url)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     /**
      * Return array of all posts in thread, including original article
@@ -122,22 +107,6 @@ class ForumhouseDriver implements DriverInterface
         return $text;
     }
 
-    /**
-     * Parse habr.com date representation to DateTime
-     */
-    protected function parseArticleDate(string $rawDate): \DateTimeInterface
-    {
-        $preDate = substr($rawDate, 0, 19) . substr($rawDate, 23, 1);
-
-        $finalDate = \DateTime::createFromFormat(\DateTime::ISO8601, $preDate);
-
-        if (! $finalDate) {
-            throw new \Exception("Failed to parse date $preDate");
-        }
-
-        return $finalDate;
-    }
-
     protected function getThreadIdFromURL(string $url): string
     {
         $id = null;
@@ -207,22 +176,5 @@ class ForumhouseDriver implements DriverInterface
         $postDate = \DateTime::createFromFormat("d.m.y H:i", $dateString);
 
         return $postDate;
-    }
-
-
-    /**
-     * Check if we visited this page of the thread
-     */
-    protected function getLastURLVisited(string $threadId): ?string
-    {
-        return Storage::get($this->driverCode, $threadId . "_last_page");
-    }
-
-    /**
-     * To prevent multiple refetches
-     */
-    protected function setLastURLVisited(string $threadId, string $url): void
-    {
-        Storage::set($this->driverCode, $threadId . "_last_page", $url);
     }
 }

@@ -2,7 +2,8 @@
 
 namespace ItIsAllMail\Driver\Habr;
 
-use ItIsAllMail\DriverInterface;
+use ItIsAllMail\Interfaces\FetchDriverInterface;
+use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Storage;
@@ -12,25 +13,10 @@ use ItIsAllMail\Utils\URLProcessor;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\HtmlNode;
 
-class LORDriver implements DriverInterface
+class LORDriver extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $crawler;
     protected $driverCode = "linux.org.ru";
-
-    public function getCode(): string
-    {
-        return $this->driverCode;
-    }
-
-    public function matchURL(string $url): bool
-    {
-        if (preg_match("/" . $this->getCode() . "/", $url)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     /**
      * Return array of all posts in thread, including original article
@@ -168,8 +154,6 @@ class LORDriver implements DriverInterface
             }
         }
 
-        // print "\"$title\"" . "\n";
-
         return $title;
     }
 
@@ -213,21 +197,5 @@ class LORDriver implements DriverInterface
     {
         preg_match('/\-([0-9]+)/', $post->getAttribute("id"), $id);
         return $id[1];
-    }
-
-    /**
-     * Check if we visited this page of the thread
-     */
-    protected function getLastURLVisited(string $threadId): ?string
-    {
-        return Storage::get($this->driverCode, $threadId . "_last_page");
-    }
-
-    /**
-     * To prevent multiple refetches
-     */
-    protected function setLastURLVisited(string $threadId, string $url): void
-    {
-        Storage::set($this->driverCode, $threadId . "_last_page", $url);
     }
 }

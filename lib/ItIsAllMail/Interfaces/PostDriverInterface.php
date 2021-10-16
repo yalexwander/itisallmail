@@ -1,10 +1,9 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Interfaces;
 
-interface DriverInterface
+interface PostDriverInterface
 {
-
     /**
      * Must return true if you think your driver must handle this URL
      */
@@ -18,9 +17,11 @@ interface DriverInterface
     public function getCode(): string;
 
     /**
-     * Must return array of <ItIsAllMail\Message> objects. You do not need to
-     * care how distinguish old and new messages in thread, just return all of
-     * them normalized to <ItIsAllMail\Message>. See its construct method
+     * Posting to some resource. For now required parameters are somethin like:
+     * @params = [
+     *   "thread" => Thread ID in format according to current driver used thread fromat
+     *   "body"   => Message body
+     *   "attachements" => array of attachements
      */
-    public function getPosts(array $source): array;
+    public function doPost(array $params): array;
 }

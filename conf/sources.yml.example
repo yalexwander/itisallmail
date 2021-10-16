@@ -1,6 +1,6 @@
 - url: "https://habr.com/ru/post/536412/"
 - {
     url: "https://habr.com/ru/post/536508/"
-    code: "habr.com"
+    driver: "habr.com"
     mailbox: "default"
   }

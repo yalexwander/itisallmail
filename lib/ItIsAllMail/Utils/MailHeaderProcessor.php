@@ -42,7 +42,7 @@ class MailHeaderProcessor
     public static function sanitizeCyrillicAddress(string $input): string
     {
         return preg_replace(
-            '/[^A-Za-z0-9\._\#\@\-]+/',
+            '/[^A-Za-z0-9_\#\@\-]+/',
             '_',
             self::rusTranslit($input)
         );

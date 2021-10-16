@@ -2,31 +2,17 @@
 
 namespace ItIsAllMail\Driver\Habr;
 
-use ItIsAllMail\DriverInterface;
+use ItIsAllMail\Interfaces\FetchDriverInterface;
+use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use Symfony\Component\DomCrawler\Crawler;
 
-class HabrDriver implements DriverInterface
+class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $crawler;
     protected $driverCode = "habr.com";
     protected $threadId;
-
-    public function getCode(): string
-    {
-        return $this->driverCode;
-    }
-
-    public function matchURL(string $url): bool
-    {
-        if (preg_match("/" . $this->getCode() . "/", $url)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     /**
      * Return array of all posts in thread, including original article
@@ -39,8 +25,6 @@ class HabrDriver implements DriverInterface
 
         return $posts;
     }
-
-
     /**
      * Make post from the article itself
      */
@@ -49,8 +33,8 @@ class HabrDriver implements DriverInterface
         $html = file_get_contents($source["url"]);
         $this->crawler = new Crawler($html);
 
-        $postContainer = $this->crawler->filter(".tm-page-article__body");
-        $author = $postContainer->filter(".tm-user-info__username")->first()->text();
+        $postContainer = $this->crawler->filter(".tm-article-presenter__body")->first();
+        $author = $postContainer->filter("a.tm-user-info__userpic")->first()->attr("title");
         $postText = $this->postToText(
             $postContainer->filter(".tm-article-body")->first()
         );

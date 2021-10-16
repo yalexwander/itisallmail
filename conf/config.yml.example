@@ -1,5 +1,7 @@
-mailbox : "mailboxes/default"
+mailbox : "default"
+mailbox_base_dir: "mailboxes"
 update_interval: 300
 drivers :
-  - "Habr"
-  - "Forumhouse"
+  - "habr.com"
+  - "forumhouse.ru"
+  - "linux.org.ru"

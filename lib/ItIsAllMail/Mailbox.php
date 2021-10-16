@@ -13,6 +13,12 @@ class Mailbox
         $this->path = $path;
         $this->localMessages = [];
 
+        if (! file_exists($path)) {
+            mkdir($path);
+            mkdir($path . DIRECTORY_SEPARATOR . "cur");
+            mkdir($path . DIRECTORY_SEPARATOR . "new");
+        }
+
         $this->mailSubdirs = [
             "new" => $this->path . DIRECTORY_SEPARATOR . "new",
             "cur" => $this->path . DIRECTORY_SEPARATOR . "cur"
