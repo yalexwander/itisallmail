@@ -1,17 +1,12 @@
 <?php
 
-$rootDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
-
-require_once($rootDir . "vendor" . DIRECTORY_SEPARATOR . "autoload.php");
-require_once($rootDir . "lib" . DIRECTORY_SEPARATOR . "autoload.php");
+require_once("includes.php");
 
 use ItIsAllMail\FetchDriverFactory;
 use ItIsAllMail\Mailbox;
 
-$confDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR;
-
-$config = yaml_parse_file($confDir . "config.yml");
-$sources = yaml_parse_file($confDir . "sources.yml");
+$config = yaml_parse_file($__AppConfigFile);
+$sources = yaml_parse_file($__AppSourcesFile);
 
 $driverFactory = new FetchDriverFactory($config);
 

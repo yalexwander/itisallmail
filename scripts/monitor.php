@@ -1,12 +1,12 @@
 <?php
 
-require_once "../vendor/autoload.php";
-require_once "../lib/autoload.php";
+// just check new messsages ever conf["update_interval"] seconds
+
+require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
 
-$confDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
-$config = yaml_parse_file($confDir . "config.yml");
+$config = yaml_parse_file($__AppConfigFile);
 
 $fetcherExecutable = __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php";
 

@@ -56,4 +56,18 @@ class FetchDriverFactory
 
         throw new \Exception("Driver for url \"{$source["url"]}\" not found");
     }
+
+    /**
+     * Tries to find matching driver by code
+     */
+    public function getFetchDriverByCode(string $code): FetchDriverInterface
+    {
+        foreach ($this->driverList as $driver) {
+            if ($driver->getCode() === $code) {
+                return $driver;
+            }
+        }
+
+        throw new \Exception("Driver for code \"$code\" not found");
+    }
 }
