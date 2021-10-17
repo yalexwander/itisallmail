@@ -20,7 +20,12 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
     public function getPosts(array $source): array
     {
         $posts = [];
-        $posts[] = $this->getFirstPost($source);
+
+        if (null === $this->getLastURLVisited($source["url"])) {
+            $posts[] = $this->getFirstPost($source);
+            $this->setLastURLVisited($source["url"], $source["url"]);
+        }
+
         $posts = array_merge($posts, $this->getComments($source));
 
         return $posts;
