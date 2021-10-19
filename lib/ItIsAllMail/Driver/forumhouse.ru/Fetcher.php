@@ -147,7 +147,7 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
                 $title .= $line . " ";
             }
 
-            if (strlen($title) > 512) {
+            if (mb_strlen($title) > 512) {
                 break;
             }
         }

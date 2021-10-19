@@ -148,7 +148,7 @@ class LORDriver extends AbstractFetcherDriver implements FetchDriverInterface
                 if (strpos($line, ">") !== 0) {
                     $title .= $line . " ";
                 }
-                if (strlen($title) > 512) {
+                if (mb_strlen($title) > 512) {
                     break;
                 }
             }

@@ -69,7 +69,7 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
         $commentsURL = $source["url"];
 
         // fix url to prevent double slash
-        if (strstr($source["url"], "/") == (strlen($source["url"]) - 1)) {
+        if (strstr($source["url"], "/") === (strlen($source["url"]) - 1)) {
             $commentsURL .= "/";
         }
 
