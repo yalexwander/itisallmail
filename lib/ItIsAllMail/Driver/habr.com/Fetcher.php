@@ -6,6 +6,7 @@ use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
+use ItIsAllMail\Utils\Browser;
 use Symfony\Component\DomCrawler\Crawler;
 
 class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
@@ -35,7 +36,7 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
      */
     public function getFirstPost(array $source): Message
     {
-        $html = file_get_contents($source["url"]);
+        $html = Browser::getAsString($source["url"]);
         $this->crawler = new Crawler($html);
 
         $postContainer = $this->crawler->filter(".tm-article-presenter__body")->first();
@@ -77,7 +78,7 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
 
         $this->threadId = $this->getThreadIdFromURL($commentsURL);
 
-        $html = file_get_contents($commentsURL);
+        $html = Browser::getAsString($commentsURL);
         $this->crawler = new Crawler($html);
 
         $comments = [];

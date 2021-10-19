@@ -7,6 +7,7 @@ use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Storage;
+use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 use ItIsAllMail\Utils\URLProcessor;
@@ -38,7 +39,10 @@ class LORDriver extends AbstractFetcherDriver implements FetchDriverInterface
         while ($url) {
             Debug::log("Processing $url");
 
-            $html = file_get_contents($url);
+            $html = Browser::getAsString($url);
+            //dirtiest fix for PHPHtmlParser
+            $html = preg_replace('/<meta\s+property=\s*\"[^\"]+\"\s+content=\s*"[^\"]+"\s*\/*>/', "", $html);
+
             $dom = new Dom();
             $dom->loadStr($html);
 
@@ -47,7 +51,7 @@ class LORDriver extends AbstractFetcherDriver implements FetchDriverInterface
 
                 $author = $postNode->find(".msg_body div.sign > a")[0];
                 if ($author !== null) {
-                    $author = $author->text;
+                    $author = $author->text();
                 } else {
                     continue;
                 }

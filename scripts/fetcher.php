@@ -2,6 +2,7 @@
 
 require_once("includes.php");
 
+use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\FetchDriverFactory;
 use ItIsAllMail\Mailbox;
 
@@ -17,6 +18,7 @@ foreach ($sources as $source) {
         (($source["mailbox"] ?? $driver->getOpt("mailbox")) ?? $config["mailbox"]);
     $m = new Mailbox($mailboxPath);
 
+    Debug::debug("Processing source " . $source["url"]);
 
     // We have 2 main fail points here:
     // 1) problems with site like connection or markup changes

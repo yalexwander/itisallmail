@@ -31,7 +31,7 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
         while ($url) {
             Debug::log("Processing $url");
 
-            $html = file_get_contents($url);
+            $html = Browser::getAsString($url);
             $dom = new Crawler($html);
 
             foreach ($dom->filter("li.message") as $postNode) {
@@ -75,7 +75,7 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
                 foreach ($post->filter(".messageText a>img.bbCodeImage") as $attachement) {
                     $msg->addAttachement(
                         $attachement->getAttribute("alt"),
-                        file_get_contents($attachement->baseURI . $attachement->getAttribute("src"))
+                        Browser::getAsString($attachement->baseURI . $attachement->getAttribute("src"))
                     );
                 }
 

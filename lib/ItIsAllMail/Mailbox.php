@@ -17,6 +17,7 @@ class Mailbox
             mkdir($path);
             mkdir($path . DIRECTORY_SEPARATOR . "cur");
             mkdir($path . DIRECTORY_SEPARATOR . "new");
+            mkdir($path . DIRECTORY_SEPARATOR . "tmp");
         }
 
         $this->mailSubdirs = [
