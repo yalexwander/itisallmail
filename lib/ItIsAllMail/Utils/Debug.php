@@ -2,6 +2,8 @@
 
 namespace ItIsAllMail\Utils;
 
+use ItIsAllMail\Message;
+
 class Debug
 {
 
@@ -18,5 +20,19 @@ class Debug
         print (new \DateTime())->format("Y-m-d H:i:s: ");
         print $str;
         print "\n";
+    }
+
+
+    public function dumpMessage(Message $msg): string
+    {
+        print <<<EOT
+        subject: {$msg->subject}
+        from: {$msg->from}
+        parent: {$msg->parent}
+        created: {$msg->created->format("Y-m-d H:i:s")}
+        id: {$msg->id}
+        body: {$msg->body}
+====\n
+EOT;
     }
 }

@@ -54,20 +54,6 @@ class Message
         $this->mentions = $source["mentions"] ?? [];
     }
 
-
-    public function debug(): void
-    {
-        print <<<EOT
-        subject: {$this->subject}
-        from: {$this->from}
-        parent: {$this->parent}
-        created: {$this->created->format("Y-m-d H:i:s")}
-        id: {$this->id}
-        body: {$this->body}
-====\n
-EOT;
-    }
-
     public function toMIMEString(): string
     {
         $headers = (new Headers())
