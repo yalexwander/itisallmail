@@ -25,7 +25,11 @@ foreach ($sources as $source) {
     // 2) Producing emails incompatible with standards
     try {
         $posts = $driver->getPosts($source);
-        $m->mergeMessages($posts);
+        $mergeResult = $m->mergeMessages($posts);
+
+        if ($mergeResult["added"]) {
+            Debug::log("{$mergeResult["added"]} new messages in {$mailboxPath}");
+        }
     } catch (\Exception $e) {
         printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
         printf("Details:\n%s\n", $e->__toString());

@@ -37,8 +37,6 @@ class LORDriver extends AbstractFetcherDriver implements FetchDriverInterface
         }
 
         while ($url) {
-            Debug::log("Processing $url");
-
             $html = Browser::getAsString($url);
             //dirtiest fix for PHPHtmlParser
             $html = preg_replace('/<meta\s+property=\s*\"[^\"]+\"\s+content=\s*"[^\"]+"\s*\/*>/', "", $html);

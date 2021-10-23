@@ -58,17 +58,25 @@ class Mailbox
         }
     }
 
-    public function mergeMessages(array $messages): void
+    public function mergeMessages(array $messages): array
     {
+        $mergeStats = [
+            "added" => 0,
+            "modified" => 0
+        ];
+
         foreach ($messages as $msg) {
             $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
 
 
             if (! $this->msgExists($msg->getId())) {
-                print "Adding " . $msg->getId()  . "\n";
+                Debug::log("Adding " . $msg->getId());
+                $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($messageFilepath, $msg->toMIMEString());
             }
         }
+
+        return $mergeStats;
     }
 }
