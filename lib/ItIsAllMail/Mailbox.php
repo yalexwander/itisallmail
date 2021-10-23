@@ -2,6 +2,8 @@
 
 namespace ItIsAllMail;
 
+use ItIsAllMail\Utils\Debug;
+
 class Mailbox
 {
     protected $path;
