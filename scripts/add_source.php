@@ -12,7 +12,14 @@ require_once("includes.php");
 
 $restIndex = null;
 $opts = getopt("m:d:", [], $restIndex);
-$url = array_slice($argv, $restIndex)[0];
+$url = array_slice($argv, $restIndex);
+
+if (empty($url)) {
+    print "Usage php scripts/add_source [[-m <mailbox>] [-d <driver>]] <url>\n";
+    exit(1);
+}
+
+$url = $url[0];
 
 $config = yaml_parse_file($__AppConfigFile);
 $driverFactory = new FetchDriverFactory($config);
