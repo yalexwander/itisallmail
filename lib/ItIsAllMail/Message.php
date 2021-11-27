@@ -66,7 +66,7 @@ class Message
         $this->setExtraHeaders($headers);
 
         if ($this->parent !== null) {
-            $headers->addIdHeader('References', [ $this->getParentId() ]);
+            $headers->addIdHeader('References', [ $this->getParent() ]);
         }
 
         $body = new AlternativePart(
@@ -95,9 +95,24 @@ class Message
         }
     }
 
-    public function getParentId(): string
+    public function getParent(): string
     {
         return $this->parent;
+    }
+
+    public function getFrom(): string
+    {
+        return $this->from;
+    }
+
+    public function getBody(): string
+    {
+        return $this->body;
+    }
+
+    public function getCreated(): ?\DateTime
+    {
+        return $this->created;
     }
 
     public function addAttachement(string $title, string $data): Message

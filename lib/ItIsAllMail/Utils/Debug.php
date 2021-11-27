@@ -25,13 +25,13 @@ class Debug
 
     public function dumpMessage(Message $msg): string
     {
-        print <<<EOT
-        subject: {$msg->subject}
-        from: {$msg->from}
-        parent: {$msg->parent}
-        created: {$msg->created->format("Y-m-d H:i:s")}
-        id: {$msg->id}
-        body: {$msg->body}
+        return <<<EOT
+        subject: {$msg->getSubject()}
+        from: {$msg->getFrom()}
+        parent: {$msg->getParent()}
+        created: {$msg->getCreated()->format("Y-m-d H:i:s")}
+        id: {$msg->getId()}
+        body: {$msg->getBody()}
 ====\n
 EOT;
     }

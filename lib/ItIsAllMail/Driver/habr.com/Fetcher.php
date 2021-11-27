@@ -1,15 +1,18 @@
 <?php
 
-namespace ItIsAllMail\Driver\Habr;
+namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Browser;
-use Symfony\Component\DomCrawler\Crawler;
+use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\Utils\URLProcessor;
+use voku\helper\HtmlDomParser;
+use voku\helper\SimpleHtmlDom;
 
-class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
+class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $crawler;
     protected $driverCode = "habr.com";
@@ -37,15 +40,15 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
     public function getFirstPost(array $source): Message
     {
         $html = Browser::getAsString($source["url"]);
-        $this->crawler = new Crawler($html);
+        $dom = HtmlDomParser::str_get_html($html);
 
-        $postContainer = $this->crawler->filter(".tm-article-presenter__body")->first();
-        $author = $postContainer->filter("a.tm-user-info__userpic")->first()->attr("title");
+        $postContainer = $dom->findOne(".tm-article-presenter__body");
+        $author = $postContainer->findOne("a.tm-user-info__userpic")->getAttribute("title");
         $postText = $this->postToText(
-            $postContainer->filter(".tm-article-body")->first()
+            $postContainer->findOne(".tm-article-body")
         );
-        $postDate = $postContainer->filter(".tm-article-snippet__datetime-published > time")->first()->attr("datetime");
-        $postTitle = $postContainer->filter(".tm-article-snippet__title")->first()->text();
+        $postDate = $postContainer->findOne(".tm-article-snippet__datetime-published > time")->getAttribute("datetime");
+        $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
         $postId = $this->getThreadIdFromURL($source["url"]);
         $this->threadId = $postId;
 
@@ -67,58 +70,56 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
      */
     public function getComments(array $source): array
     {
-        $commentsURL = $source["url"];
-
-        // fix url to prevent double slash
-        if (strstr($source["url"], "/") === (strlen($source["url"]) - 1)) {
-            $commentsURL .= "/";
-        }
-
+        $commentsURL = URLProcessor::normalizeStartURL($source["url"]);
         $commentsURL .= "comments/";
 
-        $this->threadId = $this->getThreadIdFromURL($commentsURL);
+        $threadId = $this->getThreadIdFromURL($commentsURL);
 
         $html = Browser::getAsString($commentsURL);
-        $this->crawler = new Crawler($html);
+        $dom = HtmlDomParser::str_get_html($html);
 
         $comments = [];
-        $this->crawler->filter("article.tm-comment-thread__comment")->each(
-            function ($node, $i) use (&$comments) {
+        foreach ($dom->findMulti("article.tm-comment-thread__comment") as $node) {
+            // skip deleted comments
+            $isBanned = $node->findOneOrFalse(".comment__message_banned") ? true : false;
 
-                // skip deleted comments
-                $isBanned = $node->filter(".comment__message_banned")->count() > 0;
-
-                if ($isBanned) {
-                    return;
-                }
-
-
-                $parent = $node->closest(".tm-comment-thread__children");
-
-                if ($parent !== null) {
-                    $parent = $parent->closest("section")
-                        ->filter("article.tm-comment-thread__comment")->first()
-                        ->filter("a")->first();
-                    $parent = $this->getCommentIdFromLink($parent->attr("name"));
-                } else {
-                    $parent = $this->threadId;
-                }
-
-                $comments[] = new Message([
-                    "from" => $node->filter(".tm-user-info__username")->first()->text()  . "@" . $this->getCode(),
-                    "subject" => $node->filter(".tm-comment__body-content")->first()->text(),
-                    "parent" => $parent . "@" . $this->getCode(),
-                    "created" => $this->parseCommentDate(
-                        $node->filter(".tm-comment-thread__comment-link")->first()->text()
-                    ),
-                    "id" => $this->getCommentIdFromLink(
-                        $node->filter("a")->first()->attr("name")
-                    )  . "@" . $this->getCode(),
-                    "body" => $this->postToText($node->filter(".tm-comment__body-content")->first()),
-                    "thread" => $this->threadId  . "@" . $this->getCode()
-                ]);
+            if ($isBanned) {
+                continue;
             }
-        );
+
+            $postId = $this->getCommentIdFromLink(
+                $node->findOne("a")->getAttribute("name")
+            );
+
+            $parent = $node->parentNode()->parentNode()->parentNode();
+
+            if ($parent !== null and $parent->getAttribute("class") === "tm-comment-thread") {
+                $parent = $this->getCommentIdFromLink(
+                    $parent->findOne("article > a.tm-comment-thread__target")->getAttribute("name")
+                );
+
+                if ($parent == $postId) {
+                    $parent = $threadId;
+                }
+            } else {
+                $parent = $threadId;
+            }
+
+            $postTitle = $node->findOne(".tm-comment__body-content")->text();
+            $commentBody = $this->postToText($node->findOne(".tm-comment__body-content"));
+
+            $comments[] = new Message([
+                "from" => $node->findOne(".tm-user-info__username")->text()  . "@" . $this->getCode(),
+                "subject" => $postTitle,
+                "parent" => $parent . "@" . $this->getCode(),
+                "created" => $this->parseCommentDate(
+                    $node->findOne(".tm-comment-thread__comment-link")->text()
+                ),
+                "id" => $postId . "@" . $this->getCode(),
+                "body" => $commentBody,
+                "thread" => $threadId  . "@" . $this->getCode()
+            ]);
+        }
 
         return $comments;
     }
@@ -126,9 +127,9 @@ class HabrDriver extends AbstractFetcherDriver implements FetchDriverInterface
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function postToText(Crawler $node): string
+    protected function postToText(SimpleHtmlDom $node): string
     {
-        return (new HtmlToText($node->html()))->getText();
+        return (new HtmlToText($node->outerHtml()))->getText();
     }
 
     /**
