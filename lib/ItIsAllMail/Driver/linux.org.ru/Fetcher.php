@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail\Driver\Habr;
+namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\AbstractFetcherDriver;
@@ -19,6 +19,8 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
     protected $crawler;
     protected $driverCode = "linux.org.ru";
 
+    protected $threadMessageMap;
+
     /**
      * Return array of all posts in thread, including original article
      */
@@ -28,13 +30,16 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
 
         $startUrl = URLProcessor::normalizeStartURL($source["url"]);
         $threadId = $this->getThreadIdFromURL($startUrl);
+        $rootMessageId = $this->getRootMessage($threadId);
 
         $url = "";
-        if (isset($source["ignore_last_page"]) and $source["ignore_last_page"]) {
+        if (! empty($source["ignore_last_page"])) {
             $url = $startUrl;
         } else {
             $url = $this->getLastURLVisited($threadId) ?? $startUrl;
         }
+
+        $this->threaMessageMap = [];
 
         while ($url) {
             $html = Browser::getAsString($url);
@@ -42,8 +47,6 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
             $dom = HtmlDomParser::str_get_html($html);
 
             foreach ($dom->findMulti("article.msg") as $postNode) {
-                $isStartPost = $postNode->findOneOrFalse(".msg_body > footer > div.sign > a");
-
                 $author = $postNode->findOneOrFalse(".msg_body div.sign > a");
 
                 if ($author !== false) {
@@ -54,12 +57,22 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
 
                 $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
 
-                $parent = $this->getParent($postNode, $threadId);
                 $created = $this->getPostDate($postNode);
+
                 $postId = $threadId . "#" . $this->getPostId($postNode);
+                $this->threaMessageMap[$postId] = true;
+
+                $isStartPost = $postNode->findOneOrFalse(".msg_body > footer > div.sign > a");
                 if ($isStartPost) {
                     $postId = $threadId;
                 }
+
+                if ($rootMessageId === null) {
+                    $rootMessageId = $threadId;
+                    $postId = $rootMessageId;
+                    $this->setRootMessage($threadId, $rootMessageId);
+                }
+                $parent = $this->getParent($postNode, $rootMessageId);
 
                 $postText = $this->getPostText($postNode);
                 $title = $this->getPostTitle($postNode, $postText);
@@ -80,10 +93,10 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
             }
 
             $nextPage = $dom->findMulti("#comments .nav a.page-number");
-            $nextPage = $nextPage->offsetGet($nextPage->count() - 1);
+            $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
 
             if (($nextPage !== null) and strstr($nextPage->text(), "→")) {
-                $url = rtrim($dom->findOne("base")->getAttribute("href"), "/") . $nextPage->getAttribute("href");
+                $url = URLProcessor::getNodeBaseURI($dom, $url) . $nextPage->getAttribute("href");
                 Debug::debug("New url: $url");
             } else {
                 $this->setLastURLVisited($threadId, $url);
@@ -167,8 +180,10 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
 
     protected function getParent(SimpleHtmlDom $node, string $defaultParent): string
     {
-        $parent = $node->find("a")[0];
-        if ($parent !== null) {
+        $parent = $node->findOneOrFalse("a");
+        $parentId = null;
+
+        if ($parent) {
             if (
                 preg_match(
                     '/(forum|news)\/([^\/]+)\/([0-9]+)\?cid=([0-9]+)/',
@@ -176,11 +191,16 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
                     $matches
                 )
             ) {
-                return $matches[1] . "_" . $matches[2] . "_" . $matches[3] . "#" . $matches[4];
+                $parentId =  $matches[1] . "_" . $matches[2] . "_" . $matches[3] . "#" . $matches[4];
             }
         }
 
-        return $defaultParent;
+        // prevent from linking to other threads
+        if (empty($this->threaMessageMap[$parentId])) {
+            $parentId = $defaultParent;
+        }
+
+        return $parentId;
     }
 
     /**
