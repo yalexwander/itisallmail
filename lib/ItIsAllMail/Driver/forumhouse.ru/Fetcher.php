@@ -76,7 +76,8 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
                 );
 
                 foreach ($post->findMulti("ul.attachmentList a > img") as $attachement) {
-                    $attachementURL = URLProcessor::getNodeBaseURI($dom, $url) . $attachement->getAttribute("src");
+                    $attachementURL =
+                        URLProcessor::getNodeBaseURI($dom, $url) . "/" . $attachement->getAttribute("src");
                     Debug::debug("Downloading attachement: $attachementURL");
                     $msg->addAttachement(
                         $attachement->getAttribute("alt"),
@@ -91,7 +92,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
             $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
 
             if ($nextPage and strstr($nextPage->text(), "Вперёд")) {
-                $url = URLProcessor::getNodeBaseURI($dom, $url) . $nextPage->getAttribute("href");
+                $url = URLProcessor::getNodeBaseURI($dom, $url) . "/" . $nextPage->getAttribute("href");
                 Debug::debug("New url: $url");
             } else {
                 $this->setLastURLVisited($threadId, $url);

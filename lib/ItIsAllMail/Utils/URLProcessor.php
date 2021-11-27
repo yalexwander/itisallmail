@@ -42,6 +42,8 @@ class URLProcessor
             }
         }
 
+        $baseURL = rtrim($baseURL, "/");
+
         return $baseURL;
     }
 }
