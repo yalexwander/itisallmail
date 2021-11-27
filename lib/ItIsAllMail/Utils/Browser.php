@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Utils;
 
-use Goutte\Client;
+use GuzzleHttp\Client;
 
 class Browser
 {
@@ -18,11 +18,12 @@ class Browser
 
     public static function getAsString(string $url): ?string
     {
-        $client = new Client();
-        $client->setServerParameter(
-            'HTTP_USER_AGENT',
-            self::$userAgents[ array_rand(self::$userAgents) ]
-        );
-        return $client->request('GET', $url)->html();
+        $client = new Client([
+            'headers' => [
+                'User-Agent' => self::$userAgents[0],
+            ]
+        ]);
+
+        return $client->request('GET', $url)->getBody();
     }
 }

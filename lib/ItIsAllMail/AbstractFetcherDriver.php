@@ -50,4 +50,21 @@ class AbstractFetcherDriver
     {
         Storage::set($this->driverCode, $threadId . "_last_page", $url);
     }
+
+    /**
+     * Check if we visited this page of the thread
+     */
+    protected function getRootMessage(string $threadId): ?string
+    {
+        return Storage::get($this->driverCode, $threadId . "_root_msg");
+    }
+
+    /**
+     * Stores root message for current thread
+     */
+    protected function setRootMessage(string $threadId, string $msgId): void
+    {
+        Storage::set($this->driverCode, $threadId . "_root_msg", $msgId);
+    }
+
 }
