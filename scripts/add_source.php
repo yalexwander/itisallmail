@@ -1,13 +1,10 @@
 <?php
 
-use ItIsAllMail\FetchDriverFactory;
-
 require_once("includes.php");
 
-// scripts adds new source to list of sources
-// usage:
-// php scripts/add_source [[-m <mailbox>] [-d <driver>]] <url>
+use ItIsAllMail\FetchDriverFactory;
 
+// script adds new source to list of sources
 
 
 $restIndex = null;
@@ -15,7 +12,7 @@ $opts = getopt("m:d:", [], $restIndex);
 $url = array_slice($argv, $restIndex);
 
 if (empty($url)) {
-    print "Usage php scripts/add_source [[-m <mailbox>] [-d <driver>]] <url>\n";
+    print "Usage php scripts/add_source [[-m <mailbox>] [-d <driver-code>]] <url>\n";
     exit(1);
 }
 

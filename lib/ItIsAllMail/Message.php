@@ -26,7 +26,7 @@ class Message
     ];
 
     // maximal length of subject
-    protected $subjectMaxChars = 64;
+    protected $subjectMaxChars = 128;
 
     // list of all users of given site/network/messenger mention in this message
     protected $mentions;
