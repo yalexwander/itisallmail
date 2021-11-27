@@ -1,17 +1,19 @@
 <?php
 
-namespace ItIsAllMail\Driver\Habr;
+namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 use ItIsAllMail\Utils\URLProcessor;
-use Symfony\Component\DomCrawler\Crawler;
+use voku\helper\HtmlDomParser;
+use voku\helper\SimpleHtmlDom;
 
-class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInterface
+class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $crawler;
     protected $driverCode = "forumhouse.ru";
@@ -25,6 +27,7 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
 
         $startUrl = URLProcessor::normalizeStartURL($source["url"]);
         $threadId = $this->getThreadIdFromURL($startUrl);
+        $rootMessageId = $this->getRootMessage($threadId);
 
         $url = $this->getLastURLVisited($threadId) ?? $startUrl;
 
@@ -32,13 +35,11 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
             Debug::log("Processing $url");
 
             $html = Browser::getAsString($url);
-            $dom = new Crawler($html);
+            $dom = HtmlDomParser::str_get_html($html);
 
-            foreach ($dom->filter("li.message") as $postNode) {
-                $post = new Crawler($postNode);
-
-                $author = $post->filter(".userText")->first();
-                if ($author->count()) {
+            foreach ($dom->findMulti("li.message") as $post) {
+                $author = $post->findOneOrFalse(".userText");
+                if ($author) {
                     $author = $author->text();
                 } else {
                     continue;
@@ -46,18 +47,20 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
 
                 $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
 
-                $parent = $this->getParent($post, $threadId);
-                $created = $this->extractDateFromPost($post);
+                $postId = $threadId . "#" . substr($post->getAttribute("id"), 5);
 
-                $postId = "";
-                if ($parent === $threadId) {
-                    $postId = $threadId . "#" .
-                        substr($post->filter("li.message")->first()->attr("id"), 5);
-                } else {
-                    $postId = $threadId . "#" . substr($post->attr("id"), 5);
+                // current post becomes root only if we didn't find one during previos fetches
+                if ($rootMessageId === null) {
+                    $rootMessageId = $threadId;
+                    $postId = $rootMessageId;
+                    $this->setRootMessage($threadId, $rootMessageId);
                 }
 
-                $postText = $this->postToText($post->filter(".messageText")->first());
+                $parent = $this->getParent($post, $rootMessageId);
+                $created = $this->extractDateFromPost($post);
+
+                $postText = $this->postToText($post->findOne(".messageText"));
+
                 $title = $this->getPostTitle($postText);
 
                 $msg = new Message(
@@ -72,19 +75,23 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
                     ]
                 );
 
-                foreach ($post->filter(".messageText a>img.bbCodeImage") as $attachement) {
+                foreach ($post->findMulti("ul.attachmentList a > img") as $attachement) {
+                    $attachementURL = URLProcessor::getNodeBaseURI($dom, $url) . $attachement->getAttribute("src");
+                    Debug::debug("Downloading attachement: $attachementURL");
                     $msg->addAttachement(
                         $attachement->getAttribute("alt"),
-                        Browser::getAsString($attachement->baseURI . $attachement->getAttribute("src"))
+                        Browser::getAsString($attachementURL)
                     );
                 }
 
                 $posts[] = $msg;
             }
 
-            $nextPage = $dom->filter('div.pageNavLinkGroup a.text')->last();
-            if ($nextPage->count() and strstr($nextPage->text(), "Вперёд")) {
-                $url = $nextPage->getNode(0)->baseURI . $nextPage->attr("href");
+            $nextPage = $dom->findMulti('div.pageNavLinkGroup a.text');
+            $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
+
+            if ($nextPage and strstr($nextPage->text(), "Вперёд")) {
+                $url = URLProcessor::getNodeBaseURI($dom, $url) . $nextPage->getAttribute("href");
                 Debug::debug("New url: $url");
             } else {
                 $this->setLastURLVisited($threadId, $url);
@@ -99,9 +106,9 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function postToText(Crawler $node): string
+    protected function postToText(SimpleHtmlDom $node): string
     {
-        $text = (new HtmlToText($node->html()))->getText();
+        $text = (new HtmlToText($node->innerHtml()))->getText();
         $text = preg_replace('/ \[https\:\/\/www\.forumhouse\.ru\/members\/[0-9]+\/]/', '', $text);
 
         return $text;
@@ -114,15 +121,18 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
         return $id[1];
     }
 
-    protected function getParent(Crawler $node, string $defaultParent): string
+    protected function getParent(SimpleHtmlDom $node, string $defaultParent): string
     {
-        $parent = $node->filter(".SelectQuoteContainer")->first();
-        if ($parent->count()) {
-            $parent = $parent->filter("a.AttributionLink");
-            if ($parent->count()) {
-                if (preg_match('/threads\/([0-9]+)\/[a-z0-9\-]*\#post-([0-9]+)/', $parent->attr("href"), $matches)) {
-                    return $matches[1] . "#" . $matches[2];
-                }
+        $parent = $node->findOneOrFalse(".SelectQuoteContainer a.AttributionLink");
+        if ($parent) {
+            if (
+                preg_match(
+                    '/threads\/([0-9]+)\/[a-z0-9\-]*\#post-([0-9]+)/',
+                    $parent->getAttribute("href"),
+                    $matches
+                )
+            ) {
+                return $matches[1] . "#" . $matches[2];
             }
         }
 
@@ -159,17 +169,17 @@ class ForumhouseDriver extends AbstractFetcherDriver implements FetchDriverInter
      * Try to extract post date. We have at least 2 html formats here. For old
      * topics and new ones. Probably more, so fallback to current date.
      */
-    protected function extractDateFromPost(Crawler $post): \DateTime
+    protected function extractDateFromPost(SimpleHtmlDom $post): \DateTime
     {
-        $dateWidget = $post->filter("a.datePermalink>span")->first();
+        $dateWidget = $post->findOneOrFalse("a.datePermalink>span");
         $dateString = "";
         $postDate = null;
 
-        if ($dateWidget->count()) {
-            $dateString = $dateWidget->attr('title');
+        if ($dateWidget) {
+            $dateString = $dateWidget->getAttribute('title');
         } else {
-            $dateWidget = $post->filter("a.datePermalink>abbr")->first();
-            $dateString = $dateWidget->html();
+            $dateWidget = $post->findOne("a.datePermalink>abbr");
+            $dateString = $dateWidget->innerHtml();
         }
 
         $dateString = preg_replace('/в /', "", $dateString);
