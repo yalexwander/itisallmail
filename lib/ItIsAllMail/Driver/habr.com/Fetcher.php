@@ -14,9 +14,15 @@ use voku\helper\SimpleHtmlDom;
 
 class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $crawler;
     protected $driverCode = "habr.com";
-    protected $threadId;
+    protected $defaultCommentDate;
+
+    public function __construct(array $opts)
+    {
+        parent::__construct($opts);
+
+        $this->defaultCommentDate = new \DateTime('2000-01-01');
+    }
 
     /**
      * Return array of all posts in thread, including original article
@@ -27,7 +33,6 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
 
         if (null === $this->getLastURLVisited($source["url"])) {
             $posts[] = $this->getFirstPost($source);
-            $this->setLastURLVisited($source["url"], $source["url"]);
         }
 
         $posts = array_merge($posts, $this->getComments($source));
@@ -40,6 +45,7 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
     public function getFirstPost(array $source): Message
     {
         $html = Browser::getAsString($source["url"]);
+        Debug::debug("Downloaded post page");
         $dom = HtmlDomParser::str_get_html($html);
 
         $postContainer = $dom->findOne(".tm-article-presenter__body");
@@ -50,17 +56,20 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
         $postDate = $postContainer->findOne(".tm-article-snippet__datetime-published > time")->getAttribute("datetime");
         $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
         $postId = $this->getThreadIdFromURL($source["url"]);
-        $this->threadId = $postId;
+
+        $this->defaultCommentDate = $this->parseArticleDate($postDate);
 
         $msg = new Message([
             "from" => $author . "@" . $this->getCode(),
             "subject" => $postTitle,
             "parent" => null,
-            "created" => $this->parseArticleDate($postDate),
+            "created" => $this->defaultCommentDate,
             "id" => $postId . "@" . $this->getCode(),
             "body" => $postText,
             "thread" => $postId . "@" . $this->getCode()
         ]);
+
+        $this->setLastURLVisited($source["url"], $source["url"]);
 
         return $msg;
     }
@@ -76,16 +85,13 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
         $threadId = $this->getThreadIdFromURL($commentsURL);
 
         $html = Browser::getAsString($commentsURL);
+        Debug::debug("Downloaded comments page");
         $dom = HtmlDomParser::str_get_html($html);
 
+        $defaultCommentDate = new \DateTime('2000-01-01');
         $comments = [];
         foreach ($dom->findMulti("article.tm-comment-thread__comment") as $node) {
-            // skip deleted comments
-            $isBanned = $node->findOneOrFalse(".comment__message_banned") ? true : false;
-
-            if ($isBanned) {
-                continue;
-            }
+            $commentTextWidget = $node->findOneOrFalse(".tm-comment__body-content");
 
             $postId = $this->getCommentIdFromLink(
                 $node->findOne("a")->getAttribute("name")
@@ -105,16 +111,27 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
                 $parent = $threadId;
             }
 
-            $postTitle = $node->findOne(".tm-comment__body-content")->text();
-            $commentBody = $this->postToText($node->findOne(".tm-comment__body-content"));
+            // by default we treat comment as deleted
+            $commentTitle = "DELETED";
+            $commentBody = "DELETED";
+            $commentAuthor = "UFO";
+            $commentDate = $this->defaultCommentDate;
+
+            // if comment is not deleted
+            if ($commentTextWidget) {
+                $commentTitle = preg_replace("/[\r\n]/", " ", $commentTextWidget->text());
+                $commentBody = $this->postToText($commentTextWidget);
+                $commentAuthor = $node->findOne(".tm-user-info__username")->text();
+                $commentDate = $this->parseCommentDate(
+                    $node->findOne(".tm-comment-thread__comment-link")->text()
+                );
+            }
 
             $comments[] = new Message([
-                "from" => $node->findOne(".tm-user-info__username")->text()  . "@" . $this->getCode(),
-                "subject" => $postTitle,
+                "from" => $commentAuthor . "@" . $this->getCode(),
+                "subject" => $commentTitle,
                 "parent" => $parent . "@" . $this->getCode(),
-                "created" => $this->parseCommentDate(
-                    $node->findOne(".tm-comment-thread__comment-link")->text()
-                ),
+                "created" => $commentDate,
                 "id" => $postId . "@" . $this->getCode(),
                 "body" => $commentBody,
                 "thread" => $threadId  . "@" . $this->getCode()
