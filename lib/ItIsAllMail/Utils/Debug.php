@@ -23,7 +23,7 @@ class Debug
     }
 
 
-    public function dumpMessage(Message $msg): string
+    public static function dumpMessage(Message $msg): string
     {
         return <<<EOT
         subject: {$msg->getSubject()}

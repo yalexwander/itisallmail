@@ -29,7 +29,6 @@ class AbstractFetcherDriver
         return $this->driverCode;
     }
 
-
     public function getOpt(string $key)
     {
         return $this->opts[$key] ?? null;
@@ -52,7 +51,8 @@ class AbstractFetcherDriver
     }
 
     /**
-     * Check if we visited this page of the thread
+     * To not re-download first page of discussion try to fetch root message
+     * from cache
      */
     protected function getRootMessage(string $threadId): ?string
     {

@@ -9,6 +9,8 @@ use Symfony\Component\Mime\Part\TextPart;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Header\DateHeader;
 
+use ItIsAllMail\Utils\Debug;
+
 class Message
 {
     protected $subject;
@@ -56,6 +58,9 @@ class Message
 
     public function toMIMEString(): string
     {
+
+        Debug::debug("Trying convert to MIME:");
+        Debug::debug(Debug::dumpMessage($this));
         $headers = (new Headers())
             ->addMailboxListHeader('To', [ $this->thread ])
             ->addTextHeader('Subject', $this->getSubject())
