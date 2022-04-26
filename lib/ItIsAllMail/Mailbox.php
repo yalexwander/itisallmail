@@ -33,7 +33,7 @@ class Mailbox
     /**
      * Checks if image with such id already exists
      */
-    protected function msgExists(string $id): bool
+    public function msgExists(string $id): bool
     {
         return (isset($this->localMessages[$id]) ? true : false);
     }

@@ -72,7 +72,9 @@ class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDrive
                 ]
             );
 
-            $this->processPostAttachements($postNode, $msg);
+            if (! $this->messageWithGivenIdAlreadyDownloaded($postId . "@" . $this->getCode())) {
+                $this->processPostAttachements($postNode, $msg);
+            }
 
             $posts[] = $msg;
         }
@@ -125,7 +127,7 @@ class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDrive
     {
         $textNode = $node->findOneOrFalse("div.tgme_widget_message_text");
         if ($textNode) {
-            return $textNode->text();
+            return (new HtmlToText($textNode->innerHtml()))->getText();
         }
         else {
             return "";
@@ -134,7 +136,8 @@ class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDrive
 
     public function getPostTitle($node): string
     {
-        return $this->getPostText($node);
+        $title = preg_replace('/\n/', ' ', $this->getPostText($node));
+        return $title;
     }
 
     protected function getPostId(SimpleHtmlDom $post): string

@@ -17,6 +17,7 @@ foreach ($sources as $source) {
     $mailboxPath = $config["mailbox_base_dir"] . DIRECTORY_SEPARATOR .
         (($source["mailbox"] ?? $driver->getOpt("mailbox")) ?? $config["mailbox"]);
     $m = new Mailbox($mailboxPath);
+    $driver->setMailbox($m);
 
     Debug::debug("Processing source " . $source["url"]);
 

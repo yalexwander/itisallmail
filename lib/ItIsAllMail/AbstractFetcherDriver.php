@@ -3,12 +3,14 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Utils\Storage;
+use ItIsAllMail\Mailbox;
 
 class AbstractFetcherDriver
 {
 
     protected $opts;
     protected $driverCode;
+    protected $mailbox;
 
     public function __construct(array $opts)
     {
@@ -67,4 +69,23 @@ class AbstractFetcherDriver
         Storage::set($this->driverCode, $threadId . "_root_msg", $msgId);
     }
 
+    public function setMailbox(Mailbox $m)
+    {
+        $this->mailbox = $m;
+    }
+
+    protected function getMailbox()
+    {
+        if ($this->mailbox === null) {
+            die('Mailbox is not set for current driver instance');
+        }
+
+        return $this->mailbox;
+    }
+
+
+    protected function messageWithGivenIdAlreadyDownloaded(string $id): bool
+    {
+        return $this->getMailbox()->msgExists($id);
+    }
 }
