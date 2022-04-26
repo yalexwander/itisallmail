@@ -98,9 +98,8 @@ class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDrive
             $postNode->findOneOrFalse("div.tgme_channel_info_header_username")->text()
         );
 
-        $title = $postNode->findOneOrFalse(".tgme_channel_info_header_title")->text();
-
-        $postText = $postNode->text();
+        $postText = $this->postToText($postNode);
+        $title = $this->postToText($postNode->findOneOrFalse(".tgme_channel_info_header_title"));
 
         $created = $this->defaultCommentDate;
 
