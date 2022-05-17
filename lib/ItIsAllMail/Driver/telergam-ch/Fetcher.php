@@ -184,4 +184,14 @@ class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDrive
         }
     }
 
+    /**
+     * It assumes, that telegram message ID just increment, so if checked ID
+     * is greater, than last saved one, the message was already downloaded,
+     * even if it doesn't exists in mailbox
+     */
+    protected function messageWithGivenIdAlreadyDownloaded(string $id): bool
+    {
+        return $this->getMailbox()->msgExists($id);
+    }
+
 }

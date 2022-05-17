@@ -9,9 +9,10 @@ use ItIsAllMail\Utils\Debug;
 $config = yaml_parse_file($__AppConfigFile);
 
 $fetcherExecutable = __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php";
+$phpExecutable = "php";
 
 while (true) {
     Debug::debug("Starting fetcher...");
-    system($fetcherExecutable);
+    system($phpExecutable . " " . $fetcherExecutable);
     sleep($config["update_interval"]);
 }

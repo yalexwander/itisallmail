@@ -1,6 +1,8 @@
-mailbox : "default"
 mailbox_base_dir: "mailboxes"
+mailbox : "default"
+catalog_mailbox : "catalog"
 update_interval: 300
+change_subject_if_attachements: 1
 drivers :
   - "habr.com"
   - "forumhouse.ru"

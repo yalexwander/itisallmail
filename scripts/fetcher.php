@@ -3,6 +3,7 @@
 require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\Utils\SourceConfig;
 use ItIsAllMail\FetchDriverFactory;
 use ItIsAllMail\Mailbox;
 
@@ -13,11 +14,10 @@ $driverFactory = new FetchDriverFactory($config);
 
 foreach ($sources as $source) {
     $driver = $driverFactory->getFetchDriverForSource($source);
+    $sourceConfig = new SourceConfig($config, $driver, $source);
 
-    $mailboxPath = $config["mailbox_base_dir"] . DIRECTORY_SEPARATOR .
-        (($source["mailbox"] ?? $driver->getOpt("mailbox")) ?? $config["mailbox"]);
-    $m = new Mailbox($mailboxPath);
-    $driver->setMailbox($m);
+    $mailbox = new Mailbox($sourceConfig);
+    $driver->setMailbox($mailbox);
 
     Debug::debug("Processing source " . $source["url"]);
 
@@ -26,10 +26,10 @@ foreach ($sources as $source) {
     // 2) Producing emails incompatible with standards
     try {
         $posts = $driver->getPosts($source);
-        $mergeResult = $m->mergeMessages($posts);
+        $mergeResult = $mailbox->mergeMessages($posts);
 
         if ($mergeResult["added"]) {
-            Debug::log("{$mergeResult["added"]} new messages in {$mailboxPath}");
+            Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getPath()}");
         }
     } catch (\Exception $e) {
         printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());

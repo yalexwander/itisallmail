@@ -3,23 +3,29 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\Utils\SourceConfig;
 
 class Mailbox
 {
+    protected $sourceConfig;
     protected $path;
     protected $localMessages;
     protected $mailSubdirs;
 
-    public function __construct(string $path)
+    public function __construct(SourceConfig $sourceConfig)
     {
-        $this->path = $path;
+        $this->sourceConfig = $sourceConfig;
+
+        $this->path = $this->sourceConfig->getOpt("mailbox_base_dir") . DIRECTORY_SEPARATOR .
+            $this->sourceConfig->getOpt("mailbox");
+
         $this->localMessages = [];
 
-        if (! file_exists($path)) {
-            mkdir($path);
-            mkdir($path . DIRECTORY_SEPARATOR . "cur");
-            mkdir($path . DIRECTORY_SEPARATOR . "new");
-            mkdir($path . DIRECTORY_SEPARATOR . "tmp");
+        if (! file_exists($this->path)) {
+            mkdir($this->path);
+            mkdir($this->path . DIRECTORY_SEPARATOR . "cur");
+            mkdir($this->path . DIRECTORY_SEPARATOR . "new");
+            mkdir($this->path . DIRECTORY_SEPARATOR . "tmp");
         }
 
         $this->mailSubdirs = [
@@ -75,10 +81,14 @@ class Mailbox
                 Debug::log("Adding " . $msg->getId());
                 $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
-                file_put_contents($messageFilepath, $msg->toMIMEString());
+                file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
             }
         }
 
         return $mergeStats;
+    }
+
+    public function getPath() {
+        return $this->path;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Header\DateHeader;
 
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\Utils\SourceConfig;
 
 class Message
 {
@@ -56,14 +57,13 @@ class Message
         $this->mentions = $source["mentions"] ?? [];
     }
 
-    public function toMIMEString(): string
+    public function toMIMEString(SourceConfig $sourceConfig): string
     {
 
         Debug::debug("Trying convert to MIME:");
         Debug::debug(Debug::dumpMessage($this));
         $headers = (new Headers())
             ->addMailboxListHeader('To', [ $this->thread ])
-            ->addTextHeader('Subject', $this->getSubject())
             ->addDateHeader('Date', $this->created)
             ->addIdHeader('Message-id', [ $this->getId() ])
             ->addMailboxListHeader('From', [ $this->from ]);
@@ -80,6 +80,20 @@ class Message
             ),
             ... $this->attachements
         );
+
+        if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
+            $subject = $this->getSubject();
+
+            if (count($this->attachements)) {
+                $subject = "[A] " . $subject;
+            }
+
+            $headers->addTextHeader('Subject', $subject);
+        }
+        else {
+            $headers->addTextHeader('Subject', $this->getSubject());
+        }
+
 
         $message = new MIMEMessage($headers, $body);
 
