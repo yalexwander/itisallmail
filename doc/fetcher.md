@@ -1,9 +1,8 @@
 # Fetcher
 
-`scripts/fetcher.php` is a script responding on fetching all sources,
-and putting the generated emails to mailboxes. Depending on how your
-mail client works with maildir, all new messages will be just added,
-while old ones left untouched.
+To fetch messages from all sources specified in `conf/sources.yml`
+script `scripts/fetcher.php` must be started. Fetched messages
+converted to emails and put to corresponding directories. To see debug
+output start script this way:
 
-In worst case you will have copies of the same message after fetcher
-being run. Please create an issue.
+    CIM_DEBUG=1 php scripts/fetcher.php

@@ -1,5 +1,4 @@
 # Monitor
 
-`scripts/monitor.php` is just a script which fetches new messages from
-given sources each N seconds. See `update_interval` parameter in 
-`conf/config.yml`.
+To check all sources of new messages on regular basis `scripts/monitor.php` exits. Being launched it constantly execute
+`scripts/fetcher.php` in endless loop.

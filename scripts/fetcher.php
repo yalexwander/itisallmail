@@ -35,4 +35,6 @@ foreach ($sources as $source) {
         printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
         printf("Details:\n%s\n", $e->__toString());
     }
+
+    sleep($config["update_interval"]);
 }

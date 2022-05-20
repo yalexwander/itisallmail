@@ -14,5 +14,4 @@ $phpExecutable = "php";
 while (true) {
     Debug::debug("Starting fetcher...");
     system($phpExecutable . " " . $fetcherExecutable);
-    sleep($config["update_interval"]);
 }
