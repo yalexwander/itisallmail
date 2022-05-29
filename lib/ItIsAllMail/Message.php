@@ -10,7 +10,7 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Header\DateHeader;
 
 use ItIsAllMail\Utils\Debug;
-use ItIsAllMail\Utils\SourceConfig;
+use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 
 class Message
 {
@@ -57,7 +57,7 @@ class Message
         $this->mentions = $source["mentions"] ?? [];
     }
 
-    public function toMIMEString(SourceConfig $sourceConfig): string
+    public function toMIMEString(HierarchicConfigInterface $sourceConfig): string
     {
 
         Debug::debug("Trying convert to MIME:");
@@ -114,7 +114,7 @@ class Message
         }
     }
 
-    public function getParent(): string
+    public function getParent(): ?string
     {
         return $this->parent;
     }

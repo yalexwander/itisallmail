@@ -3,12 +3,10 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
-use ItIsAllMail\Interfaces\PostDriverInterface;
-use ItIsAllMail\AbstractFetcherDriver;
+use ItIsAllMail\Utils\Config\DriverConfig;
 
 class FetchDriverFactory
 {
-
     protected $driverList = [];
 
     protected $config = [];
@@ -17,25 +15,18 @@ class FetchDriverFactory
     {
         $this->config = $config;
 
-        // to make autoloading, based on loading last requied class, work correct
-        new AbstractFetcherDriver([]);
+        foreach ($this->config["drivers"] as $driverId) {
+            $driverOpts = DriverConfig::getDriverConfig($driverId);
 
-        foreach ($this->config["drivers"] as $driverConf) {
-            $driver = null;
-            $driverOpts = [];
-
-            if (is_array($driverConf)) {
-                $driver = array_key_first($driverConf);
-                $driverOpts = $driverConf[$driver];
-            } else {
-                $driver = $driverConf;
+            if (! in_array("fetcher", $driverOpts["features"])) {
+                continue;
             }
 
             require_once __DIR__ . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
-                . $driver . DIRECTORY_SEPARATOR . "Fetcher.php";
-            $newClasses = get_declared_classes();
-            $className = end($newClasses);
-            $this->driverList[] = new $className($driverOpts);
+                . $driverId . DIRECTORY_SEPARATOR . $driverOpts["fetcher_config"]["file"];
+
+            $driverConfig = ! empty($driverOpts["fetcher_config"]) ? $driverOpts["fetcher_config"] : [];
+            $this->driverList[] = new $driverOpts["fetcher_config"]["class"]($driverConfig);
         }
     }
 

@@ -3,7 +3,7 @@
 require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
-use ItIsAllMail\Utils\SourceConfig;
+use ItIsAllMail\Utils\Config\FetcherSourceConfig;
 use ItIsAllMail\FetchDriverFactory;
 use ItIsAllMail\Mailbox;
 
@@ -14,7 +14,7 @@ $driverFactory = new FetchDriverFactory($config);
 
 foreach ($sources as $source) {
     $driver = $driverFactory->getFetchDriverForSource($source);
-    $sourceConfig = new SourceConfig($config, $driver, $source);
+    $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 
     $mailbox = new Mailbox($sourceConfig);
     $driver->setMailbox($mailbox);

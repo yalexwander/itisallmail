@@ -3,7 +3,7 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Utils\Debug;
-use ItIsAllMail\Utils\SourceConfig;
+use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 
 class Mailbox
 {
@@ -12,7 +12,7 @@ class Mailbox
     protected $localMessages;
     protected $mailSubdirs;
 
-    public function __construct(SourceConfig $sourceConfig)
+    public function __construct(HierarchicConfigInterface $sourceConfig)
     {
         $this->sourceConfig = $sourceConfig;
 
@@ -76,9 +76,8 @@ class Mailbox
         foreach ($messages as $msg) {
             $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
 
-
             if (! $this->msgExists($msg->getId())) {
-                Debug::log("Adding " . $msg->getId());
+                Debug::log("Adding " . $msg->getId() . " as " . $messageFilepath);
                 $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));

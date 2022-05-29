@@ -12,7 +12,7 @@ use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
 
-class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterface
+class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $driverCode = "habr.com";
     protected $defaultCommentDate;
@@ -147,23 +147,6 @@ class HabrComFetcher extends AbstractFetcherDriver implements FetchDriverInterfa
     protected function postToText(SimpleHtmlDom $node): string
     {
         return (new HtmlToText($node->outerHtml()))->getText();
-    }
-
-    /**
-     * Parse habr.com date representation to DateTime
-     */
-    protected function parseArticleDate(string $rawDate): \DateTimeInterface
-    {
-        // see bug https://bugs.php.net/bug.php?id=51950
-        $preDate = substr($rawDate, 0, 19) . substr($rawDate, 23, 1);
-
-        $finalDate = \DateTime::createFromFormat(\DateTime::ISO8601, $preDate);
-
-        if (! $finalDate) {
-            throw new \Exception("Failed to parse date $preDate");
-        }
-
-        return $finalDate;
     }
 
     /**

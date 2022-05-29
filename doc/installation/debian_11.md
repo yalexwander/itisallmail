@@ -2,7 +2,7 @@
 
 ## Install system dependencies:
 
-    sudo apt install php composer php7.4-xml php-yaml
+    sudo apt install php composer php7.4-xml php-yaml php-mailparse
 
 ## Install app dependencies:
 

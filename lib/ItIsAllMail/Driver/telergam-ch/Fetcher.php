@@ -13,7 +13,7 @@ use ItIsAllMail\Utils\MailHeaderProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
 
-class TelegramChannelFetcher extends AbstractFetcherDriver implements FetchDriverInterface
+class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected $driverCode = "t.me";
     protected $defaultCommentDate;

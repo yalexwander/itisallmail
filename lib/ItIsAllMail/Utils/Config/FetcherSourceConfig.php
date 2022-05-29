@@ -1,10 +1,11 @@
 <?php
 
-namespace ItIsAllMail\Utils;
+namespace ItIsAllMail\Utils\Config;
 
+use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 
-class SourceConfig {
+class FetcherSourceConfig implements HierarchicConfigInterface {
 
     protected $appConfig;
     protected $driver;
