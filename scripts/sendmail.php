@@ -11,3 +11,4 @@ $processor = new SendMailProcessor($config);
 exit(
     $processor->process(file_get_contents("php://stdin"))
 );
+

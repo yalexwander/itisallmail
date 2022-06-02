@@ -1,0 +1,29 @@
+# to send all mail throw ItIsAllMail 
+set sendmail="php scripts/sendmail.php"
+
+# your favorite editor
+set editor=nano
+
+# to make editing email headers possible
+set edit_headers = yes
+set autoedit = yes
+
+# direcory where maildirs stored
+set folder="mailboxes"
+
+# where all sent messages will be stored
+set record="mailboxes/sent"
+
+# where unfinished messages stored
+set postponed="mailboxes/postponed"
+
+mailboxes =default
+mailboxes =catalog
+
+
+# to make macro for Catalog work
+lua-source "neomutt/lua_muttrc.lua"
+
+# control macros
+
+source macro/catalog_macro

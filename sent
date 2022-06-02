@@ -13,3 +13,18 @@ Lines: 1
 
 /catalog habr
 
+From user@pc Thu Jun  2 03:15:01 2022
+Date: Thu, 2 Jun 2022 03:15:01 +0300
+From: user <user@pc>
+To: a@b.c
+Subject: x
+Message-ID: <20220602001501.knppobyetlpn7co2@pc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Status: RO
+Content-Length: 21
+Lines: 1
+
+mail.command.catalog
+

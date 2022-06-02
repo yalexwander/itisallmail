@@ -18,7 +18,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "Habr
 class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverInterface {
 
     protected $config;
-    protected $driverCode = "catalog.habr.com";
+    protected $driverCode = "habr.com";
 
     public function __construct(array $config)
     {
@@ -26,7 +26,10 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
     }
 
     public function queryCatalog(string $query, array $opts = []) : array {
-        $dom = HtmlDomParser::str_get_html(file_get_contents("/tmp/index.html"));
+        $url = $this->createUrlFromQuery($query);
+
+        $html = Browser::getAsString($url);
+        $dom = HtmlDomParser::str_get_html($html);
 
         $result = [];
 
@@ -60,7 +63,12 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
     }
 
     public function canHandleQuery(string $query, array $opts = []): bool {
+
         if (preg_match('/habr\.com/', $query)) {
+            return true;
+        }
+
+        if ($opts["catalog_default_driver"] === $this->getCode()) {
             return true;
         }
 
@@ -74,5 +82,29 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
 
     public function getCode($catalogType = null) : string {
         return $this->driverCode;
+    }
+
+    protected function createUrlFromQuery(string $query) : string {
+        if (preg_match('/^https:\/\//', $query)) {
+            return $query;
+        }
+
+        $domain = "https://habr.com";
+        $language = "ru";
+
+        if (preg_match('/^en (.+)$/', $query, $queryParam)) {
+            $query = $queryParam[0];
+            $language = "en";
+        }
+
+        if (preg_match('/^(all|top)$/', $query, $queryParam)) {
+            return $domain . "/" . $language . "/" . $queryParam[0];
+        }
+
+        if (preg_match('/^hub\/(.+)$/', $query, $queryParam)) {
+            return $domain . "/" . $language . "/hub/" . $queryParam[0];
+        }
+
+        return $domain . "/" . $language . "/" .  "top";
     }
 }
