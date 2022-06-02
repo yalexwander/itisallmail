@@ -1,18 +1,12 @@
 # macro definition
 
-macro index ,a ':lua IAM.set_sendmail_args("-c /add")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>'
+macro index ,a ':lua IAM.set_sendmail_args("-c /add")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>:lua mutt.message("Added")<enter>'
 
 # macro description
 
-# :lua IAM.set_script_editor("-b mail.command.catalog -i ")<enter>
-#  sets fake editor to add IAM catalog command to email body
-
-# m -- create new message
-# n -- NO for using postponed one (seems always need at least one postponed message to make it work correclty)
-# t -- to edit TO header
-# a@b.c<enter> -- set header to non-blank
-# s -- to edit SUBJECT header
-# x -- set header to non blank
-# :lua IAM.set_normal_editor() -- set regular editor back
-# y -- send command message
-
+#:lua IAM.set_sendmail_args("-c /add")<enter>  -- set sendmail to catalog mode
+# b -- bounce message under cursor
+# a@b.c<enter> -- set dummy recepient
+# y -- send message
+# :lua IAM.set_sendmail_args("")<enter> - set sendmail to default mode
+# :lua mutt.message("Added")<enter> - make user know command finished

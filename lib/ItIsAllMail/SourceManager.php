@@ -35,7 +35,7 @@ class SourceManager {
             array_push($sources, $source);
         }
         
-        yaml_emit_file("/tmp/brrr", $sources);
+        yaml_emit_file($this->sourcesFile, $sources);
     }
 
     protected function validateSource(array $source) {
