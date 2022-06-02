@@ -5,8 +5,8 @@ set sendmail="php scripts/sendmail.php"
 set editor=nano
 
 # to make editing email headers possible
-set edit_headers = yes
-set autoedit = yes
+set edit_headers=yes
+set autoedit=yes
 
 # direcory where maildirs stored
 set folder="mailboxes"
@@ -21,9 +21,11 @@ mailboxes =default
 mailboxes =catalog
 
 
-# to make macro for Catalog work
+# required stuff to create emails in automatic mode
 lua-source "neomutt/lua_muttrc.lua"
+
 
 # control macros
 
 source macro/catalog_macro
+source macro/add_source_macro

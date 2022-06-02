@@ -3,6 +3,7 @@
 require_once("includes.php");
 
 use ItIsAllMail\FetchDriverFactory;
+use ItIsAllMail\SourceManager;
 
 // script adds new source to list of sources
 
@@ -19,13 +20,13 @@ if (empty($url)) {
 $url = $url[0];
 
 $config = yaml_parse_file($__AppConfigFile);
-$driverFactory = new FetchDriverFactory($config);
-$sources = yaml_parse_file($__AppSourcesFile);
+$sourceManager = new SourceManager($config);
 
 $newSource = [
     "url" => $url
 ];
 
+$driverFactory = new FetchDriverFactory($config);
 $driver = null;
 if (! empty($opts["d"])) {
     $driver = $driverFactory->getFetchDriverByCode($opts["d"]);
@@ -38,11 +39,4 @@ if (! empty($opts["m"])) {
     $newSource["mailbox"] = $opts["m"];
 }
 
-foreach ($sources as $source) {
-    if ($source["url"] === $url) {
-        throw new \Exception("Source with url $url already exists");
-    }
-}
-
-array_push($sources, $newSource);
-yaml_emit_file($__AppSourcesFile, $sources);
+$sourceManager->addSource($newSource);

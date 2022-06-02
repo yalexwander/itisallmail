@@ -2,7 +2,8 @@
 
 namespace ItIsAllMail;
 
-use ItIsAllMail\CatalogActionHandler;
+use ItIsAllMail\Action\CatalogActionHandler;
+use ItIsAllMail\Action\SourceAddActionHandler;
 
 class SendMailProcessor {
     protected $config;
@@ -48,28 +49,34 @@ class SendMailProcessor {
         return $parsedMessage;
     }
 
-    public function process(string $rawMessage) : int
+    public function process(string $rawMessage, array $options) : int
     {
         $parsed = $this->parseMessage($rawMessage);
 
-        if ($this->isCommandMessage($parsed)) {
-            $this->processCommand($parsed);
+        if ($this->isCommandMessage($parsed, $options)) {
+            $this->processCommand($parsed, $options);
         }
        
         return 0;
     }
 
 
-    protected function isCommandMessage(array $parsedMsg): bool {
-        if (preg_match('/^\/(catalog|track|untrack)/', $parsedMsg["body"])) {
+    protected function isCommandMessage(array $parsedMsg, array $options): bool {
+        if (preg_match('/^\/(catalog|add)/', $parsedMsg["body"])) {
+            return true;
+        }
+
+        if (! empty($options["c"])) {
             return true;
         }
 
         return false;
     }
 
-    protected function processCommand(array $parsedMsg): int {
-        preg_match('/^\/([a-z_\-]+)( (.+))*/', $parsedMsg["body"], $matches);
+    protected function processCommand(array $parsedMsg, $options): int {
+        $commandSource = $options["c"] ?? $parsedMsg["body"];
+
+        preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
         $command = $matches[1];
         $commandArg = empty($matches[3]) ? "" : $matches[3];
 
@@ -77,6 +84,11 @@ class SendMailProcessor {
         if ($command === 'catalog') {
             $catalogActionHandler = new CatalogActionHandler($this->config);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
+        }
+        elseif ($command === 'add') {
+            $logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r($parsedMsg, true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
+            $sourceAddActionHandler = new SourceAddActionHandler($this->config);
+            $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
         }
         else {
             exit(1);

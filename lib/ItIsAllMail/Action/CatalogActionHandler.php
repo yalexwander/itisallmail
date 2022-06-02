@@ -1,10 +1,11 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Action;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\Mailbox;
 use ItIsAllMail\Utils\Config\CatalogConfig;
+use ItIsAllMail\CatalogDriverFactory;
 
 class CatalogActionHandler {
 

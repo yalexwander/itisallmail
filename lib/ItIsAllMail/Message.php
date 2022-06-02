@@ -25,7 +25,7 @@ class Message
 
     // this is list of extra headers, that can be useful in many places
     protected $extraHeaders = [
-        'mentions', 'likes', 'dislikes', 'reference'
+        'mentions', 'likes', 'dislikes', 'reference', 'uri'
     ];
 
     // maximal length of subject
@@ -43,6 +43,9 @@ class Message
     // list of message IDs this message references to
     protected $reference;
 
+    // URI that specifies link of filepath, ot unique ID that can be directly
+    // converted to message source
+    protected $uri;
 
     public function __construct(array $source)
     {
@@ -55,6 +58,7 @@ class Message
         $this->thread = $source["thread"];
         $this->attachements = $source["attachements"] ?? [];
         $this->mentions = $source["mentions"] ?? [];
+        $this->uri = $source["uri"] ?? null;
     }
 
     public function toMIMEString(HierarchicConfigInterface $sourceConfig): string
@@ -94,7 +98,6 @@ class Message
             $headers->addTextHeader('Subject', $this->getSubject());
         }
 
-
         $message = new MIMEMessage($headers, $body);
 
         return $message->toString();
@@ -129,6 +132,12 @@ class Message
         return $this->body;
     }
 
+    public function getUri(): string
+    {
+        return $this->uri;
+    }
+
+
     public function getCreated(): ?\DateTime
     {
         return $this->created;
@@ -147,11 +156,8 @@ class Message
 
     protected function setExtraHeaders(Headers $headers): void
     {
-        // if (count($this->mentions)) {
-        //     $mentionHeader = "";
-        //     foreach ($this->mentions as $mention) {
-        //         $mentionHeader .=
-        //     }
-        // }
+        if ($this->getUri() !== null) {
+            $headers->addTextHeader('x-iam-uri', $this->getUri());
+        }
     }
 }

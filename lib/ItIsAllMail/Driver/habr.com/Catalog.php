@@ -46,6 +46,9 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
             $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
             $postId = $postContainer->getAttribute("id");
 
+            $postURI = $postContainer->findOne("h2.tm-article-snippet__title>a")->getAttribute("href");
+            $postURI = "https://" . $this->getCode() . $postURI;
+
             $msg = new Message([
                 "from" => "all" . "@" . $this->getCode(),
                 "subject" => $postTitle,
@@ -53,7 +56,8 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
                 "created" => $postDate,
                 "id" => $postId . "@" . $this->getCode(),
                 "body" => $postText,
-                "thread" => $postId . "@" . $this->getCode()
+                "thread" => $postId . "@" . $this->getCode(),
+                "uri" => $postURI
             ]);
 
             $result[] = $msg;

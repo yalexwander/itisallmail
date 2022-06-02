@@ -10,4 +10,3 @@ require_once($__AppMainDir . "lib" . DIRECTORY_SEPARATOR . "autoload.php");
 $__AppConfDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR;
 
 $__AppConfigFile = $__AppConfDir . "config.yml";
-$__AppSourcesFile = $__AppConfDir . "sources.yml";
