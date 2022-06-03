@@ -13,7 +13,6 @@ class SourceAddActionHandler {
     }
 
     public function process(string $arg, array $msg) {
-        
         $source = [
             "url" => $msg["headers"]["x-iam-uri"]
         ];

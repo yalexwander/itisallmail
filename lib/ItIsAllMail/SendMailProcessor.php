@@ -85,8 +85,11 @@ class SendMailProcessor {
             $catalogActionHandler = new CatalogActionHandler($this->config);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
         }
+        if ($command === 'feed') {
+            $feedActionHandler = new FeedActionHandler($this->config);
+            $commandResult = $feedActionHandler->process($commandArg, $parsedMsg);
+        }
         elseif ($command === 'add') {
-            $logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r($parsedMsg, true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
             $sourceAddActionHandler = new SourceAddActionHandler($this->config);
             $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
         }

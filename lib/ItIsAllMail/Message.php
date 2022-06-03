@@ -132,7 +132,7 @@ class Message
         return $this->body;
     }
 
-    public function getUri(): string
+    public function getUri(): ?string
     {
         return $this->uri;
     }

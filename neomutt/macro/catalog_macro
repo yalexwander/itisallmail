@@ -1,12 +1,14 @@
 # macro definition
 
-macro index ,c ':lua IAM.set_script_editor("-b /catalog -i ")<enter>mnta@b.c<enter>sx<enter>:lua IAM.set_normal_editor()<enter>yy/mailboxes/catalog<enter><enter>'
+macro index ,c 'y/mailboxes/catalog<enter><enter>D.*<enter>$y:lua IAM.set_script_editor("-b /catalog -i ")<enter>mnta@b.c<enter>sx<enter>:lua IAM.set_normal_editor()<enter>y'
 
 # macro description
 
-# :lua IAM.set_script_editor("-b /catalog -i ")<enter>
-#  sets fake editor to add IAM catalog command to email body
-
+# :lua IAM.set_script_editor("-b /catalog -i ")<enter> -- sets fake editor to add IAM catalog command to email body
+# y -- open mailbox selection dialog
+# /mailboxes/catalog<enter> -- type the name of the catalog mailbox
+# <enter> -- sumbit the mailbox choice
+# D.*<enter>$y -- delete all messages in catalog 
 # m -- create new message
 # n -- NO for using postponed one (seems always need at least one postponed message to make it work correclty)
 # t -- to edit TO header
@@ -15,6 +17,3 @@ macro index ,c ':lua IAM.set_script_editor("-b /catalog -i ")<enter>mnta@b.c<ent
 # x -- set header to non blank
 # :lua IAM.set_normal_editor() -- set regular editor back
 # y -- send command message
-# y -- open mailbox selection dialog
-# /mailboxes/catalog<enter> -- type the name of the catalog mailbox
-# <enter> - sumbit the mailbox choice

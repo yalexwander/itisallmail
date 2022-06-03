@@ -26,9 +26,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
     }
 
     public function queryCatalog(string $query, array $opts = []) : array {
-        $url = $this->createUrlFromQuery($query);
-
-        $html = Browser::getAsString($url);
+        $html = $this->getHTMLForQuery($query);
         $dom = HtmlDomParser::str_get_html($html);
 
         $result = [];
@@ -50,7 +48,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
             $postURI = "https://" . $this->getCode() . $postURI;
 
             $msg = new Message([
-                "from" => "all" . "@" . $this->getCode(),
+                "from" => $author . "@" . $this->getCode(),
                 "subject" => $postTitle,
                 "parent" => null,
                 "created" => $postDate,
@@ -88,27 +86,32 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
         return $this->driverCode;
     }
 
-    protected function createUrlFromQuery(string $query) : string {
+    protected function getHTMLForQuery(string $query) : string {
         if (preg_match('/^https:\/\//', $query)) {
             return $query;
         }
 
         $domain = "https://habr.com";
-        $language = "ru";
+        $languages = [ "ru", "en" ];
+        $url = $domain . "/" . $languages[0] . "/" .  "all";
 
-        if (preg_match('/^en (.+)$/', $query, $queryParam)) {
-            $query = $queryParam[0];
-            $language = "en";
+        if (preg_match('/^(en|ru) (.+)$/', $query, $queryParam)) {
+            $query = $queryParam[1];
+            $languages = [ $queryParam[0] ];
         }
 
         if (preg_match('/^(all|top)$/', $query, $queryParam)) {
-            return $domain . "/" . $language . "/" . $queryParam[0];
+            $url = $domain . "/" . $languages[0] . "/" .  "top";
         }
 
         if (preg_match('/^hub\/(.+)$/', $query, $queryParam)) {
-            return $domain . "/" . $language . "/hub/" . $queryParam[0];
+            $url = $domain . "/" . $languages[0] . "/hub/" . $queryParam[0];
         }
 
-        return $domain . "/" . $language . "/" .  "top";
+        $cookies = [
+            "fl" => implode(",", $languages)
+        ];
+
+        return Browser::getAsString($url, [], $cookies);
     }
 }
