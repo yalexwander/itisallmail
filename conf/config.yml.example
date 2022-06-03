@@ -6,8 +6,10 @@ update_interval: 300
 change_subject_if_attachements: true
 download_attachements: "full"
 nickname_transformation: "readable"
+source_update_interval: 60
 between_source_update_interval: 5
-monitor_update_interval: 60
+fetcher_proxy : ""
+poster_proxy : ""
 
 drivers :
   - "habr.com"

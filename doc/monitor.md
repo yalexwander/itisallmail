@@ -1,4 +1,8 @@
 # Monitor
 
-To check all sources of new messages on regular basis `scripts/monitor.php` exits. Being launched it constantly execute
-`scripts/fetcher.php` in endless loop.
+`scripts/monitor.php` is used for regular downlading of new posts. When started it calculates next update time for each source from `conf/sources.yml` and starts `scripts/fetcher.php` to process it.
+
+
+## Usage
+
+    php scripts/monitor.php

@@ -9,18 +9,18 @@ Each option can be specified for all app, for separate driver, for separate sour
 ### mailbox_base_dir
 
 Specifies the path to directory where all maildirs will be stored. App stores all maildirs in one place.
-Can be set for: app, driver, source.
+Can be set on level of: app, driver, source.
 
 ### mailbox
 
 Default mailbox name to put all downloaded posts if mailbox is unspecified.
-Can be set for: app, driver, source.
+Can be set on level of: app, driver, source.
 
 ## catalog_mailbox
 
 Default mailbox to store temporary messages download by `catalog` action. Workflow assumes that this mailbox is cleaned each time `catalog` action called.
 
-Can be set for: app, driver, source.
+Can be set on level of: app, driver, source.
 
 
 ### download_attachements
@@ -34,14 +34,23 @@ Specifies if files attached to post, or linked from post, or somewhere else rela
 `thumb` means thumbnails for videos or big images downloaded.
 `none` means no related files will be downloaded.
 
-Can be set for: app, driver, source.
+Can be set on level of: app, driver, source.
 
-### update_interval
+### source_update_interval
 
 Allowed values: integer
 
-Update interval for monitor script in seconds. Specifies how much to sleep between fetching each source.
+Update interval for single source in seconds. Specifies how much to sleep between fetching each source. Even if sources handled by different drivers.
 
+Can be set on level of: app, driver, source.
+
+### between_source_update_interval
+
+Allowed values: integer
+
+Threshold value to prevent calling updates too often. This option sets the least number of seconds should pass before downloading next source. While it can be set on driver level, the main idea is to threshold the frequency of requests for monitor.
+
+Can be set on level of: app, driver, source.
 
 ### change_subject_if_attachements
 
@@ -65,4 +74,13 @@ Allowed values: list of strings
 
 Specifies which drivers should be loaded when calling fetcher script.
 
-Can be set for: app.
+Can be set on level of: app.
+
+
+### drivers
+
+Allowed values: list of strings
+
+Specifies which drivers should be loaded when calling fetcher script.
+
+Can be set on level of: app.
