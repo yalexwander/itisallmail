@@ -34,7 +34,7 @@ class CatalogDriverFactory
     }
 
     /**
-     * Tries to find matching catalog driver
+     * Tries to find matching catalog driver or use default from global config
      */
     public function getCatalogDriver(string $query, array $opts): CatalogDriverInterface
     {

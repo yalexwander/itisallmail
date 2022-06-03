@@ -19,7 +19,7 @@ class CatalogActionHandler {
         $this->catalogDriverFactory = new CatalogDriverFactory($config);
     }
 
-    public function process(string $arg, array $msg) {
+    public function process(string $arg, array $msg) : int {
         $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ] );
 
         $catalogConfig = new CatalogConfig($this->config, $driver, [ "mailbox" => $this->config["catalog_mailbox"] ]);

@@ -5,36 +5,40 @@ require_once("includes.php");
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\Config\FetcherSourceConfig;
 use ItIsAllMail\FetchDriverFactory;
+use ItIsAllMail\SourceManager;
 use ItIsAllMail\Mailbox;
 
-$config = yaml_parse_file($__AppConfigFile);
-$sources = yaml_parse_file($__AppSourcesFile);
+if (empty($argv[1])) {
+    print "You must specify source url/id";
+    exit(1);
+}
 
+$config = yaml_parse_file($__AppConfigFile);
+
+$sourceManager = new SourceManager($config);
 $driverFactory = new FetchDriverFactory($config);
 
-foreach ($sources as $source) {
-    $driver = $driverFactory->getFetchDriverForSource($source);
-    $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
+$source = $sourceManager->getSourceById($argv[1]);
 
-    $mailbox = new Mailbox($sourceConfig);
-    $driver->setMailbox($mailbox);
+$driver = $driverFactory->getFetchDriverForSource($source);
+$sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 
-    Debug::debug("Processing source " . $source["url"]);
+$mailbox = new Mailbox($sourceConfig);
+$driver->setMailbox($mailbox);
 
-    // We have 2 main fail points here:
-    // 1) problems with site like connection or markup changes
-    // 2) Producing emails incompatible with standards
-    try {
-        $posts = $driver->getPosts($source);
-        $mergeResult = $mailbox->mergeMessages($posts);
+Debug::debug("Processing source " . $source["url"]);
 
-        if ($mergeResult["added"]) {
-            Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getPath()}");
-        }
-    } catch (\Exception $e) {
-        printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
-        printf("Details:\n%s\n", $e->__toString());
+// We have 2 main fail points here:
+// 1) problems with site like connection or markup changes
+// 2) Producing emails incompatible with standards
+try {
+    $posts = $driver->getPosts($source);
+    $mergeResult = $mailbox->mergeMessages($posts);
+    
+    if ($mergeResult["added"]) {
+        Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getPath()}");
     }
-
-    sleep($config["update_interval"]);
+} catch (\Exception $e) {
+    printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
+    printf("Details:\n%s\n", $e->__toString());
 }

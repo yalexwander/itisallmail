@@ -22,10 +22,10 @@ class CatalogConfig implements HierarchicConfigInterface {
      * Return specified config value based on where it was set
      */
     public function getOpt(string $key) {
-        if (! empty($this->sourceConfig[$key])) {
+        if (isset($this->sourceConfig[$key])) {
             return $this->sourceConfig[$key];
         }
-        elseif (! empty($this->appConfig[$key])) {
+        elseif (isset($this->appConfig[$key])) {
             return $this->appConfig[$key];
         }
         else {

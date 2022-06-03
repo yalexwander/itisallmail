@@ -47,4 +47,14 @@ class SourceManager {
     public function getSources() {
         return yaml_parse_file($this->sourcesFile);
     }
+
+    public function getSourceById($url) {
+        foreach ($this->getSources() as $source) {
+            if ($source["url"] === $url) {
+                return $source;
+            }
+        }
+
+        throw new \Exception("Source with such id \"$url\" not found. Add it first");
+    }
 }

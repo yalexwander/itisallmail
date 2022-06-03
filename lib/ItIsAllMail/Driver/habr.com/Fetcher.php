@@ -87,7 +87,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         $threadId = $this->getThreadIdFromURL($commentsURL);
 
         $html = Browser::getAsString($commentsURL);
-        Debug::debug("Downloaded comments page");
+        Debug::debug("Downloaded comments page $commentsURL");
         $dom = HtmlDomParser::str_get_html($html);
 
         $defaultCommentDate = new \DateTime('2000-01-01');
