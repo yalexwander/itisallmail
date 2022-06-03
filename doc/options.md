@@ -84,3 +84,20 @@ Allowed values: list of strings
 Specifies which drivers should be loaded when calling fetcher script.
 
 Can be set on level of: app.
+
+### fetcher_proxy
+
+Allowed values: string
+
+If blank string, no proxy program for fetching sources used. Otherwise you can specify for example "torsocks" or "proxychains".
+
+Can be set on level of: app, driver, source.
+
+
+### poster_proxy
+
+Allowed values: string
+
+If blank string, no proxy program for posting used. Otherwise you can specify for example "torsocks" or "proxychains"
+
+Can be set on level of: app, driver, source.
