@@ -17,16 +17,22 @@ set record="mailboxes/sent"
 # where unfinished messages stored
 set postponed="mailboxes/postponed"
 
+# !!! EDIT THIS IF YOU ADD ANOTHER MAILBOXES !!!
 mailboxes =default
 mailboxes =catalog
 
-
 # required stuff to create emails in automatic mode
-lua-source "neomutt/lua_muttrc.lua"
+lua-source "neomutt/config/lua_muttrc.lua"
 
+# look and feel
+source "colors"
+source "display"
+
+# custom keybindings
+source "keybindings"
 
 # control macros
 
-source macro/catalog_macro
-source macro/add_source_macro
-source macro/delete_source_macro
+source "macro/catalog_macro"
+source "macro/add_source_macro"
+source "macro/delete_source_macro"

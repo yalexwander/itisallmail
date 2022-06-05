@@ -1,0 +1,24 @@
+macro index <Left> <previous-undeleted>
+macro index <Right> <next-undeleted>
+
+# scroll with all kind of inserts
+bind pager \060 next-line
+bind pager <Insert> next-line
+
+bind pager <Delete> exit
+
+
+### Navigation from pager ###
+
+# first exit pager to make <home>/<end>/PgUp/PgDown work
+macro pager <home> 'q<home><enter>'
+macro pager <end> 'q<end><enter>'
+macro pager <PageDown> 'q<PageDown><enter>'
+macro pager <PageUp> 'q<PageUp><enter>'
+
+
+# ' for next message with marking it as read
+macro pager,index \' '<tab>'
+
+# ' for next subthread with marking it as read
+macro pager,index \" '<Esc>r'

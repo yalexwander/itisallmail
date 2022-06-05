@@ -1,6 +1,6 @@
 # macro definition
 
-macro index ,c 'y/mailboxes/catalog<enter><enter>D.*<enter>$y:lua IAM.set_script_editor("-b /catalog -i ")<enter>mnta@b.c<enter>sx<enter>:lua IAM.set_normal_editor()<enter>y'
+macro index ,c 'y/mailboxes/catalog<enter><enter>D.*<enter>$y:lua IAM.set_script_editor("-b /catalog -i ")<enter>mnta@b.c<enter>sx<enter>:lua IAM.set_normal_editor()<enter>ey'
 
 # macro description
 
