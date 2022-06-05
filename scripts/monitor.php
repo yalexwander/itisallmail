@@ -32,7 +32,8 @@ class Monitor {
             $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
 
             $joinedConfig = new FetcherSourceConfig($this->config, $driver, $source);
-            $sourceUpdateInterval = intval($joinedConfig->getOpt("source_update_interval"));
+            $sourceUpdateInterval = intval($joinedConfig->getOpt("source_update_interval"))
+                + $driver->getAdditionalDelayBeforeNextFetch($source);
 
             $betweenSourceUpdateInterval = (count($activeSources) + 1) * intval(
                 $joinedConfig->getOpt("between_source_update_interval")

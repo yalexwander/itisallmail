@@ -7,7 +7,6 @@ use ItIsAllMail\Mailbox;
 
 class AbstractFetcherDriver
 {
-
     protected $opts;
     protected $driverCode;
     protected $mailbox;
@@ -69,6 +68,11 @@ class AbstractFetcherDriver
         Storage::set($this->driverCode, $threadId . "_root_msg", $msgId);
     }
 
+    /**
+     * For some cases fetcher need to have access to mailbox, for example when
+     * source posts change id or oder on site, but logically it is the same
+     * posts that already was downloaded.
+     */
     public function setMailbox(Mailbox $m)
     {
         $this->mailbox = $m;
@@ -83,9 +87,15 @@ class AbstractFetcherDriver
         return $this->mailbox;
     }
 
-
     protected function messageWithGivenIdAlreadyDownloaded(string $id): bool
     {
         return $this->getMailbox()->msgExists($id);
+    }
+
+    /**
+     * Can be used to add time before next fetch in monitor
+     */
+    public function getAdditionalDelayBeforeNextFetch(array $source) : int {
+        return 0;
     }
 }
