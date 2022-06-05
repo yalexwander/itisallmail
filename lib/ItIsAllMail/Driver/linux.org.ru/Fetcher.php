@@ -55,7 +55,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
                     continue;
                 }
 
-                $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
+                $author = MailHeaderProcessor::sanitizeNonLatinAddress($author);
 
                 $created = $this->getPostDate($postNode);
 

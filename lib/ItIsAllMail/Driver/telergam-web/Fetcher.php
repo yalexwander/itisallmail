@@ -44,7 +44,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
         foreach ($dom->findMulti("div.tgme_widget_message") as $postNode) {
             $author = $postNode->findOneOrFalse(".tgme_widget_message_owner_name")->text();
-            $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
+            $author = MailHeaderProcessor::sanitizeNonLatinAddress($author);
 
             $postText = $this->getPostText($postNode);
 
@@ -75,6 +75,8 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             if (! $this->messageWithGivenIdAlreadyDownloaded($postId . "@" . $this->getCode())) {
                 $this->processPostAttachements($postNode, $msg);
             }
+
+            print Debug::dumpMessage($msg);
 
             $posts[] = $msg;
         }
@@ -111,7 +113,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             [
                 "from" => $author . "@" . $this->getCode(),
                 "subject" => $title,
-                "parent" => $parent . "@" . $this->getCode(),
+                "parent" => null,
                 "created" => $created,
                 "id" => $postId . "@" . $this->getCode(),
                 "body" => $postText,
@@ -125,8 +127,13 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     public function getPostText($node): string
     {
         $textNode = $node->findOneOrFalse("div.tgme_widget_message_text");
+        $rawHtml = $textNode->innerHtml();
+
+        // fix emojis and other underscored text
+        $rawHtml = preg_replace('/(<i [^>]*>)|(<\/i>)/', '', $rawHtml);
+        
         if ($textNode) {
-            return (new HtmlToText($textNode->innerHtml()))->getText();
+            return (new HtmlToText($rawHtml))->getText();
         }
         else {
             return "";

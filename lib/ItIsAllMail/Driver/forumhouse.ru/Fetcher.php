@@ -45,7 +45,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
                     continue;
                 }
 
-                $author = MailHeaderProcessor::sanitizeCyrillicAddress($author);
+                $author = MailHeaderProcessor::sanitizeNonLatinAddress($author);
 
                 $postId = $threadId . "#" . substr($post->getAttribute("id"), 5);
 

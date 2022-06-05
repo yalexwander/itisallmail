@@ -39,7 +39,7 @@ class MailHeaderProcessor
      * Make at least something readable and compatible with RFC2822 from
      * nickname typical for ru-net
      */
-    public static function sanitizeCyrillicAddress(string $input): string
+    public static function sanitizeNonLatinAddress(string $input): string
     {
         return preg_replace(
             '/[^A-Za-z0-9_\#\@\-]+/',
