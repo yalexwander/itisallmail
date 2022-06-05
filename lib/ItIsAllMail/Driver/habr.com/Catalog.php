@@ -100,17 +100,19 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
             $languages = [ $queryParam[0] ];
         }
 
-        if (preg_match('/^(all|top)$/', $query, $queryParam)) {
-            $url = $domain . "/" . $languages[0] . "/" .  "top";
+        if (preg_match('/^(all|top|news)$/', $query, $queryParam)) {
+            $url = $domain . "/" . $languages[0] . "/" .  $queryParam[0];
         }
 
         if (preg_match('/^hub\/(.+)$/', $query, $queryParam)) {
-            $url = $domain . "/" . $languages[0] . "/hub/" . $queryParam[0];
+            $url = $domain . "/" . $languages[0] . "/" . $queryParam[0];
         }
 
         $cookies = [
             "fl" => implode(",", $languages)
         ];
+
+        $logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r([$url, $cookies], true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
 
         return Browser::getAsString($url, [], $cookies);
     }
