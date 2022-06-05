@@ -27,6 +27,22 @@ class Browser
             )
         ]);
 
-        return $client->request('GET', $url)->getBody();
+        $data = '';
+        if (getenv('CIM_DEBUG_BROWSER_CACHE')) {
+            if (file_exists(getenv('CIM_DEBUG_BROWSER_CACHE'))) {
+                $data = file_get_contents(getenv('CIM_DEBUG_BROWSER_CACHE'));
+            }
+
+            return $data;
+        }
+
+        $data = $client->request('GET', $url)->getBody();
+
+        if (getenv('CIM_DEBUG_BROWSER_CACHE')) {
+            file_put_contents(getenv('CIM_DEBUG_BROWSER_CACHE'), $data);
+        }
+
+
+        return $data;
     }
 }
