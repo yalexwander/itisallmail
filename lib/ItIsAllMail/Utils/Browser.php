@@ -19,9 +19,12 @@ class Browser
     public static function getAsString(string $url, array $headers = [], array $cookies = []): ?string
     {
         $client = new Client([
-            'headers' => [
-                'User-Agent' => self::$userAgents[0],
-            ]
+            'headers' => array_merge(
+                [
+                    'User-Agent' => self::$userAgents[0],
+                ],
+                $headers
+            )
         ]);
 
         return $client->request('GET', $url)->getBody();
