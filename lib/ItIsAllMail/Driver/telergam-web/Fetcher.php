@@ -76,8 +76,6 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
                 $this->processPostAttachements($postNode, $msg);
             }
 
-            print Debug::dumpMessage($msg);
-
             $posts[] = $msg;
         }
 
