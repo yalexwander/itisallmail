@@ -4,9 +4,9 @@ macro index ,a ':lua IAM.set_sendmail_args("-c /add")<enter>ba@b.c<enter>y:lua I
 
 # macro description
 
-#:lua IAM.set_sendmail_args("-c /add")<enter>  -- set sendmail to catalog mode
+#:lua IAM.set_sendmail_args("-c /add")<enter>  -- set sendmail to add mode
 # b -- bounce message under cursor
 # a@b.c<enter> -- set dummy recepient
 # y -- send message
-# :lua IAM.set_sendmail_args("")<enter> - set sendmail to default mode
-# :lua mutt.message("Added")<enter> - make user know command finished
+# :lua IAM.set_sendmail_args("")<enter> -- set sendmail to default mode
+# :lua mutt.message("Added")<enter> -- make user know command finished

@@ -4,6 +4,7 @@ namespace ItIsAllMail;
 
 use ItIsAllMail\Action\CatalogActionHandler;
 use ItIsAllMail\Action\SourceAddActionHandler;
+use ItIsAllMail\Action\SourceDeleteActionHandler;
 
 class SendMailProcessor {
     protected $config;
@@ -60,9 +61,8 @@ class SendMailProcessor {
         return 0;
     }
 
-
     protected function isCommandMessage(array $parsedMsg, array $options): bool {
-        if (preg_match('/^\/(catalog|add)/', $parsedMsg["body"])) {
+        if (preg_match('/^\/(catalog|add|delete|feed|)/', $parsedMsg["body"])) {
             return true;
         }
 
@@ -73,6 +73,10 @@ class SendMailProcessor {
         return false;
     }
 
+    /**
+     * Adding new commands remember, that this dunction must return 0 on
+     * success, because this exit code will be passed as sendmail exit code
+     */
     protected function processCommand(array $parsedMsg, $options): int {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
@@ -85,7 +89,7 @@ class SendMailProcessor {
             $catalogActionHandler = new CatalogActionHandler($this->config);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
         }
-        if ($command === 'feed') {
+        elseif ($command === 'feed') {
             $feedActionHandler = new FeedActionHandler($this->config);
             $commandResult = $feedActionHandler->process($commandArg, $parsedMsg);
         }
@@ -93,7 +97,12 @@ class SendMailProcessor {
             $sourceAddActionHandler = new SourceAddActionHandler($this->config);
             $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
         }
+        elseif ($command === 'delete') {
+            $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->config);
+            $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
+        }
         else {
+            print "Wrong command $command" . "\n";
             exit(1);
         }
 

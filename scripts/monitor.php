@@ -27,8 +27,6 @@ class Monitor {
         $newMap = [];
         $newSources = $this->sourceManager->getSources();
 
-        print_r($oldMap);
-
         $activeSources = [];
         foreach ($newSources as $source) {
             $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);

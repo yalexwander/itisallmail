@@ -17,13 +17,13 @@ class SourceManager {
             . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
     }
 
-    public function addSource(array $source) {
+    public function addSource(array $source) : int {
         $this->validateSource($source);
 
         $sources = $this->getSources();
 
         $sourceExists = false;
-        foreach ($sources as &$existingSource) {
+        foreach ($sources as $existingSource) {
             if ($existingSource["url"] === $source["url"]) {
                 $existingSource = $source;
                 $sourceExists = true;
@@ -33,9 +33,25 @@ class SourceManager {
 
         if (! $sourceExists) {
             array_push($sources, $source);
+            yaml_emit_file($this->sourcesFile, $sources);
+            return 1;
+        } else {
+            return 0;
         }
-        
-        yaml_emit_file($this->sourcesFile, $sources);
+    }
+
+    public function deleteSource(array $source) : int {
+        $sources = $this->getSources();
+
+        foreach ($sources as $sId => $existingSource) {
+            if ($existingSource["url"] === $source["url"]) {
+                unset($sources[$sId]);
+                yaml_emit_file($this->sourcesFile, $sources);
+                return 1;
+            }
+        }
+
+        return 0;
     }
 
     protected function validateSource(array $source) {
@@ -55,6 +71,6 @@ class SourceManager {
             }
         }
 
-        throw new \Exception("Source with such id \"$url\" not found. Add it first");
+        return null;
     }
 }

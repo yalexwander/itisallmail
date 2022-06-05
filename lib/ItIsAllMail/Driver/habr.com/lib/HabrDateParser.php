@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Driver;
 
-class DateParser {
+class HabrDateParser {
 
     public static function parseArticleDate(string $rawDate): \DateTimeInterface
     {

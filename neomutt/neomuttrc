@@ -29,3 +29,4 @@ lua-source "neomutt/lua_muttrc.lua"
 
 source macro/catalog_macro
 source macro/add_source_macro
+source macro/delete_source_macro

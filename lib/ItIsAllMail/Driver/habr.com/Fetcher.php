@@ -59,7 +59,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
         $postId = $this->getThreadIdFromURL($source["url"]);
 
-        $this->defaultCommentDate = DateParser::parseArticleDate($postDate);
+        $this->defaultCommentDate = HabrDateParser::parseArticleDate($postDate);
 
         $msg = new Message([
             "from" => $author . "@" . $this->getCode(),
@@ -68,7 +68,8 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
             "created" => $this->defaultCommentDate,
             "id" => $postId . "@" . $this->getCode(),
             "body" => $postText,
-            "thread" => $postId . "@" . $this->getCode()
+            "thread" => $postId . "@" . $this->getCode(),
+            "uri" => $source["url"]
         ]);
 
         $this->setLastURLVisited($source["url"], $source["url"]);
@@ -124,7 +125,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 $commentTitle = preg_replace("/[\r\n]/", " ", $commentTextWidget->text());
                 $commentBody = $this->postToText($commentTextWidget);
                 $commentAuthor = $node->findOne(".tm-user-info__username")->text();
-                $commentDate = DateParser::parseCommentDate(
+                $commentDate = HabrDateParser::parseCommentDate(
                     $node->findOne(".tm-comment-thread__comment-link")->text()
                 );
             }
@@ -136,7 +137,8 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 "created" => $commentDate,
                 "id" => $postId . "@" . $this->getCode(),
                 "body" => $commentBody,
-                "thread" => $threadId  . "@" . $this->getCode()
+                "thread" => $threadId  . "@" . $this->getCode(),
+                "uri" => $source["url"] . "#comment_" . $postId
             ]);
         }
 

@@ -20,6 +20,10 @@ $driverFactory = new FetchDriverFactory($config);
 
 $source = $sourceManager->getSourceById($argv[1]);
 
+if ($source === null) {
+    throw new \Exception("Source with url $argv[1] not found. Add it first");
+}
+
 $driver = $driverFactory->getFetchDriverForSource($source);
 $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 
