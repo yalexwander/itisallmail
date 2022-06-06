@@ -2,12 +2,12 @@
 
 namespace ItIsAllMail\Interfaces;
 
-interface PostDriverInterface
+interface PosterDriverInterface
 {
     /**
-     * Must return true if you think your driver must handle this URL
+     * Must return true if you think your driver must handle given message
      */
-    public function matchURL(string $url): bool;
+    public function canProcessMessage(array $msg): bool;
 
     /**
      * Must return simple code like "habr.com" or "reddit.com", expecting it
@@ -23,5 +23,5 @@ interface PostDriverInterface
      *   "body"   => Message body
      *   "attachements" => array of attachements
      */
-    public function doPost(array $params): array;
+    public function post(array $params): array;
 }

@@ -8,7 +8,16 @@ use ItIsAllMail\SourceManager;
 
 class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface {
 
-    public function mapThreadToSource(array $msg) : ?array
+    public function canMapThis(array $msg, $mapType = null) : ?bool
+    {
+        if (preg_match($msg["headers"]["to"], "@habr.com")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function mapMessageToSource(array $msg) : ?array
     {
         $msgUrl = null;
 
@@ -25,4 +34,5 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
         
         return $source;
     }
+
 }

@@ -21,7 +21,7 @@ class SourceDeleteActionHandler {
         $mapperFactory = new AddressMapperFactory($this->config);
         $addressMapper = $mapperFactory->findMapper($msg);
         
-        $source = $addressMapper->mapThreadToSource($msg);
+        $source = $addressMapper->mapMessageToSource($msg);
 
         if ($source === null) {
             return 1;

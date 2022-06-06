@@ -10,5 +10,7 @@ interface AddressMapperInterface {
      
       $msg - is an array with parsed email message
      */
-    public function mapThreadToSource(array $msg) : ?array;
+    public function mapMessageToSource(array $msg) : ?array;
+
+    public function canMapThis(array $msg, $mapType = null) : ?bool;
 }

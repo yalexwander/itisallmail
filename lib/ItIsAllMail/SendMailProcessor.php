@@ -5,6 +5,7 @@ namespace ItIsAllMail;
 use ItIsAllMail\Action\CatalogActionHandler;
 use ItIsAllMail\Action\SourceAddActionHandler;
 use ItIsAllMail\Action\SourceDeleteActionHandler;
+use ItIsAllMail\Action\PostActionHandler;
 
 class SendMailProcessor {
     protected $config;
@@ -62,7 +63,7 @@ class SendMailProcessor {
     }
 
     protected function isCommandMessage(array $parsedMsg, array $options): bool {
-        if (preg_match('/^\/(catalog|add|delete|feed|)/', $parsedMsg["body"])) {
+        if (preg_match('/^\/([a-z]+)/', $parsedMsg["body"])) {
             return true;
         }
 
@@ -100,6 +101,10 @@ class SendMailProcessor {
         elseif ($command === 'delete') {
             $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->config);
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
+        }
+        elseif ($command === 'post') {
+            $postActionHandler = new PostActionHandler($this->config);
+            $commandResult = $postActionHandler->process($commandArg, $parsedMsg);
         }
         else {
             print "Wrong command $command" . "\n";

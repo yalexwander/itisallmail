@@ -36,7 +36,11 @@ class AddressMapperFactory {
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["mapper_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["mapper_config"]) ? $driverOpts["mapper_config"] : [];
-            return new $driverOpts["mapper_config"]["class"]($driverConfig);
+            $mapper = new $driverOpts["mapper_config"]["class"]($driverConfig);
+
+            if ($mapper->canMapThis($msg)) {
+                return $mapper;
+            }
         }
 
         throw new \Exception("Mapper for code $driverCode not found");

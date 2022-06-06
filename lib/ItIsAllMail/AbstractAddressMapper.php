@@ -13,8 +13,14 @@ class AbstractAddressMapper implements AddressMapperInterface {
         $this->config = $config;
     }
 
-    public function mapThreadToSource(array $msg) : ?array
+    public function mapMessageToSource(array $msg) : ?array
     {
         throw new \Exception("Not implemented");
     }
+
+    public function canMapThis(array $msg) : ?bool
+    {
+        throw new \Exception("Not implemented");
+    }
+
 }
