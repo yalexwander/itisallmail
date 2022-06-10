@@ -6,24 +6,33 @@ use ItIsAllMail\PosterDriverFactory;
 use ItIsAllMail\PostingQueue;
 
 class PostActionHandler {
-    protected $config;
-    protected $posterDriverFactory;
+    protected $appConfig;
 
-    public function __construct($config)
+    public function __construct($appConfig)
     {
-        $this->config = $config;
-        $this->posterDriverFactory = new PosterDriverFactory($config);
+        $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, array $msg) : int {
-        $poster = $this->posterDriverFactory->findPoster($msg);
-
+    public function process(string $arg, string $rawMessage, array $msg) : int {
         $result = 1;
-        if (! empty($this->config["use_posting_queue"])) {
-            $queue = new PostingQueue($this->config);
-            $result = $queue->add($msg);
-        } else {       
-            $result = $poster->post($msg, [ "arg" => $arg ]);
+
+        if (! empty($this->appConfig["use_posting_queue"])) {
+            $queue = new PostingQueue($this->appConfig);
+            $result = $queue->add($rawMessage);
+        } else {
+            $transferFilename = tempnam(sys_get_temp_dir(), "iam-post-");
+            file_put_contents($transferFilename, $rawMessage);
+
+            $execString = "php \""  . __DIR__ . DIRECTORY_SEPARATOR
+                . ".." . DIRECTORY_SEPARATOR
+                . ".." . DIRECTORY_SEPARATOR
+                . ".." . DIRECTORY_SEPARATOR
+                . "scripts" . DIRECTORY_SEPARATOR . "poster.php\""
+                . " -m \"" . $transferFilename . "\"";
+            
+            system($execString);
+            unlink($transferFilename);
+            
         }
 
         exit(1);

@@ -22,9 +22,6 @@ class AddressMapperFactory {
     }
     
     public function findMapper(array $msg) : AddressMapperInterface {
-        $parts = explode("@", $msg["headers"]["to"]);
-        $driverCode = array_pop($parts);
-
         foreach ($this->config["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 
@@ -43,6 +40,6 @@ class AddressMapperFactory {
             }
         }
 
-        throw new \Exception("Mapper for code $driverCode not found");
+        throw new \Exception("Eligible mapper not found for address " . $msg["headers"]["to"]);
     }
 }

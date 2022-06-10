@@ -10,7 +10,8 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
 
     public function canMapThis(array $msg, $mapType = null) : ?bool
     {
-        if (preg_match($msg["headers"]["to"], "@habr.com")) {
+        $uri = $msg["headers"]["x-iam-uri"] ?? $msg["referenced_message"]["headers"]["x-iam-uri"];
+        if (preg_match('/habr\.com\//' ,$uri)) {
             return true;
         }
 
@@ -19,18 +20,20 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
 
     public function mapMessageToSource(array $msg) : ?array
     {
-        $msgUrl = null;
+        $uri = $msg["headers"]["x-iam-uri"] ?? $msg["referenced_message"]["headers"]["x-iam-uri"];
+        $sourceManager = new SourceManager($this->config);
 
-        print $msg["headers"]["x-iam-uri"] . "\n";
-
-        if (preg_match('/(https:\/\/habr.com\/[^#]+)/', $msg["headers"]["x-iam-uri"], $matches)) {
+        if (
+            ! empty($uri) and
+            preg_match('/(https:\/\/habr.com\/[^#]+)/', $uri, $matches)
+        ) {
             $msgUrl = $matches[0];
+            $source = $sourceManager->getSourceById($msgUrl);
         } else {
             return null;
         }
 
-        $sourceManager = new SourceManager($this->config);
-        $source = $sourceManager->getSourceById($msgUrl);
+        print_r($source);exit(1);
         
         return $source;
     }

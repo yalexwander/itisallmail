@@ -18,7 +18,7 @@ class AbstractAddressMapper implements AddressMapperInterface {
         throw new \Exception("Not implemented");
     }
 
-    public function canMapThis(array $msg) : ?bool
+    public function canMapThis(array $msg, $mapType = null) : ?bool
     {
         throw new \Exception("Not implemented");
     }

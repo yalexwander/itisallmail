@@ -1,0 +1,6 @@
+macro pager,index ,r ':lua IAM.set_sendmail_args("-c /post")<enter>fta<enter>y'
+
+
+
+# r -- reply on message under cursor
+# y -- yes to include replied message in reply

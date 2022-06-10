@@ -28,6 +28,11 @@ lua-source "neomutt/config/lua_muttrc.lua"
 source "colors"
 source "display"
 
+# need to sending work
+set mime_forward=yes
+
+# ah, I was going to suggest the opposite: mime_forward=no (so you get a plain text copy), combined with `unignore X-CRM-ticket-id` so that the header shows up in the forwarded text
+
 # custom keybindings
 source "keybindings"
 

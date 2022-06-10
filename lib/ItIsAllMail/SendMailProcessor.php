@@ -6,6 +6,7 @@ use ItIsAllMail\Action\CatalogActionHandler;
 use ItIsAllMail\Action\SourceAddActionHandler;
 use ItIsAllMail\Action\SourceDeleteActionHandler;
 use ItIsAllMail\Action\PostActionHandler;
+use ItIsAllMail\Utils\EmailParser;
 
 class SendMailProcessor {
     protected $config;
@@ -15,48 +16,14 @@ class SendMailProcessor {
         $this->config = $config;
     }
 
-    protected function parseMessage(string $rawMessage) : array
-    {
-        $mime = mailparse_msg_create();
 
-        if (! mailparse_msg_parse($mime, $rawMessage)) {
-            exit(1);
-        }
-
-        $msgStructure = mailparse_msg_get_structure($mime);
-
-        $parsedMessage = [
-            "headers"      => [],
-            "attachements" => [],
-            "body"         => ""
-        ];
-
-        foreach ($msgStructure as $partId) {
-            $partResource = mailparse_msg_get_part($mime, $partId);
-            $partContent = mailparse_msg_get_part_data($partResource);
-
-            if (! count($parsedMessage["headers"])) {
-                $parsedMessage["headers"] = $partContent["headers"];
-
-                $parsedMessage["body"] = substr(
-                    $rawMessage,
-                    $partContent["starting-pos-body"],
-                    $partContent["ending-pos-body"] - $partContent["starting-pos-body"]
-                );
-            }
-        }
-
-        mailparse_msg_free($mime);
-
-        return $parsedMessage;
-    }
 
     public function process(string $rawMessage, array $options) : int
     {
-        $parsed = $this->parseMessage($rawMessage);
+        $parsed = EmailParser::parseMessage($rawMessage);
 
         if ($this->isCommandMessage($parsed, $options)) {
-            $this->processCommand($parsed, $options);
+            $this->processCommand($rawMessage, $parsed, $options);
         }
        
         return 0;
@@ -78,7 +45,7 @@ class SendMailProcessor {
      * Adding new commands remember, that this dunction must return 0 on
      * success, because this exit code will be passed as sendmail exit code
      */
-    protected function processCommand(array $parsedMsg, $options): int {
+    protected function processCommand(string $rawMessage, array $parsedMsg, $options): int {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
         preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
@@ -104,7 +71,7 @@ class SendMailProcessor {
         }
         elseif ($command === 'post') {
             $postActionHandler = new PostActionHandler($this->config);
-            $commandResult = $postActionHandler->process($commandArg, $parsedMsg);
+            $commandResult = $postActionHandler->process($commandArg, $rawMessage, $parsedMsg);
         }
         else {
             print "Wrong command $command" . "\n";
