@@ -4,8 +4,8 @@ namespace ItIsAllMail\Action;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\Utils\Config\CatalogConfig;
-use ItIsAllMail\CatalogDriverFactory;
-use ItIsAllMail\AddressMapperFactory;
+use ItIsAllMail\Factory\CatalogDriverFactory;
+use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\SourceManager;
 
 class SourceDeleteActionHandler {

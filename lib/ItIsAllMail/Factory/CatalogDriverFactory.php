@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\AbstractFetcherDriver;
@@ -25,7 +25,7 @@ class CatalogDriverFactory
                 continue;
             }
 
-            require_once __DIR__ . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+            require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["catalog_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["catalog_config"]) ? $driverOpts["catalog_config"] : [];

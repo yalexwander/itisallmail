@@ -5,7 +5,7 @@ namespace ItIsAllMail\Action;
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\Mailbox;
 use ItIsAllMail\Utils\Config\CatalogConfig;
-use ItIsAllMail\CatalogDriverFactory;
+use ItIsAllMail\Factory\CatalogDriverFactory;
 
 class CatalogActionHandler {
 

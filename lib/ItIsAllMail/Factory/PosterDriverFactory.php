@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Utils\Config\DriverConfig;
@@ -25,7 +25,7 @@ class PosterDriverFactory {
                 continue;
             }
 
-            require_once __DIR__ . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+            require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["poster_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["poster_config"]) ? $driverOpts["poster_config"] : [];

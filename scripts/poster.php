@@ -4,7 +4,7 @@ require_once("includes.php");
 
 use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Utils\EmailParser;
-use ItIsAllMail\AddressMapperFactory;
+use ItIsAllMail\Factory\AddressMapperFactory;
 
 $appConfig = yaml_parse_file($__AppConfigFile);
 

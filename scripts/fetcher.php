@@ -4,7 +4,7 @@ require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\Config\FetcherSourceConfig;
-use ItIsAllMail\FetchDriverFactory;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Mailbox;
 
@@ -16,7 +16,7 @@ if (empty($argv[1])) {
 $config = yaml_parse_file($__AppConfigFile);
 
 $sourceManager = new SourceManager($config);
-$driverFactory = new FetchDriverFactory($config);
+$driverFactory = new FetcherDriverFactory($config);
 
 $source = $sourceManager->getSourceById($argv[1]);
 

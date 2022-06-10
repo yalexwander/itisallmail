@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Action;
 
-use ItIsAllMail\PosterDriverFactory;
+use ItIsAllMail\Factory\PosterDriverFactory;
 use ItIsAllMail\PostingQueue;
 
 class PostActionHandler {

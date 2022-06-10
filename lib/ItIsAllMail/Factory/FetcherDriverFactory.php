@@ -1,11 +1,11 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\Utils\Config\DriverConfig;
 
-class FetchDriverFactory
+class FetcherDriverFactory
 {
     protected $driverList = [];
 
@@ -22,7 +22,7 @@ class FetchDriverFactory
                 continue;
             }
 
-            require_once __DIR__ . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+            require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["fetcher_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["fetcher_config"]) ? $driverOpts["fetcher_config"] : [];

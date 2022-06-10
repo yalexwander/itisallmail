@@ -31,7 +31,6 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
 
 
     public function post(array $msg, array $opts = []) : array {
-        print_r($opts);die();
-
+        
     }
 }

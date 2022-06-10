@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\Utils\Config\DriverConfig;
@@ -29,7 +29,7 @@ class AddressMapperFactory {
                 continue;
             }
 
-            require_once __DIR__ . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+            require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["mapper_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["mapper_config"]) ? $driverOpts["mapper_config"] : [];

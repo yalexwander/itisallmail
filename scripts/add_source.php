@@ -2,7 +2,7 @@
 
 require_once("includes.php");
 
-use ItIsAllMail\FetchDriverFactory;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 
 // script adds new source to list of sources
@@ -26,7 +26,7 @@ $newSource = [
     "url" => $url
 ];
 
-$driverFactory = new FetchDriverFactory($config);
+$driverFactory = new FetcherDriverFactory($config);
 $driver = null;
 if (! empty($opts["d"])) {
     $driver = $driverFactory->getFetchDriverByCode($opts["d"]);

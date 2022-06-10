@@ -7,7 +7,7 @@ require_once("includes.php");
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Utils\Config\FetcherSourceConfig;
-use ItIsAllMail\FetchDriverFactory;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 
 class Monitor {
 
@@ -17,7 +17,7 @@ class Monitor {
 
     public function __construct(array $config)
     {
-        $this->fetchDriverFactory = new FetchDriverFactory($config);
+        $this->fetchDriverFactory = new FetcherDriverFactory($config);
         $this->sourceManager = new SourceManager($config);
         $this->config = $config;
     }
