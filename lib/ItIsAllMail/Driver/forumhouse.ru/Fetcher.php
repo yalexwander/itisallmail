@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
-use ItIsAllMail\AbstractFetcherDriver;
+use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Debug;

@@ -6,7 +6,7 @@ use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
-use ItIsAllMail\AbstractPosterDriver;
+use ItIsAllMail\DriverCommon\AbstractPosterDriver;
 use ItIsAllMail\PostingQueue;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAuth.php");

@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
-use ItIsAllMail\AbstractFetcherDriver;
+use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\Utils\Config\DriverConfig;
 
 class CatalogDriverFactory

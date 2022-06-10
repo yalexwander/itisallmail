@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail;
+namespace ItIsAllMail\DriverCommon;
 
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 

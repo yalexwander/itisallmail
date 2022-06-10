@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
-use ItIsAllMail\AbstractCatalogDriver;
+use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
 
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;

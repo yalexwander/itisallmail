@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Driver;
 
-use ItIsAllMail\AbstractAddressMapper;
+use ItIsAllMail\DriverCommon\AbstractAddressMapper;
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\SourceManager;
 
