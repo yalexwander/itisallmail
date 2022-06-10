@@ -6,7 +6,7 @@ require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\SourceManager;
-use ItIsAllMail\Utils\Config\FetcherSourceConfig;
+use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 
 class Monitor {

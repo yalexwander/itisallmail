@@ -4,7 +4,8 @@ namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
-use ItIsAllMail\Utils\Config\DriverConfig;
+use ItIsAllMail\Config\DriverConfig;
+use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
 
 class CatalogDriverFactory
 {

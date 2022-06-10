@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Action;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
-use ItIsAllMail\Utils\Config\CatalogConfig;
+use ItIsAllMail\Config\CatalogConfig;
 use ItIsAllMail\Factory\CatalogDriverFactory;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\SourceManager;

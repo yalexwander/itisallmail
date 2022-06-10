@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
-use ItIsAllMail\Utils\Config\DriverConfig;
+use ItIsAllMail\Config\DriverConfig;
 
 class FetcherDriverFactory
 {

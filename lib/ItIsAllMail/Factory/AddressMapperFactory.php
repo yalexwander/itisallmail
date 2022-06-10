@@ -3,7 +3,7 @@
 namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\AddressMapperInterface;
-use ItIsAllMail\Utils\Config\DriverConfig;
+use ItIsAllMail\Config\DriverConfig;
 
 /**
  * This factory does not load all mappers, because it is almost useless for

@@ -1,6 +1,6 @@
 <?php
 
-namespace ItIsAllMail\Utils\Config;
+namespace ItIsAllMail\Config;
 
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Interfaces\CatalogDriverInterface;

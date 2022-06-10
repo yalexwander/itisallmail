@@ -12,6 +12,13 @@ use Symfony\Component\Mime\Header\DateHeader;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 
+/**
+ * This class represents internal message. It does not maps directly to MIME
+ * or any other data structure. It is just a bridge to define features and
+ * pieces of information you can found in modern messengers and how it can be
+ * mapped to MIME.
+ */
+
 class Message
 {
     protected $subject;

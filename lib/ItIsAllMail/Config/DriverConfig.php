@@ -1,12 +1,12 @@
 <?php
 
-namespace ItIsAllMail\Utils\Config;
+namespace ItIsAllMail\Config;
 
 class DriverConfig {
 
     public static function getDriverConfig(string $driver) : array
     {
-        $configPath = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+        $configPath = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
             . $driver . DIRECTORY_SEPARATOR . "driver.cfg";
 
         if (! file_exists($configPath)) {
