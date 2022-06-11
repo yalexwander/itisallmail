@@ -18,10 +18,7 @@ interface PosterDriverInterface
 
     /**
      * Posting to some resource. For now required parameters are somethin like:
-     * @params = [
-     *   "thread" => Thread ID in format according to current driver used thread fromat
-     *   "body"   => Message body
-     *   "attachements" => array of attachements
+     *
      */
-    public function post(array $params): array;
+    public function post(array $msg, array $source = null, array $opts = []) : array;
 }

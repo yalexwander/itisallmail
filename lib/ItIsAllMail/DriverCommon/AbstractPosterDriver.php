@@ -15,7 +15,7 @@ class AbstractPosterDriver implements PosterDriverInterface {
         return $this->code;
     }
 
-    public function post(array $params): array
+    public function post(array $msg, array $source = null, array $opts = []) : array
     {
         throw new \Exception("Not implemented");
     }

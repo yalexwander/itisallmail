@@ -15,7 +15,8 @@ class PosterDriverFactory {
     }
     
     public function findPoster(array $msg) : PosterDriverInterface {
-        $parts = explode("@", $msg["headers"]["to"]);
+        $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
+        $parts = explode("@", $toHeader);
         $driverCode = array_pop($parts);
 
         foreach ($this->config["drivers"] as $driverId) {
