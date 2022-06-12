@@ -6,6 +6,12 @@ use ItIsAllMail\Interfaces\PosterDriverInterface;
 
 class AbstractPosterDriver implements PosterDriverInterface {
 
+    public function __construct(array $appConfig, array $posterConfig)
+    {
+        $this->appConfig = $appConfig;
+        $this->posterConfig = $posterConfig;
+    }
+
     public function canProcessMessage(array $msg): bool {
         return false;
     }

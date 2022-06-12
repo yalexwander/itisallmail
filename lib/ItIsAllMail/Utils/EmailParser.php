@@ -67,8 +67,11 @@ class EmailParser {
             }
             // assuming we now parsing some part of multipart message
             elseif ($complexMessage) {
-                // assuming any inlined text part is the message itself
-                if (false !== strstr($partContent["headers"]["content-type"], "text/plain;")) {
+                // assuming any inlined text part is the message itself and it is not inside attached message
+                if (
+                    empty($parsedMessage["body"]) and
+                    (false !== strstr($partContent["headers"]["content-type"], "text/plain;"))
+                ) {
                     $parsedMessage["body"] = substr(
                         $rawMessage,
                         $partContent["starting-pos-body"],

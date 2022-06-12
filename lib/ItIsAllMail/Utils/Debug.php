@@ -35,4 +35,18 @@ class Debug
 ====\n
 EOT;
     }
+
+
+    public static function dumpResponse($response) : string {
+        $result = "";
+
+        foreach ($response->getHeaders() as $name => $values) {
+            $result .= $name . ': ' . implode(', ', $values) . "\n";
+        }
+
+        $result .= "\n" . $response->getBody()->getContents();
+
+        return $result;
+    }
+
 }

@@ -101,3 +101,11 @@ Allowed values: string
 If blank string, no proxy program for posting used. Otherwise you can specify for example "torsocks" or "proxychains"
 
 Can be set on level of: app, driver, source.
+
+### poster_credentials
+
+Allowed values: any
+
+Sets the credentials that will be used for posting. The format is highly rely on posting driver you use, so arrays allowed here too.
+
+Can be set on level of: app, driver, source.

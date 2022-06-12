@@ -21,6 +21,13 @@ $source = $mapper->mapMessageToSource($msg);
 $posterFactory = new PosterDriverFactory($appConfig);
 $poster = $posterFactory->findPoster($msg);
 
-$poster->post($msg, $source);
+$result = $poster->post($msg, $source);
 
-print_r('stop');exit(1);
+if ($result["status"]) {
+    return 0;
+}
+else {
+    print_r($result);
+    exit(1);
+}
+

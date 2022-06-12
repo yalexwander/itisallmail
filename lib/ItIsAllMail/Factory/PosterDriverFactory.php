@@ -7,11 +7,11 @@ use ItIsAllMail\Config\DriverConfig;
 
 class PosterDriverFactory {
 
-    protected $config;
+    protected $appConfig;
     
-    public function __construct($config)
+    public function __construct($appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
     }
     
     public function findPoster(array $msg) : PosterDriverInterface {
@@ -19,7 +19,7 @@ class PosterDriverFactory {
         $parts = explode("@", $toHeader);
         $driverCode = array_pop($parts);
 
-        foreach ($this->config["drivers"] as $driverId) {
+        foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 
             if (! in_array("poster", $driverOpts["features"])) {
@@ -30,7 +30,7 @@ class PosterDriverFactory {
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["poster_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["poster_config"]) ? $driverOpts["poster_config"] : [];
-            $posterDriver = new $driverOpts["poster_config"]["class"]($driverConfig);
+            $posterDriver = new $driverOpts["poster_config"]["class"]($this->appConfig, $driverConfig);
 
             if ($posterDriver->canProcessMessage($msg)) {
                 return $posterDriver;

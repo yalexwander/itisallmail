@@ -8,29 +8,63 @@ use ItIsAllMail\Utils\URLProcessor;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractPosterDriver;
 use ItIsAllMail\PostingQueue;
+use ItIsAllMail\Config\FetcherSourceConfig;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 
-require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAuth.php");
+
+require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
 class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
 
-    protected $config;
+    protected $appConfig;
+    protected $posterConfig;
     protected $driverCode = "habr.com";
 
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
-
     public function canProcessMessage(array $msg): bool {
-        if (preg_match('/@habr.com$/',$msg["headers"]["to"])) {
+        $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
+
+        if (preg_match('/@habr.com$/', $toHeader)) {
             return true;
         }
 
         return false;
     }
 
+    public function post(array $msg, array $source = null, array $opts = []) : array {
+        $fetcherDriver = (new FetcherDriverFactory($this->appConfig))->getFetchDriverForSource($source);
+        $fetcherConfig = new FetcherSourceConfig($this->appConfig, $fetcherDriver, $source);
 
-    public function post(array $msg, array $opts = []) : array {
-        
+        $api = new HabrAPI($fetcherConfig->getOpt("poster_credentials"));
+
+        if (! $api->auth()) {
+            throw new \Exception("Failed to auth to post");
+        }
+
+        $article = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
+        preg_match('/([0-9]+)@/', $article, $article);
+        $article = $article[1];
+
+        $parent = $msg["referenced_message"]["headers"]["message-id"] ?? $msg["headers"]["message-id"];
+        preg_match('/([0-9]+)@/', $parent, $parent);
+        $parent = $parent[1];
+
+        if ($parent === $article) {
+            $parent = null;
+        }
+
+        $comment = $api->sendComment(
+            [
+                "article" => $article,
+                "parent" => $parent,
+                "text" => $msg["body"],
+                'source' => $source
+            ]
+        );
+
+        return [
+            "newId"  => $comment["data"]["id"],
+            "status" => 1,
+            "error" => ""
+        ];
     }
 }

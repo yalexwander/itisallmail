@@ -33,8 +33,6 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
             return null;
         }
 
-        print_r($source);exit(1);
-        
         return $source;
     }
 
