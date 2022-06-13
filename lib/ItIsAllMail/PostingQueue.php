@@ -20,7 +20,7 @@ class PostingQueue {
         $posterDriverFactory = new PosterDriverFactory($this->appConfig);
         $poster = $posterDriverFactory->findPoster($msg);
 
-        $result = $poster->post($msg);
+        // $result = $poster->post($msg);
 
         return $result;
     }

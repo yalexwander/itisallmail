@@ -7,6 +7,7 @@ use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
+use ItIsAllMail\Utils\Debug;
 
 class PostActionHandler {
 
@@ -47,14 +48,15 @@ class PostActionHandler {
                 . ".." . DIRECTORY_SEPARATOR
                 . "scripts" . DIRECTORY_SEPARATOR . "poster.php\""
                 . " -m \"" . $transferFilename . "\"";
+
+            Debug::debug("Starting command:\n" . $execString);
            
-            system($execString);
+            $result = system($execString);
             unlink($transferFilename);
             
         }
 
-        exit(1);
-        return $result;
+        return (!$result["status"]);
     }
 
 }

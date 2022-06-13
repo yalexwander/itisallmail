@@ -64,7 +64,8 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
         return [
             "newId"  => $comment["data"]["id"],
             "status" => 1,
-            "error" => ""
+            "error" => "",
+            "response" => $comment
         ];
     }
 }

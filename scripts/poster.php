@@ -22,9 +22,10 @@ $posterFactory = new PosterDriverFactory($appConfig);
 $poster = $posterFactory->findPoster($msg);
 
 $result = $poster->post($msg, $source);
+$logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r($result, true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
 
 if ($result["status"]) {
-    return 0;
+    exit(0);
 }
 else {
     print_r($result);

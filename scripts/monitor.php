@@ -100,6 +100,8 @@ class Monitor {
 
         $execString .= " \"" . $source["url"] . "\"";
 
+        Debug::debug("Starting command:\n" . $execString);
+
         system($execString);
         
         return 1;
