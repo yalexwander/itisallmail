@@ -4,6 +4,8 @@ catalog_mailbox : "catalog"
 catalog_default_driver : "habr.com"
 update_interval: 300
 change_subject_if_attachements: true
+change_subject_if_score: true
+add_statusline_header : true
 download_attachements: "full"
 nickname_transformation: "readable"
 source_update_interval: 60

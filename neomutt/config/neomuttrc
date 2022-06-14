@@ -2,7 +2,7 @@
 set sendmail="php scripts/sendmail.php"
 
 # your favorite editor
-set editor=nano
+set editor="emacsclient -c -t"
 
 # to make editing email headers possible
 set edit_headers=yes
@@ -28,10 +28,10 @@ lua-source "neomutt/config/lua_muttrc.lua"
 source "colors"
 source "display"
 
+unignore x-iam-statusline
+
 # need to sending work
 set mime_forward=yes
-
-# ah, I was going to suggest the opposite: mime_forward=no (so you get a plain text copy), combined with `unignore X-CRM-ticket-id` so that the header shows up in the forwarded text
 
 # custom keybindings
 source "keybindings"

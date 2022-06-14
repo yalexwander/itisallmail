@@ -32,7 +32,7 @@ class Message
 
     // this is list of extra headers, that can be useful in many places
     protected $extraHeaders = [
-        'mentions', 'likes', 'dislikes', 'reference', 'uri'
+        'mentions', 'score', 'reference', 'uri'
     ];
 
     // maximal length of subject
@@ -41,11 +41,8 @@ class Message
     // list of all users of given site/network/messenger mention in this message
     protected $mentions;
 
-    // count of likes if presented
-    protected $likes;
-
-    // count of dislikes if presented
-    protected $dislikes;
+    // count of likes and dislikes if presented
+    protected $score;
 
     // list of message IDs this message references to
     protected $reference;
@@ -66,6 +63,7 @@ class Message
         $this->attachements = $source["attachements"] ?? [];
         $this->mentions = $source["mentions"] ?? [];
         $this->uri = $source["uri"] ?? null;
+        $this->score = $source["score"] ?? null;
     }
 
     public function toMIMEString(HierarchicConfigInterface $sourceConfig): string
@@ -79,8 +77,6 @@ class Message
             ->addIdHeader('Message-id', [ $this->getId() ])
             ->addMailboxListHeader('From', [ $this->from ]);
 
-        $this->setExtraHeaders($headers);
-
         if ($this->parent !== null) {
             $headers->addIdHeader('References', [ $this->getParent() ]);
         }
@@ -92,18 +88,22 @@ class Message
             ... $this->attachements
         );
 
+        $subject = $this->getSubject();
+        
         if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
-            $subject = $this->getSubject();
-
             if (count($this->attachements)) {
                 $subject = "[A] " . $subject;
             }
+        }
+        if (! empty($sourceConfig->getOpt("change_subject_if_score"))) {
+            if ($this->getScore() !== null) {
+                $subject = "[" . implode(",", $this->getScore()) . "] " . $subject;
+            }
+        }
+        
+        $headers->addTextHeader('Subject', $subject);
 
-            $headers->addTextHeader('Subject', $subject);
-        }
-        else {
-            $headers->addTextHeader('Subject', $this->getSubject());
-        }
+        $this->setExtraHeaders($headers, $sourceConfig);
 
         $message = new MIMEMessage($headers, $body);
 
@@ -144,6 +144,11 @@ class Message
         return $this->uri;
     }
 
+    public function getScore(): ?array
+    {
+        return $this->score;
+    }
+
 
     public function getCreated(): ?\DateTime
     {
@@ -161,10 +166,28 @@ class Message
     }
 
 
-    protected function setExtraHeaders(Headers $headers): void
+    protected function setExtraHeaders(Headers $headers, HierarchicConfigInterface $sourceConfig): void
     {
         if ($this->getUri() !== null) {
             $headers->addTextHeader('x-iam-uri', $this->getUri());
+        }
+
+        $score = $this->getScore();
+        if (!empty($score)) {
+            $headers->addTextHeader('x-iam-score', implode(",", $score));
+        }
+
+        if ($sourceConfig->getOpt('add_statusline_header')) {
+            $statusline = "";
+            if ($score !== null) {
+                $statusline .= "\u{2764}" . $score[0] . " \u{26a1}" . $score[1] . " ";
+            }
+
+            if (count($this->attachements)) {
+                $statusline .= "\u{1f4be} ";
+            }
+        
+            $headers->addTextHeader('x-iam-statusline', $statusline);
         }
     }
 }

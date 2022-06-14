@@ -58,6 +58,19 @@ Allowed values: 1 | 0
 
 If set, `Subject` field for each message will have a mark, that message has attached files.
 
+### change_subject_if_score
+
+Allowed values: 1 | 0
+
+If set, `Subject` field for each message will have a mark, that message has likes/dislikes.
+
+### add_statusline_header
+
+Allowed values: 1 | 0
+
+If set, X-IAM-statusline header is added to each message, where score and media stat presented
+
+
 ### nickname_transformation
 
 Allowed values: `readable` | `strict` | `strict_name`

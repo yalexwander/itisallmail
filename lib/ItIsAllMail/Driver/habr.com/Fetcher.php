@@ -130,6 +130,14 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 );
             }
 
+            $score = $node->findOne("div.tm-votes-meter title")->text();
+            if (preg_match('/↑([0-9]+).*?↓([0-9]+)/u', $score, $score)) {
+                $score = [ intval($score[1]), intval($score[2]) ];
+            }
+            else {
+                $score = null;
+            }
+
             $comments[] = new Message([
                 "from" => $commentAuthor . "@" . $this->getCode(),
                 "subject" => $commentTitle,
@@ -138,7 +146,8 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 "id" => $postId . "@" . $this->getCode(),
                 "body" => $commentBody,
                 "thread" => $threadId  . "@" . $this->getCode(),
-                "uri" => $source["url"] . "#comment_" . $postId
+                "uri" => $source["url"] . "#comment_" . $postId,
+                "score" => $score
             ]);
         }
 
