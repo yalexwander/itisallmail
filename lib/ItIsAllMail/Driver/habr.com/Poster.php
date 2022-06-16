@@ -31,6 +31,8 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
     }
 
     public function post(array $msg, array $source = null, array $opts = []) : array {
+        $this->assertEmptyMessage($msg);
+
         $fetcherDriver = (new FetcherDriverFactory($this->appConfig))->getFetchDriverForSource($source);
         $fetcherConfig = new FetcherSourceConfig($this->appConfig, $fetcherDriver, $source);
 

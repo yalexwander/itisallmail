@@ -53,10 +53,9 @@ class PostActionHandler {
            
             $result = system($execString);
             unlink($transferFilename);
-            
         }
 
-        return (!$result["status"]);
+        return $result;
     }
 
 }

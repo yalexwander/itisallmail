@@ -6,11 +6,11 @@
 
   Command line usage:
 
-  php editor.php -b <email body content> -i <email_file>
+  php editor.php -i <email file> [ -b <email body content> -c <citation text file> ]
 
  */
 
-$options = getopt("b:i:");
+$options = getopt("b:i:c");
 
 if (! empty($options["b"])) {
     $srcMessage  = file_get_contents($options["i"]);

@@ -77,6 +77,8 @@ class Message
             ->addIdHeader('Message-id', [ $this->getId() ])
             ->addMailboxListHeader('From', [ $this->from ]);
 
+        $headers->setMaxLineLength($this->subjectMaxChars * 2);
+
         if ($this->parent !== null) {
             $headers->addIdHeader('References', [ $this->getParent() ]);
         }

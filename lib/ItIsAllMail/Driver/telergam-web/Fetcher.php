@@ -47,12 +47,11 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             $author = MailHeaderProcessor::sanitizeNonLatinAddress($author);
 
             $postText = $this->getPostText($postNode);
+            $title = $this->getPostTitle($postText);
 
             $postText .= "\n\n[ ";
             $postText .= $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href");
             $postText .= " ]\n";
-
-            $title = $this->getPostTitle($postNode, $postText);
 
             $parent = $threadId;
 
@@ -138,9 +137,11 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         }
     }
 
-    public function getPostTitle($node): string
+    public function getPostTitle($postText): string
     {
-        $title = preg_replace('/\n/', ' ', $this->getPostText($node));
+        $title = preg_replace('/\n/', ' ', $postText);
+        $title = preg_replace('/\[http.+\]/', '', $title);
+
         return $title;
     }
 

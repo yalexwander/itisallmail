@@ -21,7 +21,11 @@ class EmailParser {
             "headers"      => [],
             "attachements" => [],
             "body"         => "",
-            "referenced_message" => []
+            // 95% of cases it will be command message or citation here
+            "referenced_message" => [],
+
+            // for cases of multicitation for future, must NOT include the "referenced_message"
+            // "related_messages" => []
         ];
 
         /**
@@ -67,16 +71,25 @@ class EmailParser {
             }
             // assuming we now parsing some part of multipart message
             elseif ($complexMessage) {
-                // assuming any inlined text part is the message itself and it is not inside attached message
+                // assuming any inlined text part is the message itself
                 if (
                     empty($parsedMessage["body"]) and
                     (false !== strstr($partContent["headers"]["content-type"], "text/plain;"))
                 ) {
-                    $parsedMessage["body"] = substr(
+                    $bodyText = substr(
                         $rawMessage,
                         $partContent["starting-pos-body"],
                         $partContent["ending-pos-body"] - $partContent["starting-pos-body"]
                     );
+
+                    // we are not inside attached message
+                    if (empty($parsedMessage["referenced_message"]["headers"])) {
+                        $parsedMessage["body"] = $bodyText;
+                    }
+                    // we parsing attached message body then
+                    else {
+                        $parsedMessage["referenced_message"] = $bodyText;
+                    }
                 }
                 // so it is attached file or another MIME message
                 else {

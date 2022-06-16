@@ -21,14 +21,17 @@ $source = $mapper->mapMessageToSource($msg);
 $posterFactory = new PosterDriverFactory($appConfig);
 $poster = $posterFactory->findPoster($msg);
 
-$result = $poster->post($msg, $source);
-$logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r($result, true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
+try {
+    $result = $poster->post($msg, $source);
 
-if ($result["status"]) {
-    exit(0);
-}
-else {
-    print_r($result);
+    if ($result["status"]) {
+        exit(0);
+    }
+    else {
+        print_r($result);
+        exit(1);
+    }
+} catch (\Exception $e) {
+    print $e;
     exit(1);
 }
-

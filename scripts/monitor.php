@@ -63,6 +63,10 @@ class Monitor {
                         "next_update" => time() + $totalAwaitInterval,
                         "updated" => 0
                     ];
+
+                    Debug::debug("Next update of {$sId} will be at " .
+                                 (new \DateTime())->setTimestamp($newMap[ $sId ]["next_update"])->format("Y-m-d H:i:s")
+                    );
                 }
                 // update is in the future, leave as is
                 else {

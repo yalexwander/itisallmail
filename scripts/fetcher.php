@@ -42,7 +42,10 @@ try {
     if ($mergeResult["added"]) {
         Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getPath()}");
     }
+
+    Debug::debug("Source processing finished");
 } catch (\Exception $e) {
     printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
     printf("Details:\n%s\n", $e->__toString());
+    Debug::debug("Source processing failed");
 }
