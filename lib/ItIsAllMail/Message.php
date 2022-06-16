@@ -29,6 +29,7 @@ class Message
     protected $body;
     protected $thread;
     protected $attachements = [];
+    protected $attachementLinks = [];
 
     // this is list of extra headers, that can be useful in many places
     protected $extraHeaders = [
@@ -89,21 +90,8 @@ class Message
             ),
             ... $this->attachements
         );
-
-        $subject = $this->getSubject();
-        
-        if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
-            if (count($this->attachements)) {
-                $subject = "[A] " . $subject;
-            }
-        }
-        if (! empty($sourceConfig->getOpt("change_subject_if_score"))) {
-            if ($this->getScore() !== null) {
-                $subject = "[" . implode(",", $this->getScore()) . "] " . $subject;
-            }
-        }
-        
-        $headers->addTextHeader('Subject', $subject);
+       
+        $headers->addTextHeader('Subject', $this->getFormattedSubject($sourceConfig));
 
         $this->setExtraHeaders($headers, $sourceConfig);
 
@@ -119,11 +107,7 @@ class Message
 
     public function getSubject(): string
     {
-        if (mb_strlen($this->subject) > $this->subjectMaxChars) {
-            return mb_substr($this->subject, 0, $this->subjectMaxChars) . "...";
-        } else {
-            return $this->subject;
-        }
+        return $this->subject;
     }
 
     public function getParent(): ?string
@@ -167,6 +151,19 @@ class Message
         return $this;
     }
 
+    public function addAttachementLink(string $title, string $url): Message
+    {
+        if (! is_array($this->attachementLinks)) {
+            $this->attachementLinks = [];
+        }
+
+        $this->attachementLinks[] = [
+            'title' => $title,
+            'url' => $url
+        ];
+
+        return $this;
+    }
 
     protected function setExtraHeaders(Headers $headers, HierarchicConfigInterface $sourceConfig): void
     {
@@ -191,5 +188,26 @@ class Message
         
             $headers->addTextHeader('x-iam-statusline', $statusline);
         }
+    }
+
+    protected function getFormattedSubject($sourceConfig) {
+        $subject = $this->subject;
+
+        if (mb_strlen($subject) > $this->subjectMaxChars) {
+            $subject = mb_substr($subject, 0, $this->subjectMaxChars) . "...";
+        }
+        
+        if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
+            if (count($this->attachementLinks)) {
+                $subject = "[A] " . $subject;
+            }
+        }
+        if (! empty($sourceConfig->getOpt("change_subject_if_score"))) {
+            if ($this->getScore() !== null) {
+                $subject = "[" . implode(",", $this->getScore()) . "] " . $subject;
+            }
+        }
+
+        return $subject;
     }
 }

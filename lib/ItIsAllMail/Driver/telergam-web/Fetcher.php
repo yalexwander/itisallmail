@@ -4,6 +4,7 @@ namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
+use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Browser;
@@ -18,9 +19,9 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     protected $driverCode = "t.me";
     protected $defaultCommentDate;
 
-    public function __construct(array $opts)
+    public function __construct(array $appConfig, array $opts)
     {
-        parent::__construct($opts);
+        parent::__construct($appConfig, $opts);
 
         $this->defaultCommentDate = new \DateTime('2000-01-01');
     }
@@ -31,6 +32,8 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     public function getPosts(array $source): array
     {
         $sourceURL = URLProcessor::normalizeStartURL($source["url"]);
+
+        $sourceConfig = new FetcherSourceConfig($this->appConfig, $this, $source);
 
         $html = Browser::getAsString($sourceURL);
 
@@ -72,7 +75,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             );
 
             if (! $this->messageWithGivenIdAlreadyDownloaded($postId . "@" . $this->getCode())) {
-                $this->processPostAttachements($postNode, $msg);
+                $this->processPostAttachements($postNode, $msg, $sourceConfig);
             }
 
             $posts[] = $msg;
@@ -139,8 +142,9 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
     public function getPostTitle($postText): string
     {
-        $title = preg_replace('/\n/', ' ', $postText);
+        $title = preg_replace('/((\r\n)+)|(\n+)/', ' ', $postText);
         $title = preg_replace('/\[http.+\]/', '', $title);
+        $title = preg_replace('/ +/', ' ', $title);
 
         return $title;
     }
@@ -163,7 +167,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         );
     }
 
-    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg)
+    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig)
     {
         $attachementsCount = 0;
         foreach ($postNode->findMulti(".tgme_widget_message_photo_wrap") as $attachementNode) {
@@ -177,16 +181,21 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             if (count($attachementURL)) {
                 $attachementURL = $attachementURL[1];
                 $attachementsCount++;
-                Debug::debug("Downloading attachement: " . $attachementURL);
 
                 $pathParts = pathinfo($attachementURL);
+                $attachementTitle = "attachement_" . $attachementsCount . "." . $pathParts["extension"];
 
-                $msg->addAttachement(
-                    "attachement_" . $attachementsCount . "." . $pathParts["extension"],
-                    Browser::getAsString($attachementURL)
-                );
+                if ($sourceConfig->getOpt('download_attachements') !== "none") {
+                    Debug::debug("Downloading attachement: " . $attachementURL);
+
+                    $msg->addAttachement(
+                        $attachementTitle,
+                        Browser::getAsString($attachementURL)
+                    );
+                }
+
+                $msg->addAttachementLink($attachementTitle, $attachementURL);
             }
-
         }
     }
 

@@ -10,9 +10,11 @@ class AbstractFetcherDriver
     protected $opts;
     protected $driverCode;
     protected $mailbox;
+    protected $appConfig;
 
-    public function __construct(array $opts)
+    public function __construct(array $appConfig, array $opts)
     {
+        $this->appConfig = $appConfig;
         $this->opts = $opts;
     }
 

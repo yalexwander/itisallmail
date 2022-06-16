@@ -9,13 +9,13 @@ class FetcherDriverFactory
 {
     protected $driverList = [];
 
-    protected $config = [];
+    protected $appConfig = [];
 
-    public function __construct(array $config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
 
-        foreach ($this->config["drivers"] as $driverId) {
+        foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 
             if (! in_array("fetcher", $driverOpts["features"])) {
@@ -26,7 +26,7 @@ class FetcherDriverFactory
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["fetcher_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["fetcher_config"]) ? $driverOpts["fetcher_config"] : [];
-            $this->driverList[] = new $driverOpts["fetcher_config"]["class"]($driverConfig);
+            $this->driverList[] = new $driverOpts["fetcher_config"]["class"]($this->appConfig, $driverConfig);
         }
     }
 

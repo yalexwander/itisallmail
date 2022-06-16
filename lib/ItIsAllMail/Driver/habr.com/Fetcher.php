@@ -19,9 +19,9 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     protected $driverCode = "habr.com";
     protected $defaultCommentDate;
 
-    public function __construct(array $opts)
+    public function __construct(array $appConfig, array $opts)
     {
-        parent::__construct($opts);
+        parent::__construct($appConfig, $opts);
 
         $this->defaultCommentDate = new \DateTime('2000-01-01');
     }
