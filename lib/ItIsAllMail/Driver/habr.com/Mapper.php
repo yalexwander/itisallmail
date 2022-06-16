@@ -36,4 +36,7 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
         return $source;
     }
 
+    public function isCatalogAddress(string $url) : bool {
+        return false;
+    }
 }

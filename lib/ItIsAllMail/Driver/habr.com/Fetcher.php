@@ -33,11 +33,15 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     {
         $posts = [];
 
-        if (null === $this->getLastURLVisited($source["url"])) {
-            $posts[] = $this->getFirstPost($source);
+        if ($this->isCatalogQuery($source)) {
         }
+        else {
+            if (null === $this->getLastURLVisited($source["url"])) {
+                $posts[] = $this->getFirstPost($source);
+            }
 
-        $posts = array_merge($posts, $this->getComments($source));
+            $posts = array_merge($posts, $this->getComments($source));
+        }
 
         return $posts;
     }
@@ -174,5 +178,9 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         $id = null;
         preg_match("/\/([0-9]+)\/(comments)*/", $url, $id);
         return $id[1];
+    }
+
+    protected function isCatalogQuery(array $source) : bool {
+        return false;
     }
 }

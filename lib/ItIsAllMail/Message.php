@@ -125,6 +125,12 @@ class Message
         return $this->body;
     }
 
+    public function setBody($body) : void
+    {
+        $this->body = $body;
+    }
+
+
     public function getUri(): ?string
     {
         return $this->uri;
@@ -207,6 +213,8 @@ class Message
                 $subject = "[" . implode(",", $this->getScore()) . "] " . $subject;
             }
         }
+
+        $subject = preg_replace('/ +/', ' ', $subject);
 
         return $subject;
     }

@@ -52,10 +52,6 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             $postText = $this->getPostText($postNode);
             $title = $this->getPostTitle($postText);
 
-            $postText .= "\n\n[ ";
-            $postText .= $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href");
-            $postText .= " ]\n";
-
             $parent = $threadId;
 
             $created = $this->getCreated($postNode);
@@ -77,6 +73,12 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             if (! $this->messageWithGivenIdAlreadyDownloaded($postId . "@" . $this->getCode())) {
                 $this->processPostAttachements($postNode, $msg, $sourceConfig);
             }
+
+            $msg->setBody(
+                $msg->getBody() . "\n\n[ " .
+                $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href") .
+                " ]\n"
+            );
 
             $posts[] = $msg;
         }
@@ -144,7 +146,6 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     {
         $title = preg_replace('/((\r\n)+)|(\n+)/', ' ', $postText);
         $title = preg_replace('/\[http.+\]/', '', $title);
-        $title = preg_replace('/ +/', ' ', $title);
 
         return $title;
     }
@@ -196,6 +197,14 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
                 $msg->addAttachementLink($attachementTitle, $attachementURL);
             }
+        }
+
+        $video = $postNode->findOneOrFalse(".tgme_widget_message_video_wrap");
+        if ($video) {
+            $msg->addAttachementLink("video", "#");
+            $msg->setBody(
+                $msg->getBody() . "\n[ VIDEO ]\n"
+            );
         }
     }
 
