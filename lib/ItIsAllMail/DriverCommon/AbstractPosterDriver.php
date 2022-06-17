@@ -29,7 +29,7 @@ class AbstractPosterDriver implements PosterDriverInterface {
     /**
      * For handling situation when blank message was sent by mistake
      */
-    protected function assertEmptyMessage(array $msg): string
+    protected function assertEmptyMessage(array $msg): void
     {
         if (empty($msg["body"])) {
             throw new \Exception("Can not send blank message");

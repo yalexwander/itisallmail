@@ -17,13 +17,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "Habr
 
 class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverInterface {
 
-    protected $config;
     protected $driverCode = "habr.com";
-
-    public function __construct(array $config)
-    {
-        $this->config = $config;
-    }
 
     public function queryCatalog(string $query, array $opts = []) : array {
         $html = $this->getHTMLForQuery($query);
@@ -87,32 +81,32 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
     }
 
     protected function getHTMLForQuery(string $query) : string {
-        if (preg_match('/^https:\/\//', $query)) {
-            return $query;
-        }
-
-        $domain = "https://habr.com";
+        $url = $query;
+        $cookies = [];
         $languages = [ "ru", "en" ];
-        $url = $domain . "/" . $languages[0] . "/" .  "all";
 
-        if (preg_match('/^(en|ru) (.+)$/', $query, $queryParam)) {
-            $query = $queryParam[1];
-            $languages = [ $queryParam[0] ];
-        }
+        if (! preg_match('/^https:\/\//', $query)) {
+            $domain = "https://habr.com";
 
-        if (preg_match('/^(all|top|news)$/', $query, $queryParam)) {
-            $url = $domain . "/" . $languages[0] . "/" .  $queryParam[0];
-        }
+            $url = $domain . "/" . $languages[0] . "/" .  "all";
 
-        if (preg_match('/^hub\/(.+)$/', $query, $queryParam)) {
-            $url = $domain . "/" . $languages[0] . "/" . $queryParam[0];
+            if (preg_match('/^(en|ru) (.+)$/', $query, $queryParam)) {
+                $query = $queryParam[1];
+                $languages = [ $queryParam[0] ];
+            }
+
+            if (preg_match('/^(all|top|news)$/', $query, $queryParam)) {
+                $url = $domain . "/" . $languages[0] . "/" .  $queryParam[0];
+            }
+
+            if (preg_match('/^hub\/(.+)$/', $query, $queryParam)) {
+                $url = $domain . "/" . $languages[0] . "/" . $queryParam[0];
+            }
         }
 
         $cookies = [
             "fl" => implode(",", $languages)
         ];
-
-        $logxf=fopen("/tmp/zlog.txt","a");fputs($logxf,print_r([$url, $cookies], true)  . "\n");fclose($logxf);chmod("/tmp/zlog.txt", 0666);
 
         return Browser::getAsString($url, [], $cookies);
     }

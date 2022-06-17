@@ -4,6 +4,7 @@ namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
+use ItIsAllMail\Factory\CatalogDriverFactory;
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Browser;
@@ -34,6 +35,10 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         $posts = [];
 
         if ($this->isCatalogQuery($source)) {
+            $catalog = (new CatalogDriverFactory($this->appConfig))
+                ->getCatalogDriver($source["url"], [ 'source' => $source]);
+
+            $posts = $catalog->queryCatalog($source["url"]);
         }
         else {
             if (null === $this->getLastURLVisited($source["url"])) {
@@ -181,6 +186,11 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     }
 
     protected function isCatalogQuery(array $source) : bool {
-        return false;
+        if (preg_match('/\/[0-9]+\/$/', $source["url"])) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

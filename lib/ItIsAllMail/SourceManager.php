@@ -43,15 +43,16 @@ class SourceManager {
     public function deleteSource(array $source) : int {
         $sources = $this->getSources();
 
+        $newSources = [];
         foreach ($sources as $sId => $existingSource) {
-            if ($existingSource["url"] === $source["url"]) {
-                unset($sources[$sId]);
-                yaml_emit_file($this->sourcesFile, $sources);
-                return 1;
+            if ($existingSource["url"] !== $source["url"]) {
+                $newSources[] = $existingSource;
             }
         }
 
-        return 0;
+        yaml_emit_file($this->sourcesFile, $newSources);
+
+        return 1;
     }
 
     protected function validateSource(array $source) {

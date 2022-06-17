@@ -10,16 +10,13 @@ use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
 class CatalogDriverFactory
 {
     protected $driverList = [];
-    protected $config = [];
+    protected $appConfig;
 
-    public function __construct(array $config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
 
-        // to make autoloading, based on loading last requied class, work correct
-        new AbstractCatalogDriver([]);
-
-        foreach ($this->config["drivers"] as $driverId) {
+        foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 
             if (! in_array("catalog", $driverOpts["features"])) {
@@ -30,7 +27,7 @@ class CatalogDriverFactory
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["catalog_config"]["file"];
 
             $driverConfig = ! empty($driverOpts["catalog_config"]) ? $driverOpts["catalog_config"] : [];
-            $this->driverList[] = new $driverOpts["catalog_config"]["class"]($driverConfig);
+            $this->driverList[] = new $driverOpts["catalog_config"]["class"]($this->appConfig, $driverConfig);
         }
     }
 
@@ -39,7 +36,7 @@ class CatalogDriverFactory
      */
     public function getCatalogDriver(string $query, array $opts): CatalogDriverInterface
     {
-        $opts["catalog_default_driver"] = $this->config["catalog_default_driver"];
+        $opts["catalog_default_driver"] = $this->appConfig["catalog_default_driver"];
         
         foreach ($this->driverList as $driver) {
             if ($driver->canHandleQuery($query, $opts)) {
