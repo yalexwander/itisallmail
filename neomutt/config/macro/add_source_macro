@@ -1,6 +1,6 @@
 # macro definition
 
-macro index ,a ':lua IAM.set_sendmail_args("-c /add")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>:lua mutt.message("Added")<enter>'
+macro index,pager ,a ':lua IAM.set_sendmail_args("-c /add")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>:lua mutt.message("Added")<enter>'
 
 # macro description
 

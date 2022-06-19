@@ -15,7 +15,15 @@ $processor = new SendMailProcessor($config);
 
 $options = getopt("c:");
 
-exit(
-    $processor->process(file_get_contents("php://stdin"), $options)
-);
+
+$result = 1;
+
+try {
+    $result = $processor->process(file_get_contents("php://stdin"), $options);
+    exit($result);
+}
+catch (\Exception $e) {
+    print $e;
+    exit(1);
+}
 

@@ -129,7 +129,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     public function getPostText($node): string
     {
         $textNode = $node->findOneOrFalse("div.tgme_widget_message_text");
-       
+
         if ($textNode) {
             $rawHtml = $textNode->innerHtml();
 

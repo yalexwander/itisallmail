@@ -23,10 +23,10 @@ class SendMailProcessor {
         $parsed = EmailParser::parseMessage($rawMessage);
 
         if ($this->isCommandMessage($parsed, $options)) {
-            $this->processCommand($rawMessage, $parsed, $options);
+            return $this->processCommand($rawMessage, $parsed, $options);
         }
        
-        return 0;
+        return 1;
     }
 
     protected function isCommandMessage(array $parsedMsg, array $options): bool {

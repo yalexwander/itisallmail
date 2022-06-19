@@ -8,6 +8,8 @@ change_subject_if_score: true
 add_statusline_header : true
 download_attachements: "full"
 nickname_transformation: "readable"
+update_subject_header_on_changed_messages: true
+update_statusline_header_on_changed_messages: true
 source_update_interval: 60
 between_source_update_interval: 5
 fetcher_proxy : ""

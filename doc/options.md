@@ -54,19 +54,19 @@ Can be set on level of: app, driver, source.
 
 ### change_subject_if_attachements
 
-Allowed values: 1 | 0
+Allowed values: boolean
 
 If set, `Subject` field for each message will have a mark, that message has attached files.
 
 ### change_subject_if_score
 
-Allowed values: 1 | 0
+Allowed values: boolean
 
 If set, `Subject` field for each message will have a mark, that message has likes/dislikes.
 
 ### add_statusline_header
 
-Allowed values: 1 | 0
+Allowed values: boolean
 
 If set, X-IAM-statusline header is added to each message, where score and media stat presented
 
@@ -122,3 +122,27 @@ Allowed values: any
 Sets the credentials that will be used for posting. The format is highly rely on posting driver you use, so arrays allowed here too.
 
 Can be set on level of: app, driver, source.
+
+### update_changed_messages:
+
+Allowed values: boolean
+
+If set, compares new messages with saved ones, updating if needed.
+
+Warning: correct display of changed data highly relies on mail reading software you use!
+
+### update_subject_header_on_changed_messages
+
+Allowed values: boolean
+
+If set, update subject header in saved message when source message updated.
+
+Warning: correct display of changed data highly relies on mail reading software you use!
+
+### update_statusline_header_on_changed_messages
+
+Allowed values: boolean
+
+If set, update statusline header in saved message when source message updated.
+
+Warning: correct display of changed data highly relies on mail reading software you use!

@@ -8,9 +8,7 @@ use ItIsAllMail\Utils\URLProcessor;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractPosterDriver;
 use ItIsAllMail\PostingQueue;
-use ItIsAllMail\Config\FetcherSourceConfig;
-use ItIsAllMail\Factory\FetcherDriverFactory;
-
+use ItIsAllMail\Config\PosterConfig;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
@@ -33,10 +31,8 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
     public function post(array $msg, array $source = null, array $opts = []) : array {
         $this->assertEmptyMessage($msg);
 
-        $fetcherDriver = (new FetcherDriverFactory($this->appConfig))->getFetchDriverForSource($source);
-        $fetcherConfig = new FetcherSourceConfig($this->appConfig, $fetcherDriver, $source);
-
-        $api = new HabrAPI($fetcherConfig->getOpt("poster_credentials"));
+        $posterConfig = new PosterConfig($this->appConfig, $source, $this);
+        $api = new HabrAPI($posterConfig->getOpt("poster_credentials"));
 
         if (! $api->auth()) {
             throw new \Exception("Failed to auth to post");

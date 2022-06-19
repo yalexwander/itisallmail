@@ -3,6 +3,8 @@
 namespace ItIsAllMail\DriverCommon;
 
 use ItIsAllMail\Interfaces\PosterDriverInterface;
+use ItIsAllMail\Config\FetcherSourceConfig;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 
 class AbstractPosterDriver implements PosterDriverInterface {
 
@@ -34,6 +36,11 @@ class AbstractPosterDriver implements PosterDriverInterface {
         if (empty($msg["body"])) {
             throw new \Exception("Can not send blank message");
         }
+    }
+
+    public function getOpt(string $key)
+    {
+        return $this->posterConfig[$key] ?? null;
     }
 
 }

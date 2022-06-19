@@ -7,6 +7,7 @@ use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
+use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\Utils\Debug;
 
 class PostActionHandler {
@@ -32,15 +33,9 @@ class PostActionHandler {
             $source = $mapper->mapMessageToSource($msg);
 
             $execString = "";
-                
-            if ($source !== null) {
-                $driver = (new FetcherDriverFactory($this->appConfig))->getFetchDriverForSource($source);
-                $fetcherConfig = new FetcherSourceConfig($this->appConfig, $driver, $source);
 
-                if (!empty($fetcherConfig->getOpt("poster_proxy"))) {
-                    $execString .= $fetcherConfig->getOpt("poster_proxy") . " ";
-                }
-            }
+            $proxyCommand = $this->getProxyCommand($msg, $source);
+            $execString .= !empty($proxyCommand) ? ($proxyCommand . " ") : "";
 
             $execString .= "php \""  . __DIR__ . DIRECTORY_SEPARATOR
                 . ".." . DIRECTORY_SEPARATOR
@@ -50,7 +45,8 @@ class PostActionHandler {
                 . " -m \"" . $transferFilename . "\"";
 
             Debug::debug("Starting command:\n" . $execString);
-           
+
+            print_r($execString);exit(1);
             system($execString, $result);
             unlink($transferFilename);
         }
@@ -58,4 +54,19 @@ class PostActionHandler {
         return $result;
     }
 
+
+    protected function getProxyCommand(array $msg, array $source) : ?string {
+
+        $proxyCommand = null;
+
+        $postingDriver = (new PosterDriverFactory($this->appConfig))->findPoster($msg);
+        $posterConfig = new PosterConfig($this->appConfig, $source, $postingDriver);
+
+        try {
+            $proxyCommand = $posterConfig->getOpt("poster_proxy");
+        }
+        catch (\Exception $e) {}
+
+        return $proxyCommand;
+    }
 }
