@@ -30,7 +30,7 @@ $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 $mailbox = new Mailbox($sourceConfig);
 $driver->setMailbox($mailbox);
 
-Debug::debug("Processing source " . $source["url"]);
+Debug::debug("Processing source " . $source["url"] . " with driver " . $driver->getCode());
 
 // We have 2 main fail points here:
 // 1) problems with site like connection or markup changes

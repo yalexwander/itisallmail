@@ -158,7 +158,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
     protected function getThreadId(string $url): string
     {
-        preg_match('/t.me\/s\/(.+)$/', $url, $id);
+        preg_match('/t\.me\/s\/(.+)$/', $url, $id);
         return $id[1];
     }
 

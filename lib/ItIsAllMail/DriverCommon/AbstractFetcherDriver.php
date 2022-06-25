@@ -20,7 +20,8 @@ class AbstractFetcherDriver
 
     public function matchURL(string $url): bool
     {
-        if (preg_match("/" . $this->getCode() . "/", $url)) {
+        $filteredCode = preg_replace('/\./', '\\.', $this->getCode());
+        if (preg_match("/" . $filteredCode . "/", $url)) {
             return true;
         } else {
             return false;
