@@ -12,5 +12,5 @@ interface AddressMapperInterface {
      */
     public function mapMessageToSource(array $msg) : ?array;
 
-    public function canMapThis(array $msg, $mapType = null) : ?bool;
+    public function canMapThis(array $msg, string $mapType = null) : ?bool;
 }

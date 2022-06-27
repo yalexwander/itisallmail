@@ -125,7 +125,7 @@ class Message
         return $this->body;
     }
 
-    public function setBody($body) : void
+    public function setBody(string $body) : void
     {
         $this->body = $body;
     }
@@ -196,7 +196,7 @@ class Message
         }
     }
 
-    protected function getFormattedSubject($sourceConfig) {
+    protected function getFormattedSubject(HierarchicConfigInterface $sourceConfig) : string {
         $subject = $this->subject;
 
         if (mb_strlen($subject) > $this->subjectMaxChars) {

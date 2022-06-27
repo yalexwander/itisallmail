@@ -49,4 +49,25 @@ EOT;
         return $result;
     }
 
+
+    public static function saveResponseToDebugQueue(string $data) : ?string {
+        if (! getenv('CIM_DEBUG')) {
+            return null;
+        }
+
+        $saveDir = "/tmp/iam-dumps";
+        $queueSize = 100;
+
+        $existingFiles = glob($saveDir . DIRECTORY_SEPARATOR . "*");
+        if (count($existingFiles) > $queueSize) {
+            unlink($existingFiles[0]);
+        }
+
+        $tmpFile = $saveDir . DIRECTORY_SEPARATOR . microtime() . ".dump";
+        
+        file_put_contents($tmpFile, $data);
+
+        return $tmpFile;
+    }
+
 }

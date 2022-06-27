@@ -15,7 +15,7 @@ class HabrAPI {
     protected $client;
     protected $cookieJar;
 
-    public function __construct($credentials)
+    public function __construct(array $credentials)
     {
         $this->credentials = $credentials;
     }
@@ -56,8 +56,6 @@ class HabrAPI {
 
         $jsonData = json_encode($jsonRequest, JSON_UNESCAPED_UNICODE);
 
-        // print_r($jsonData);exit(1);
- 
         $csrfToken = $this->getCSRFToken($comment["source"]["url"]);
 
         if (empty($csrfToken)) {

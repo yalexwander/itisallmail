@@ -4,14 +4,14 @@ namespace ItIsAllMail;
 
 class SourceManager {
 
-    protected $config;
+    protected $appConfig;
 
     protected $sourcesFile;
     
     
-    public function __construct($config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
 
         $this->sourcesFile = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR
             . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
@@ -44,28 +44,36 @@ class SourceManager {
         $sources = $this->getSources();
 
         $newSources = [];
+        $deleted = false;
         foreach ($sources as $sId => $existingSource) {
             if ($existingSource["url"] !== $source["url"]) {
                 $newSources[] = $existingSource;
             }
+            else {
+                $deleted = true;
+            }
         }
 
-        yaml_emit_file($this->sourcesFile, $newSources);
-
-        return 1;
+        if ($deleted) {
+            yaml_emit_file($this->sourcesFile, $newSources);
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
 
-    protected function validateSource(array $source) {
+    protected function validateSource(array $source) : void {
         if (empty($source["url"])) {
             throw new \Exception("url parameter is required");
         }
     }
 
-    public function getSources() {
+    public function getSources() : array {
         return yaml_parse_file($this->sourcesFile);
     }
 
-    public function getSourceById($url) {
+    public function getSourceById(string $url) : ?array {
         foreach ($this->getSources() as $source) {
             if ($source["url"] === $url) {
                 return $source;

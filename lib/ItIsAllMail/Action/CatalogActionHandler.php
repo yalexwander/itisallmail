@@ -9,20 +9,20 @@ use ItIsAllMail\Factory\CatalogDriverFactory;
 
 class CatalogActionHandler {
 
-    protected $config;
+    protected $appConfig;
     protected $catalogDriverFactory;
 
-    public function __construct($config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
 
-        $this->catalogDriverFactory = new CatalogDriverFactory($config);
+        $this->catalogDriverFactory = new CatalogDriverFactory($appConfig);
     }
 
     public function process(string $arg, array $msg) : int {
         $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ] );
 
-        $catalogConfig = new CatalogConfig($this->config, $driver, [ "mailbox" => $this->config["catalog_mailbox"] ]);
+        $catalogConfig = new CatalogConfig($this->appConfig, $driver, [ "mailbox" => $this->appConfig["catalog_mailbox"] ]);
 
         $mailbox = new Mailbox($catalogConfig);
 

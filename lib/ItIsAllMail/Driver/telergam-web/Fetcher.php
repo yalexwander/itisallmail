@@ -42,11 +42,11 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         $threadId = $this->getThreadId($sourceURL);
 
         $posts = [
-            $this->getChannelTopPost($dom->findOneOrFalse("div.tgme_channel_info"), $sourceURL)
+            $this->getChannelTopPost($dom->findOne("div.tgme_channel_info"), $sourceURL)
         ];
 
         foreach ($dom->findMulti("div.tgme_widget_message") as $postNode) {
-            $author = $postNode->findOneOrFalse(".tgme_widget_message_owner_name")->text();
+            $author = $postNode->findOne(".tgme_widget_message_owner_name")->text();
             $author = MailHeaderProcessor::sanitizeNonLatinAddress($author);
 
             $postText = $this->getPostText($postNode);
@@ -143,7 +143,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         }
     }
 
-    public function getPostTitle($postText): string
+    public function getPostTitle(string $postText): string
     {
         $title = preg_replace('/((\r\n)+)|(\n+)/', ' ', $postText);
         $title = preg_replace('/\[http.+\]/', '', $title);
@@ -169,7 +169,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         );
     }
 
-    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig)
+    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig) : void
     {
         $attachementsCount = 0;
         foreach ($postNode->findMulti(".tgme_widget_message_photo_wrap") as $attachementNode) {

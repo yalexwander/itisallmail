@@ -9,7 +9,7 @@ class PosterDriverFactory {
 
     protected $appConfig;
     
-    public function __construct($appConfig)
+    public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }

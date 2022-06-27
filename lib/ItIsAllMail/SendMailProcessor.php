@@ -45,7 +45,7 @@ class SendMailProcessor {
      * Adding new commands remember, that this dunction must return 0 on
      * success, because this exit code will be passed as sendmail exit code
      */
-    protected function processCommand(string $rawMessage, array $parsedMsg, $options): int {
+    protected function processCommand(string $rawMessage, array $parsedMsg, array $options): int {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
         preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
@@ -56,10 +56,6 @@ class SendMailProcessor {
         if ($command === 'catalog') {
             $catalogActionHandler = new CatalogActionHandler($this->config);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
-        }
-        elseif ($command === 'feed') {
-            $feedActionHandler = new FeedActionHandler($this->config);
-            $commandResult = $feedActionHandler->process($commandArg, $parsedMsg);
         }
         elseif ($command === 'add') {
             $sourceAddActionHandler = new SourceAddActionHandler($this->config);

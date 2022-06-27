@@ -6,11 +6,11 @@ use ItIsAllMail\Interfaces\AddressMapperInterface;
 
 class AbstractAddressMapper implements AddressMapperInterface {
 
-    protected $config;
+    protected $appConfig;
 
-    public function __construct($config)
+    public function __construct($appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
     }
 
     public function mapMessageToSource(array $msg) : ?array
@@ -18,7 +18,7 @@ class AbstractAddressMapper implements AddressMapperInterface {
         throw new \Exception("Not implemented");
     }
 
-    public function canMapThis(array $msg, $mapType = null) : ?bool
+    public function canMapThis(array $msg, string $mapType = null) : ?bool
     {
         throw new \Exception("Not implemented");
     }

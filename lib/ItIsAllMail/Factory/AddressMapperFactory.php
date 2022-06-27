@@ -14,15 +14,15 @@ use ItIsAllMail\Config\DriverConfig;
 
 class AddressMapperFactory {
 
-    protected $config;
+    protected $appConfig;
     
-    public function __construct($config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
     }
     
     public function findMapper(array $msg) : AddressMapperInterface {
-        foreach ($this->config["drivers"] as $driverId) {
+        foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 
             if (! in_array("mapper", $driverOpts["features"])) {

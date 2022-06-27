@@ -3,17 +3,18 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Message;
+use ItIsAllMail\Factory\PosterDriverFactory;
 
 class PostingQueue {
 
     protected $appConfig;
 
-    public function __construct($appConfig)
+    public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }
 
-    public function add(array $msg) {
+    public function add(array $msg) : void {
     }
 
     public function send(array $msg) : array {
@@ -22,7 +23,7 @@ class PostingQueue {
 
         // $result = $poster->post($msg);
 
-        return $result;
+        return [];
     }
     
 }

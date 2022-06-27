@@ -4,6 +4,7 @@ namespace ItIsAllMail;
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
+use ItIsAllMail\MailboxUpdater;
 
 class Mailbox
 {
@@ -11,6 +12,7 @@ class Mailbox
     protected $path;
     protected $localMessages;
     protected $mailSubdirs;
+    protected $mailboxUpdater;
 
     public function __construct(HierarchicConfigInterface $sourceConfig)
     {
@@ -34,6 +36,8 @@ class Mailbox
         ];
 
         $this->loadMailbox();
+
+        $this->mailboxUpdater = new MailboxUpdater();
     }
 
     /**
@@ -45,7 +49,9 @@ class Mailbox
     }
 
     /**
-     * Read mailbox for a list of already known IDs
+     * Read mailbox for a list of already known IDs . It highly rely on
+     * neomutt scheme with added ":" to the end of filename, agter whcih one
+     * flags listed
      */
     protected function loadMailbox(): void
     {
@@ -73,6 +79,15 @@ class Mailbox
             "modified" => 0
         ];
 
+        $headersToUpdate = [];
+
+        if ($this->sourceConfig->getOpt('update_statusline_header_on_changed_messages')) {
+            $headersToUpdate[] = "Subject";
+        }
+        if ($this->sourceConfig->getOpt('update_subject_header_on_changed_messages')) {
+            $headersToUpdate[] = "x-iam-statusline";
+        }        
+
         foreach ($messages as $msg) {
             $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
 
@@ -82,12 +97,15 @@ class Mailbox
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
             }
+            else {
+                $this->mailboxUpdater->update($messageFilepath, $msg, $headersToUpdate);
+            }
         }
 
         return $mergeStats;
     }
 
-    public function getPath() {
+    public function getPath() : string {
         return $this->path;
     }
 }

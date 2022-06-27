@@ -33,7 +33,7 @@ class AbstractFetcherDriver
         return $this->driverCode;
     }
 
-    public function getOpt(string $key)
+    public function getOpt(string $key)  /* : mixed */
     {
         return $this->opts[$key] ?? null;
     }
@@ -76,12 +76,12 @@ class AbstractFetcherDriver
      * source posts change id or oder on site, but logically it is the same
      * posts that already was downloaded.
      */
-    public function setMailbox(Mailbox $m)
+    public function setMailbox(Mailbox $m) : void
     {
         $this->mailbox = $m;
     }
 
-    protected function getMailbox()
+    protected function getMailbox() : Mailbox
     {
         if ($this->mailbox === null) {
             die('Mailbox is not set for current driver instance');

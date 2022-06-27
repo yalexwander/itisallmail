@@ -14,7 +14,7 @@ class PostActionHandler {
 
     protected $appConfig;
 
-    public function __construct($appConfig)
+    public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }
@@ -24,7 +24,7 @@ class PostActionHandler {
 
         if (! empty($this->appConfig["use_posting_queue"])) {
             $queue = new PostingQueue($this->appConfig);
-            $queue->add($rawMessage);
+            $queue->add($msg);
         } else {
             $transferFilename = tempnam(sys_get_temp_dir(), "iam-post-");
             file_put_contents($transferFilename, $rawMessage);
@@ -46,7 +46,6 @@ class PostActionHandler {
 
             Debug::debug("Starting command:\n" . $execString);
 
-            print_r($execString);exit(1);
             system($execString, $result);
             unlink($transferFilename);
         }

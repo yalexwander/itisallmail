@@ -8,6 +8,10 @@ use ItIsAllMail\Factory\FetcherDriverFactory;
 
 class AbstractPosterDriver implements PosterDriverInterface {
 
+    protected $appConfig;
+    protected $posterConfig;
+    protected $code;
+
     public function __construct(array $appConfig, array $posterConfig)
     {
         $this->appConfig = $appConfig;
@@ -38,7 +42,7 @@ class AbstractPosterDriver implements PosterDriverInterface {
         }
     }
 
-    public function getOpt(string $key)
+    public function getOpt(string $key)  /* : mixed */
     {
         return $this->posterConfig[$key] ?? null;
     }

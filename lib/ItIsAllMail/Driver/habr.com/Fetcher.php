@@ -12,6 +12,7 @@ use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use voku\helper\SimpleHtmlDomInterface;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrDateParser.php");
 
@@ -81,7 +82,9 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
             "uri" => $source["url"]
         ]);
 
-        $this->setLastURLVisited($source["url"], $source["url"]);
+        if (! empty($html)) {
+            $this->setLastURLVisited($source["url"], $source["url"]);
+        }
 
         return $msg;
     }
@@ -166,7 +169,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function postToText(SimpleHtmlDom $node): string
+    protected function postToText(SimpleHtmlDomInterface $node): string
     {
         return (new HtmlToText($node->outerHtml()))->getText();
     }

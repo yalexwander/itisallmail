@@ -21,6 +21,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
 
     public function queryCatalog(string $query, array $opts = []) : array {
         $html = $this->getHTMLForQuery($query);
+        Debug::saveResponseToDebugQueue($html);
         $dom = HtmlDomParser::str_get_html($html);
 
         $result = [];
@@ -76,7 +77,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
         return (new HtmlToText($node->outerHtml()))->getText();
     }
 
-    public function getCode($catalogType = null) : string {
+    public function getCode(string $catalogType = null) : string {
         return $this->driverCode;
     }
 

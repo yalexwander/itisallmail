@@ -33,7 +33,12 @@ class Browser
                 $data = file_get_contents(getenv('CIM_DEBUG_BROWSER_CACHE'));
             }
 
-            return $data;
+            return [
+                "status" => "ok",
+                "data" => $data,
+                "headers" => [],
+                "cookies" => []
+            ];
         }
 
         $data = $client->request('GET', $url)->getBody();
@@ -56,7 +61,7 @@ class Browser
         return $result["data"];
     }
 
-    public static function getRandomUserAgent() {
+    public static function getRandomUserAgent() : string {
         return self::$userAgents[ array_rand(self::$userAgents) ];
     }
 }

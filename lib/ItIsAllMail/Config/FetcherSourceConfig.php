@@ -21,7 +21,7 @@ class FetcherSourceConfig implements HierarchicConfigInterface {
     /**
      * Return specified config value based on where it was set
      */
-    public function getOpt(string $key) {
+    public function getOpt(string $key)  /* : mixed */{
         if (isset($this->sourceConfig[$key])) {
             return $this->sourceConfig[$key];
         }

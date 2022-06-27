@@ -10,15 +10,15 @@ use ItIsAllMail\SourceManager;
 
 class SourceDeleteActionHandler {
 
-    protected $config;
+    protected $appConfig;
 
-    public function __construct($config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
     }
 
     public function process(string $arg, array $msg) : int {
-        $mapperFactory = new AddressMapperFactory($this->config);
+        $mapperFactory = new AddressMapperFactory($this->appConfig);
         $addressMapper = $mapperFactory->findMapper($msg);
         
         $source = $addressMapper->mapMessageToSource($msg);
@@ -27,7 +27,7 @@ class SourceDeleteActionHandler {
             return 1;
         }
 
-        $sourceManager = new SourceManager($this->config);
+        $sourceManager = new SourceManager($this->appConfig);
         $sourceManager->deleteSource($source);
 
         return 0;

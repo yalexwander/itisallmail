@@ -12,6 +12,7 @@ use ItIsAllMail\Utils\MailHeaderProcessor;
 use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use voku\helper\SimpleHtmlDomInterface;
 
 class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
@@ -107,7 +108,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function postToText(SimpleHtmlDom $node): string
+    protected function postToText(SimpleHtmlDomInterface $node): string
     {
         $text = (new HtmlToText($node->innerHtml()))->getText();
         $text = preg_replace('/ \[https\:\/\/www\.forumhouse\.ru\/members\/[0-9]+\/]/', '', $text);
@@ -122,7 +123,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
         return $id[1];
     }
 
-    protected function getParent(SimpleHtmlDom $node, string $defaultParent): string
+    protected function getParent(SimpleHtmlDomInterface $node, string $defaultParent): string
     {
         $parent = $node->findOneOrFalse(".SelectQuoteContainer a.AttributionLink");
         if ($parent) {
@@ -170,7 +171,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
      * Try to extract post date. We have at least 2 html formats here. For old
      * topics and new ones. Probably more, so fallback to current date.
      */
-    protected function extractDateFromPost(SimpleHtmlDom $post): \DateTime
+    protected function extractDateFromPost(SimpleHtmlDomInterface $post): \DateTime
     {
         $dateWidget = $post->findOneOrFalse("a.datePermalink>span");
         $dateString = "";

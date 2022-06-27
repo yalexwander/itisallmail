@@ -13,6 +13,7 @@ use ItIsAllMail\Utils\MailHeaderProcessor;
 use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use voku\helper\SimpleHtmlDomInterface;
 
 class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
@@ -39,7 +40,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
             $url = $this->getLastURLVisited($threadId) ?? $startUrl;
         }
 
-        $this->threaMessageMap = [];
+        $this->threadMessageMap = [];
 
         while ($url) {
             $html = Browser::getAsString($url);
@@ -60,7 +61,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
                 $created = $this->getPostDate($postNode);
 
                 $postId = $threadId . "#" . $this->getPostId($postNode);
-                $this->threaMessageMap[$postId] = true;
+                $this->threadMessageMap[$postId] = true;
 
                 $isStartPost = $postNode->findOneOrFalse(".msg_body > footer > div.sign > a");
                 if ($isStartPost) {
@@ -147,7 +148,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Generate something can be put into "Subject" field
      */
-    protected function getPostTitle(SimpleHtmlDom $post, string $bodyText): string
+    protected function getPostTitle(SimpleHtmlDomInterface $post, string $bodyText): string
     {
         $titleWidget = $post->findOneOrFalse("h1 > a");
 
@@ -178,7 +179,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
         return $id[1] . "_" . $id[2] . "_" . $id[3];
     }
 
-    protected function getParent(SimpleHtmlDom $node, string $defaultParent): string
+    protected function getParent(SimpleHtmlDomInterface $node, string $defaultParent): string
     {
         $parent = $node->findOneOrFalse("a");
         $parentId = null;
@@ -196,7 +197,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
         }
 
         // prevent from linking to other threads
-        if (empty($this->threaMessageMap[$parentId])) {
+        if (empty($this->threadMessageMap[$parentId])) {
             $parentId = $defaultParent;
         }
 
@@ -207,7 +208,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
      * Try to extract post date. We have at least 2 html formats here. For old
      * topics and new ones. Probably more, so fallback to current date.
      */
-    protected function getPostDate(SimpleHtmlDom $post): \DateTime
+    protected function getPostDate(SimpleHtmlDomInterface $post): \DateTime
     {
         $dateWidget = $post->find("div.sign > time")[0];
 
@@ -219,7 +220,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
     }
 
 
-    protected function getPostId(SimpleHtmlDom $post): string
+    protected function getPostId(SimpleHtmlDomInterface $post): string
     {
         preg_match('/\-([0-9]+)/', $post->getAttribute("id"), $id);
         return $id[1];

@@ -27,5 +27,5 @@ interface FetchDriverInterface
     /**
      * Must return driver option by given name.
      */
-    public function getOpt(string $key);
+    public function getOpt(string $key)  /* : mixed */;
 }

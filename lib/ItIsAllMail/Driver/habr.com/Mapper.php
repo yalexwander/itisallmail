@@ -8,7 +8,7 @@ use ItIsAllMail\SourceManager;
 
 class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface {
 
-    public function canMapThis(array $msg, $mapType = null) : ?bool
+    public function canMapThis(array $msg, string $mapType = null) : ?bool
     {
         $uri = $msg["headers"]["x-iam-uri"] ?? $msg["referenced_message"]["headers"]["x-iam-uri"];
         if (preg_match('/habr\.com\//' ,$uri)) {
