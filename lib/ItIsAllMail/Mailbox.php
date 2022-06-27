@@ -86,7 +86,7 @@ class Mailbox
         }
         if ($this->sourceConfig->getOpt('update_subject_header_on_changed_messages')) {
             $headersToUpdate[] = "x-iam-statusline";
-        }        
+        }
 
         foreach ($messages as $msg) {
             $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
@@ -96,8 +96,7 @@ class Mailbox
                 $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
-            }
-            else {
+            } else {
                 $this->mailboxUpdater->update($messageFilepath, $msg, $headersToUpdate);
             }
         }
@@ -105,7 +104,8 @@ class Mailbox
         return $mergeStats;
     }
 
-    public function getPath() : string {
+    public function getPath(): string
+    {
         return $this->path;
     }
 }

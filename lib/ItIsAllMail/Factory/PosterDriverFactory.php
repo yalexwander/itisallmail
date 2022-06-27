@@ -5,16 +5,18 @@ namespace ItIsAllMail\Factory;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Config\DriverConfig;
 
-class PosterDriverFactory {
+class PosterDriverFactory
+{
 
     protected $appConfig;
-    
+
     public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }
-    
-    public function findPoster(array $msg) : PosterDriverInterface {
+
+    public function findPoster(array $msg): PosterDriverInterface
+    {
         $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
         $parts = explode("@", $toHeader);
         $driverCode = array_pop($parts);
@@ -39,5 +41,4 @@ class PosterDriverFactory {
 
         throw new \Exception("Poster for code $driverCode not found");
     }
-    
 }

@@ -4,7 +4,8 @@ namespace ItIsAllMail\Action;
 
 use ItIsAllMail\SourceManager;
 
-class SourceAddActionHandler {
+class SourceAddActionHandler
+{
     protected $appConfig;
 
     public function __construct(array $appConfig)
@@ -12,7 +13,8 @@ class SourceAddActionHandler {
         $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, array $msg) : int {
+    public function process(string $arg, array $msg): int
+    {
         $source = [
             "url" => $msg["headers"]["x-iam-uri"]
         ];

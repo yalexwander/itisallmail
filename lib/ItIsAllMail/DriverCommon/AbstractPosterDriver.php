@@ -6,7 +6,8 @@ use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 
-class AbstractPosterDriver implements PosterDriverInterface {
+class AbstractPosterDriver implements PosterDriverInterface
+{
 
     protected $appConfig;
     protected $posterConfig;
@@ -18,7 +19,8 @@ class AbstractPosterDriver implements PosterDriverInterface {
         $this->posterConfig = $posterConfig;
     }
 
-    public function canProcessMessage(array $msg): bool {
+    public function canProcessMessage(array $msg): bool
+    {
         return false;
     }
 
@@ -27,7 +29,7 @@ class AbstractPosterDriver implements PosterDriverInterface {
         return $this->code;
     }
 
-    public function post(array $msg, array $source = null, array $opts = []) : array
+    public function post(array $msg, array $source = null, array $opts = []): array
     {
         throw new \Exception("Not implemented");
     }
@@ -46,5 +48,4 @@ class AbstractPosterDriver implements PosterDriverInterface {
     {
         return $this->posterConfig[$key] ?? null;
     }
-
 }

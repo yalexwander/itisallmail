@@ -4,7 +4,6 @@ namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
-
 use ItIsAllMail\HtmlToText;
 use ItIsAllMail\Message;
 use ItIsAllMail\Utils\Browser;
@@ -15,11 +14,13 @@ use voku\helper\SimpleHtmlDom;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrDateParser.php");
 
-class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverInterface {
+class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverInterface
+{
 
     protected $driverCode = "habr.com";
 
-    public function queryCatalog(string $query, array $opts = []) : array {
+    public function queryCatalog(string $query, array $opts = []): array
+    {
         $html = $this->getHTMLForQuery($query);
         Debug::saveResponseToDebugQueue($html);
         $dom = HtmlDomParser::str_get_html($html);
@@ -59,7 +60,8 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
         return $result;
     }
 
-    public function canHandleQuery(string $query, array $opts = []): bool {
+    public function canHandleQuery(string $query, array $opts = []): bool
+    {
 
         if (preg_match('/habr\.com/', $query)) {
             return true;
@@ -77,11 +79,13 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
         return (new HtmlToText($node->outerHtml()))->getText();
     }
 
-    public function getCode(string $catalogType = null) : string {
+    public function getCode(string $catalogType = null): string
+    {
         return $this->driverCode;
     }
 
-    protected function getHTMLForQuery(string $query) : string {
+    protected function getHTMLForQuery(string $query): string
+    {
         $url = $query;
         $cookies = [];
         $languages = [ "ru", "en" ];

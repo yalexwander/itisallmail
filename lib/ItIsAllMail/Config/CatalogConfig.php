@@ -5,7 +5,8 @@ namespace ItIsAllMail\Config;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 
-class CatalogConfig implements HierarchicConfigInterface {
+class CatalogConfig implements HierarchicConfigInterface
+{
 
     protected $appConfig;
     protected $driver;
@@ -21,14 +22,13 @@ class CatalogConfig implements HierarchicConfigInterface {
     /**
      * Return specified config value based on where it was set
      */
-    public function getOpt(string $key) /* : mixed */ {
+    public function getOpt(string $key) /* : mixed */
+    {
         if (isset($this->sourceConfig[$key])) {
             return $this->sourceConfig[$key];
-        }
-        elseif (isset($this->appConfig[$key])) {
+        } elseif (isset($this->appConfig[$key])) {
             return $this->appConfig[$key];
-        }
-        else {
+        } else {
             throw new \Exception($key . " option is not defined");
         }
     }

@@ -10,7 +10,8 @@ use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\Utils\Debug;
 
-class PostActionHandler {
+class PostActionHandler
+{
 
     protected $appConfig;
 
@@ -19,7 +20,8 @@ class PostActionHandler {
         $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, string $rawMessage, array $msg) : int {
+    public function process(string $arg, string $rawMessage, array $msg): int
+    {
         $result = 1;
 
         if (! empty($this->appConfig["use_posting_queue"])) {
@@ -54,7 +56,8 @@ class PostActionHandler {
     }
 
 
-    protected function getProxyCommand(array $msg, array $source) : ?string {
+    protected function getProxyCommand(array $msg, array $source): ?string
+    {
 
         $proxyCommand = null;
 
@@ -63,8 +66,8 @@ class PostActionHandler {
 
         try {
             $proxyCommand = $posterConfig->getOpt("poster_proxy");
+        } catch (\Exception $e) {
         }
-        catch (\Exception $e) {}
 
         return $proxyCommand;
     }

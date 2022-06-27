@@ -16,7 +16,7 @@ class Browser
         'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
     ];
 
-    public static function get(string $url, array $headers = [], array $cookies = []) : array
+    public static function get(string $url, array $headers = [], array $cookies = []): array
     {
         $client = new Client([
             'headers' => array_merge(
@@ -61,7 +61,8 @@ class Browser
         return $result["data"];
     }
 
-    public static function getRandomUserAgent() : string {
+    public static function getRandomUserAgent(): string
+    {
         return self::$userAgents[ array_rand(self::$userAgents) ];
     }
 }

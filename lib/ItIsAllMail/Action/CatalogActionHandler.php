@@ -7,7 +7,8 @@ use ItIsAllMail\Mailbox;
 use ItIsAllMail\Config\CatalogConfig;
 use ItIsAllMail\Factory\CatalogDriverFactory;
 
-class CatalogActionHandler {
+class CatalogActionHandler
+{
 
     protected $appConfig;
     protected $catalogDriverFactory;
@@ -19,8 +20,9 @@ class CatalogActionHandler {
         $this->catalogDriverFactory = new CatalogDriverFactory($appConfig);
     }
 
-    public function process(string $arg, array $msg) : int {
-        $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ] );
+    public function process(string $arg, array $msg): int
+    {
+        $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ]);
 
         $catalogConfig = new CatalogConfig($this->appConfig, $driver, [ "mailbox" => $this->appConfig["catalog_mailbox"] ]);
 
@@ -31,7 +33,7 @@ class CatalogActionHandler {
         ]);
 
         $mergeResult = $mailbox->mergeMessages($posts);
-        
+
         return 0;
     }
 }

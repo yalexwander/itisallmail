@@ -40,7 +40,7 @@ class Storage
      * Try to keep balance betwee readability and security for possible theing
      * like nicknames, urls, emails, etc
      */
-    protected static function sanitizeFilename(string $key) : string
+    protected static function sanitizeFilename(string $key): string
     {
         return preg_replace(
             '/[^A-Za-z0-9@\._]+/',

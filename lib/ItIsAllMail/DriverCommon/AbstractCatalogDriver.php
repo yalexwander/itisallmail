@@ -12,8 +12,8 @@ class AbstractCatalogDriver
         $this->appConfig = $appConfig;
         $this->catalogDriverConfig = $catalogDriverConfig;
     }
-    
-    public function canHandleQuery(string $query, array $opts = []) : bool
+
+    public function canHandleQuery(string $query, array $opts = []): bool
     {
         return false;
     }

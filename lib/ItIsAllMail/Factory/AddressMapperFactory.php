@@ -12,16 +12,18 @@ use ItIsAllMail\Config\DriverConfig;
  */
 
 
-class AddressMapperFactory {
+class AddressMapperFactory
+{
 
     protected $appConfig;
-    
+
     public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }
-    
-    public function findMapper(array $msg) : AddressMapperInterface {
+
+    public function findMapper(array $msg): AddressMapperInterface
+    {
         foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
 

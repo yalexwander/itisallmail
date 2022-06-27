@@ -8,7 +8,6 @@ use Symfony\Component\Mime\Part\Multipart\AlternativePart;
 use Symfony\Component\Mime\Part\TextPart;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Header\DateHeader;
-
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 
@@ -90,7 +89,7 @@ class Message
             ),
             ... $this->attachements
         );
-       
+
         $headers->addTextHeader('Subject', $this->getFormattedSubject($sourceConfig));
 
         $this->setExtraHeaders($headers, $sourceConfig);
@@ -125,7 +124,7 @@ class Message
         return $this->body;
     }
 
-    public function setBody(string $body) : void
+    public function setBody(string $body): void
     {
         $this->body = $body;
     }
@@ -191,18 +190,19 @@ class Message
             if (count($this->attachements)) {
                 $statusline .= "\u{1f4be} ";
             }
-        
+
             $headers->addTextHeader('x-iam-statusline', $statusline);
         }
     }
 
-    protected function getFormattedSubject(HierarchicConfigInterface $sourceConfig) : string {
+    protected function getFormattedSubject(HierarchicConfigInterface $sourceConfig): string
+    {
         $subject = $this->subject;
 
         if (mb_strlen($subject) > $this->subjectMaxChars) {
             $subject = mb_substr($subject, 0, $this->subjectMaxChars) . "...";
         }
-        
+
         if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
             if (count($this->attachementLinks)) {
                 $subject = "[A] " . $subject;

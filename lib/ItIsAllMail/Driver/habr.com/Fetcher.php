@@ -40,8 +40,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 ->getCatalogDriver($source["url"], [ 'source' => $source]);
 
             $posts = $catalog->queryCatalog($source["url"]);
-        }
-        else {
+        } else {
             if (null === $this->getLastURLVisited($source["url"])) {
                 $posts[] = $this->getFirstPost($source);
             }
@@ -145,8 +144,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
             $score = $node->findOne("div.tm-votes-meter title")->text();
             if (preg_match('/↑([0-9]+).*?↓([0-9]+)/u', $score, $score)) {
                 $score = [ intval($score[1]), intval($score[2]) ];
-            }
-            else {
+            } else {
                 $score = null;
             }
 
@@ -188,11 +186,11 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         return $id[1];
     }
 
-    protected function isCatalogQuery(array $source) : bool {
+    protected function isCatalogQuery(array $source): bool
+    {
         if (preg_match('/\/[0-9]+\/$/', $source["url"])) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }

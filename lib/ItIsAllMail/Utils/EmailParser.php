@@ -1,12 +1,13 @@
 <?php
 
 namespace ItIsAllMail\Utils;
+
 use ItIsAllMail\Utils\Debug;
 
+class EmailParser
+{
 
-class EmailParser {
-
-    public static function parseMessage(string $rawMessage) : array
+    public static function parseMessage(string $rawMessage): array
     {
         $mime = mailparse_msg_create();
 
@@ -38,7 +39,7 @@ class EmailParser {
 
         $complexMessage = false;
         $waitingForSubmessage = false;
-        
+
         foreach ($msgStructure as $partId) {
             $partResource = mailparse_msg_get_part($mime, $partId);
             $partContent = mailparse_msg_get_part_data($partResource);
@@ -105,5 +106,4 @@ class EmailParser {
 
         return $parsedMessage;
     }
-    
 }

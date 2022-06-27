@@ -2,13 +2,14 @@
 
 namespace ItIsAllMail;
 
-class SourceManager {
+class SourceManager
+{
 
     protected $appConfig;
 
     protected $sourcesFile;
-    
-    
+
+
     public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
@@ -17,7 +18,8 @@ class SourceManager {
             . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
     }
 
-    public function addSource(array $source) : int {
+    public function addSource(array $source): int
+    {
         $this->validateSource($source);
 
         $sources = $this->getSources();
@@ -40,7 +42,8 @@ class SourceManager {
         }
     }
 
-    public function deleteSource(array $source) : int {
+    public function deleteSource(array $source): int
+    {
         $sources = $this->getSources();
 
         $newSources = [];
@@ -48,8 +51,7 @@ class SourceManager {
         foreach ($sources as $sId => $existingSource) {
             if ($existingSource["url"] !== $source["url"]) {
                 $newSources[] = $existingSource;
-            }
-            else {
+            } else {
                 $deleted = true;
             }
         }
@@ -57,23 +59,25 @@ class SourceManager {
         if ($deleted) {
             yaml_emit_file($this->sourcesFile, $newSources);
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }
 
-    protected function validateSource(array $source) : void {
+    protected function validateSource(array $source): void
+    {
         if (empty($source["url"])) {
             throw new \Exception("url parameter is required");
         }
     }
 
-    public function getSources() : array {
+    public function getSources(): array
+    {
         return yaml_parse_file($this->sourcesFile);
     }
 
-    public function getSourceById(string $url) : ?array {
+    public function getSourceById(string $url): ?array
+    {
         foreach ($this->getSources() as $source) {
             if ($source["url"] === $url) {
                 return $source;

@@ -5,7 +5,8 @@ namespace ItIsAllMail;
 use ItIsAllMail\Message;
 use ItIsAllMail\Factory\PosterDriverFactory;
 
-class PostingQueue {
+class PostingQueue
+{
 
     protected $appConfig;
 
@@ -14,10 +15,12 @@ class PostingQueue {
         $this->appConfig = $appConfig;
     }
 
-    public function add(array $msg) : void {
+    public function add(array $msg): void
+    {
     }
 
-    public function send(array $msg) : array {
+    public function send(array $msg): array
+    {
         $posterDriverFactory = new PosterDriverFactory($this->appConfig);
         $poster = $posterDriverFactory->findPoster($msg);
 
@@ -25,5 +28,4 @@ class PostingQueue {
 
         return [];
     }
-    
 }

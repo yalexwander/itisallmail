@@ -9,7 +9,8 @@ use GuzzleHttp\Cookie;
 use GuzzleHttp\Cookie\SetCookie;
 use ItIsAllMail\Utils\Debug;
 
-class HabrAPI {
+class HabrAPI
+{
 
     protected $credentials;
     protected $client;
@@ -20,7 +21,8 @@ class HabrAPI {
         $this->credentials = $credentials;
     }
 
-    public function auth() : bool {
+    public function auth(): bool
+    {
         $this->cookieJar = new CookieJar();
         $this->cookieJar = CookieJar::fromArray([
             "connect_sid" => $this->credentials["secret"],
@@ -43,8 +45,9 @@ class HabrAPI {
          "text" => comment text
        ]
      */
-    public function sendComment(array $comment) : array {
-        
+    public function sendComment(array $comment): array
+    {
+
         $jsonRequest = [
             "isMarkdown" => true,
             "parentId" => $comment["parent"],
@@ -78,7 +81,8 @@ class HabrAPI {
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function getCSRFToken(string $url) : string {
+    public function getCSRFToken(string $url): string
+    {
         $commentsUrl = $url . "comments";
 
         $response = $this->client->request(
@@ -92,24 +96,25 @@ class HabrAPI {
             ]
         );
         $content = $response->getBody()->getContents();
-        preg_match('/<meta name="csrf-token" content="(.+?)">/', $content , $token);
+        preg_match('/<meta name="csrf-token" content="(.+?)">/', $content, $token);
 
         return $token[1];
     }
 
-    protected function formatTextToPseudoMarkdown(string $text) : string {
+    protected function formatTextToPseudoMarkdown(string $text): string
+    {
         $paragraphs = explode("\n", $text);
 
         $md = [
             "type" => "doc",
             "content" => []
         ];
-        
+
         foreach ($paragraphs as $p) {
             if (empty($p)) {
                 continue;
             }
-            
+
             $md["content"][] = [
                 "type" => "paragraph",
                 "attrs" => [
@@ -123,11 +128,10 @@ class HabrAPI {
                         "text" => $p
                     ]
                 ]
-            ]; 
+            ];
         }
 
         $json = json_encode($md, JSON_UNESCAPED_UNICODE);
         return $json;
     }
-
 }

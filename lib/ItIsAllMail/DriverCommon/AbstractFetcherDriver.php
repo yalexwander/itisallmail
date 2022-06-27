@@ -76,12 +76,12 @@ class AbstractFetcherDriver
      * source posts change id or oder on site, but logically it is the same
      * posts that already was downloaded.
      */
-    public function setMailbox(Mailbox $m) : void
+    public function setMailbox(Mailbox $m): void
     {
         $this->mailbox = $m;
     }
 
-    protected function getMailbox() : Mailbox
+    protected function getMailbox(): Mailbox
     {
         if ($this->mailbox === null) {
             die('Mailbox is not set for current driver instance');
@@ -98,7 +98,8 @@ class AbstractFetcherDriver
     /**
      * Can be used to add time before next fetch in monitor
      */
-    public function getAdditionalDelayBeforeNextFetch(array $source) : int {
+    public function getAdditionalDelayBeforeNextFetch(array $source): int
+    {
         return 0;
     }
 }

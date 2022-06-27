@@ -37,7 +37,8 @@ EOT;
     }
 
 
-    public static function dumpResponse($response) : string {
+    public static function dumpResponse($response): string
+    {
         $result = "";
 
         foreach ($response->getHeaders() as $name => $values) {
@@ -50,7 +51,8 @@ EOT;
     }
 
 
-    public static function saveResponseToDebugQueue(string $data) : ?string {
+    public static function saveResponseToDebugQueue(string $data): ?string
+    {
         if (! getenv('CIM_DEBUG')) {
             return null;
         }
@@ -64,10 +66,9 @@ EOT;
         }
 
         $tmpFile = $saveDir . DIRECTORY_SEPARATOR . microtime() . ".dump";
-        
+
         file_put_contents($tmpFile, $data);
 
         return $tmpFile;
     }
-
 }

@@ -8,7 +8,8 @@ use ItIsAllMail\Factory\CatalogDriverFactory;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\SourceManager;
 
-class SourceDeleteActionHandler {
+class SourceDeleteActionHandler
+{
 
     protected $appConfig;
 
@@ -17,10 +18,11 @@ class SourceDeleteActionHandler {
         $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, array $msg) : int {
+    public function process(string $arg, array $msg): int
+    {
         $mapperFactory = new AddressMapperFactory($this->appConfig);
         $addressMapper = $mapperFactory->findMapper($msg);
-        
+
         $source = $addressMapper->mapMessageToSource($msg);
 
         if ($source === null) {

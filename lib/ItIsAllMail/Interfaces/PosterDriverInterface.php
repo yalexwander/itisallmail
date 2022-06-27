@@ -31,5 +31,5 @@ interface PosterDriverInterface
      *
      * The only "status" field is required
      */
-    public function post(array $msg, array $source = null, array $opts = []) : array;
+    public function post(array $msg, array $source = null, array $opts = []): array;
 }

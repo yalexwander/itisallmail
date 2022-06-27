@@ -137,8 +137,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
             $rawHtml = preg_replace('/(<i [^>]*>)|(<\/i>)/', '', $rawHtml);
 
             return (new HtmlToText($rawHtml))->getText();
-        }
-        else {
+        } else {
             return "";
         }
     }
@@ -169,7 +168,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         );
     }
 
-    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig) : void
+    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig): void
     {
         $attachementsCount = 0;
         foreach ($postNode->findMulti(".tgme_widget_message_photo_wrap") as $attachementNode) {
@@ -218,5 +217,4 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     {
         return $this->getMailbox()->msgExists($id);
     }
-
 }

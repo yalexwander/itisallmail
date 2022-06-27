@@ -12,13 +12,15 @@ use ItIsAllMail\Config\PosterConfig;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
-class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
+class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
+{
 
     protected $appConfig;
     protected $posterConfig;
     protected $driverCode = "habr.com";
 
-    public function canProcessMessage(array $msg): bool {
+    public function canProcessMessage(array $msg): bool
+    {
         $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
 
         if (preg_match('/@habr.com$/', $toHeader)) {
@@ -28,7 +30,8 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface {
         return false;
     }
 
-    public function post(array $msg, array $source = null, array $opts = []) : array {
+    public function post(array $msg, array $source = null, array $opts = []): array
+    {
         $this->assertEmptyMessage($msg);
 
         $posterConfig = new PosterConfig($this->appConfig, $source, $this);

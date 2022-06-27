@@ -37,7 +37,7 @@ class CatalogDriverFactory
     public function getCatalogDriver(string $query, array $opts): CatalogDriverInterface
     {
         $opts["catalog_default_driver"] = $this->appConfig["catalog_default_driver"];
-        
+
         foreach ($this->driverList as $driver) {
             if ($driver->canHandleQuery($query, $opts)) {
                 return $driver;

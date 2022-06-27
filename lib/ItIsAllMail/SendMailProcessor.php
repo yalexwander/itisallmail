@@ -8,7 +8,8 @@ use ItIsAllMail\Action\SourceDeleteActionHandler;
 use ItIsAllMail\Action\PostActionHandler;
 use ItIsAllMail\Utils\EmailParser;
 
-class SendMailProcessor {
+class SendMailProcessor
+{
     protected $config;
 
     public function __construct(array $config)
@@ -18,18 +19,19 @@ class SendMailProcessor {
 
 
 
-    public function process(string $rawMessage, array $options) : int
+    public function process(string $rawMessage, array $options): int
     {
         $parsed = EmailParser::parseMessage($rawMessage);
 
         if ($this->isCommandMessage($parsed, $options)) {
             return $this->processCommand($rawMessage, $parsed, $options);
         }
-       
+
         return 1;
     }
 
-    protected function isCommandMessage(array $parsedMsg, array $options): bool {
+    protected function isCommandMessage(array $parsedMsg, array $options): bool
+    {
         if (preg_match('/^\/([a-z]+)/', $parsedMsg["body"])) {
             return true;
         }
@@ -45,7 +47,8 @@ class SendMailProcessor {
      * Adding new commands remember, that this dunction must return 0 on
      * success, because this exit code will be passed as sendmail exit code
      */
-    protected function processCommand(string $rawMessage, array $parsedMsg, array $options): int {
+    protected function processCommand(string $rawMessage, array $parsedMsg, array $options): int
+    {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
         preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
@@ -56,25 +59,20 @@ class SendMailProcessor {
         if ($command === 'catalog') {
             $catalogActionHandler = new CatalogActionHandler($this->config);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
-        }
-        elseif ($command === 'add') {
+        } elseif ($command === 'add') {
             $sourceAddActionHandler = new SourceAddActionHandler($this->config);
             $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
-        }
-        elseif ($command === 'delete') {
+        } elseif ($command === 'delete') {
             $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->config);
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
-        }
-        elseif ($command === 'post') {
+        } elseif ($command === 'post') {
             $postActionHandler = new PostActionHandler($this->config);
             $commandResult = $postActionHandler->process($commandArg, $rawMessage, $parsedMsg);
-        }
-        else {
+        } else {
             print "Wrong command $command" . "\n";
             exit(1);
         }
 
         return $commandResult;
     }
-
 }

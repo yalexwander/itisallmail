@@ -4,9 +4,9 @@ namespace ItIsAllMail\Interfaces;
 
 interface CatalogDriverInterface
 {
-    public function queryCatalog(string $catalogType, array $opts = []) : array;
+    public function queryCatalog(string $catalogType, array $opts = []): array;
 
-    public function canHandleQuery(string $query, array $opts = []) : bool;
+    public function canHandleQuery(string $query, array $opts = []): bool;
 
     /**
      * This code not required to exactly match the site name driver created

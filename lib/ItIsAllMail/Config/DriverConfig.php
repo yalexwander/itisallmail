@@ -2,9 +2,10 @@
 
 namespace ItIsAllMail\Config;
 
-class DriverConfig {
+class DriverConfig
+{
 
-    public static function getDriverConfig(string $driver) : array
+    public static function getDriverConfig(string $driver): array
     {
         $configPath = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
             . $driver . DIRECTORY_SEPARATOR . "driver.cfg";
