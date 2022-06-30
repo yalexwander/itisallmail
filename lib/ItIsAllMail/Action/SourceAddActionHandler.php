@@ -3,6 +3,7 @@
 namespace ItIsAllMail\Action;
 
 use ItIsAllMail\SourceManager;
+use ItIsAllMail\Constants;
 
 class SourceAddActionHandler
 {
@@ -16,7 +17,7 @@ class SourceAddActionHandler
     public function process(string $arg, array $msg): int
     {
         $source = [
-            "url" => $msg["headers"]["x-iam-uri"]
+            "url" => $msg["headers"][Constants::IAM_HEADER_URI]
         ];
 
         $sourceManager = new SourceManager($this->appConfig);

@@ -10,6 +10,7 @@ use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Header\DateHeader;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
+use ItIsAllMail\Constants;
 
 /**
  * This class represents internal message. It does not maps directly to MIME
@@ -173,12 +174,12 @@ class Message
     protected function setExtraHeaders(Headers $headers, HierarchicConfigInterface $sourceConfig): void
     {
         if ($this->getUri() !== null) {
-            $headers->addTextHeader('x-iam-uri', $this->getUri());
+            $headers->addTextHeader(Constants::IAM_HEADER_URI, $this->getUri());
         }
 
         $score = $this->getScore();
         if (!empty($score)) {
-            $headers->addTextHeader('x-iam-score', implode(",", $score));
+            $headers->addTextHeader(Constants::IAM_HEADER_SCORE, implode(",", $score));
         }
 
         if ($sourceConfig->getOpt('add_statusline_header')) {
@@ -191,7 +192,7 @@ class Message
                 $statusline .= "\u{1f4be} ";
             }
 
-            $headers->addTextHeader('x-iam-statusline', $statusline);
+            $headers->addTextHeader(Constants::IAM_HEADER_STATUSLINE, $statusline);
         }
     }
 

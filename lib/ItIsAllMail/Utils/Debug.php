@@ -9,7 +9,7 @@ class Debug
 
     public static function debug(string $str): void
     {
-        if (getenv('CIM_DEBUG')) {
+        if (getenv('IAM_DEBUG')) {
             self::log($str);
         }
     }
@@ -53,7 +53,7 @@ EOT;
 
     public static function saveResponseToDebugQueue(string $data): ?string
     {
-        if (! getenv('CIM_DEBUG')) {
+        if (! getenv('IAM_DEBUG')) {
             return null;
         }
 

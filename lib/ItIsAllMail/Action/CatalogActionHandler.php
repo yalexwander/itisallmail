@@ -24,7 +24,9 @@ class CatalogActionHandler
     {
         $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ]);
 
-        $catalogConfig = new CatalogConfig($this->appConfig, $driver, [ "mailbox" => $this->appConfig["catalog_mailbox"] ]);
+        $catalogConfig = new CatalogConfig($this->appConfig, $driver, [
+            "mailbox" => $this->appConfig["catalog_mailbox"]
+        ]);
 
         $mailbox = new Mailbox($catalogConfig);
 

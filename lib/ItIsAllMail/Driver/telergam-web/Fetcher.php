@@ -168,8 +168,11 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         );
     }
 
-    protected function processPostAttachements(SimpleHtmlDom $postNode, Message $msg, FetcherSourceConfig $sourceConfig): void
-    {
+    protected function processPostAttachements(
+        SimpleHtmlDom $postNode,
+        Message $msg,
+        FetcherSourceConfig $sourceConfig
+    ): void {
         $attachementsCount = 0;
         foreach ($postNode->findMulti(".tgme_widget_message_photo_wrap") as $attachementNode) {
             $attachementURL = $attachementNode->getAttribute('style');

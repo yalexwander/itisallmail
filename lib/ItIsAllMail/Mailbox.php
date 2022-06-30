@@ -37,7 +37,7 @@ class Mailbox
 
         $this->loadMailbox();
 
-        $this->mailboxUpdater = new MailboxUpdater();
+        $this->mailboxUpdater = new MailboxUpdater($this->sourceConfig);
     }
 
     /**
@@ -79,15 +79,6 @@ class Mailbox
             "modified" => 0
         ];
 
-        $headersToUpdate = [];
-
-        if ($this->sourceConfig->getOpt('update_statusline_header_on_changed_messages')) {
-            $headersToUpdate[] = "Subject";
-        }
-        if ($this->sourceConfig->getOpt('update_subject_header_on_changed_messages')) {
-            $headersToUpdate[] = "x-iam-statusline";
-        }
-
         foreach ($messages as $msg) {
             $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
 
@@ -97,7 +88,13 @@ class Mailbox
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
-                $this->mailboxUpdater->update($messageFilepath, $msg, $headersToUpdate);
+                if (
+                    ! empty($this->sourceConfig["update_subject_header_on_changed_messages"]) or
+                    ! empty($this->sourceConfig["update_statusline_header_on_changed_messages"])
+                ) {
+                    $mergeStats["modified"]++;
+                    $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
+                }
             }
         }
 

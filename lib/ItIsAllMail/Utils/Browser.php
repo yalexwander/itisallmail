@@ -28,9 +28,9 @@ class Browser
         ]);
 
         $data = '';
-        if (getenv('CIM_DEBUG_BROWSER_CACHE')) {
-            if (file_exists(getenv('CIM_DEBUG_BROWSER_CACHE'))) {
-                $data = file_get_contents(getenv('CIM_DEBUG_BROWSER_CACHE'));
+        if (getenv('IAM_DEBUG_BROWSER_CACHE')) {
+            if (file_exists(getenv('IAM_DEBUG_BROWSER_CACHE'))) {
+                $data = file_get_contents(getenv('IAM_DEBUG_BROWSER_CACHE'));
             }
 
             return [
@@ -43,8 +43,8 @@ class Browser
 
         $data = $client->request('GET', $url)->getBody();
 
-        if (getenv('CIM_DEBUG_BROWSER_CACHE')) {
-            file_put_contents(getenv('CIM_DEBUG_BROWSER_CACHE'), $data);
+        if (getenv('IAM_DEBUG_BROWSER_CACHE')) {
+            file_put_contents(getenv('IAM_DEBUG_BROWSER_CACHE'), $data);
         }
 
         return [
