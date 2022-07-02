@@ -89,8 +89,8 @@ class Mailbox
                 file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
                 if (
-                    ! empty($this->sourceConfig["update_subject_header_on_changed_messages"]) or
-                    ! empty($this->sourceConfig["update_statusline_header_on_changed_messages"])
+                    ! empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages")) or
+                    ! empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
                 ) {
                     $mergeStats["modified"]++;
                     $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
