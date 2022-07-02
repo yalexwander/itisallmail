@@ -1,6 +1,6 @@
 IAM = {}
 
-IAM.normal_editor = "nano"
+IAM.normal_editor = "emacsclient -c -t"
 IAM.script_editor = "php neomutt/utils/dumb_editor/editor.php"
 IAM.sendmail = "php scripts/sendmail.php"
 
