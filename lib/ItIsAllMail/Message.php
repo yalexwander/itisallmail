@@ -177,23 +177,28 @@ class Message
             $headers->addTextHeader(Constants::IAM_HEADER_URI, $this->getUri());
         }
 
-        $score = $this->getScore();
         if (!empty($score)) {
-            $headers->addTextHeader(Constants::IAM_HEADER_SCORE, implode(",", $score));
+            $headers->addTextHeader(Constants::IAM_HEADER_SCORE, implode(",", $this->getScore()));
         }
 
         if ($sourceConfig->getOpt('add_statusline_header')) {
-            $statusline = "";
-            if ($score !== null) {
-                $statusline .= "\u{2764}" . $score[0] . " \u{26a1}" . $score[1] . " ";
-            }
-
-            if (count($this->attachements)) {
-                $statusline .= "\u{1f4be} ";
-            }
-
-            $headers->addTextHeader(Constants::IAM_HEADER_STATUSLINE, $statusline);
+            $headers->addTextHeader(Constants::IAM_HEADER_STATUSLINE, $this->generateStatusLineHeader($sourceConfig));
         }
+    }
+
+    protected function generateStatusLineHeader(HierarchicConfigInterface $sourceConfig) : ?string {
+        $statusline = "";
+
+        $score = $this->getScore();
+        if ($score !== null) {
+            $statusline .= "\u{2764}" . $score[0] . " \u{26a1}" . $score[1] . " ";
+        }
+
+        if (count($this->attachements)) {
+            $statusline .= "\u{1f4be} ";
+        }
+
+        return $statusline;
     }
 
     protected function getFormattedSubject(HierarchicConfigInterface $sourceConfig): string
@@ -218,5 +223,21 @@ class Message
         $subject = preg_replace('/ +/', ' ', $subject);
 
         return $subject;
+    }
+
+    /**
+     * This one is for comparing exisitng MIME file with not existing, but
+     * that where this message will be serialized into.
+     */
+    public function getTranslatedMIMEHeader(string $header, HierarchicConfigInterface $sourceConfig): string {
+        if ($header === Constants::IAM_HEADER_STATUSLINE) {
+            return $this->generateStatusLineHeader($sourceConfig);
+        }
+        elseif ($header === "subject") {
+            return $this->getFormattedSubject($sourceConfig);
+        }
+        else {
+            throw new \Exception("Unsupported header $header");
+        }
     }
 }

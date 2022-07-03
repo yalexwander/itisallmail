@@ -49,27 +49,43 @@ class Mailbox
     }
 
     /**
+     * Return message filename if message with such id already exist
+     */
+    public function getMessageFileById(string $id): ?string
+    {
+        if (! $this->msgExists($id)) {
+            return null;
+        }
+        else {
+            return $this->localMessages[$id];
+        }
+    }
+
+
+    /**
      * Read mailbox for a list of already known IDs . It highly rely on
-     * neomutt scheme with added ":" to the end of filename, agter whcih one
+     * neomutt scheme with added ":" to the end of filename, after which one
      * flags listed
+     *
+     * RACING_CONDITION - in case you update mailbox during the fetch
      */
     protected function loadMailbox(): void
     {
-        $localFiles = [];
-
         foreach ($this->mailSubdirs as $msd) {
-            $localFiles = array_merge($localFiles, scandir($msd));
-        }
+            $localFiles = scandir($msd);
 
-        foreach ($localFiles as $file) {
-            $msgId = $file;
-            $modified = strpos($file, ":");
-            if ($modified !== false) {
-                $msgId = substr($file, 0, $modified);
+            foreach ($localFiles as $file) {
+                $msgId = $file;
+                $modified = strpos($file, ":");
+                if ($modified !== false) {
+                    $msgId = substr($file, 0, $modified);
+                }
+
+                $this->localMessages[$msgId] = $msd . DIRECTORY_SEPARATOR . $file;
             }
 
-            $this->localMessages[$msgId] = 1;
         }
+
     }
 
     public function mergeMessages(array $messages): array
@@ -80,13 +96,14 @@ class Mailbox
         ];
 
         foreach ($messages as $msg) {
-            $messageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
+            $messageFilepath = $this->getMessageFileById($msg->getId());
 
-            if (! $this->msgExists($msg->getId())) {
-                Debug::log("Adding " . $msg->getId() . " as " . $messageFilepath);
+            if ($messageFilepath === null) {
+                $newMessageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
+                Debug::log("Adding " . $msg->getId() . " as " . $newMessageFilepath);
                 $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
-                file_put_contents($messageFilepath, $msg->toMIMEString($this->sourceConfig));
+                file_put_contents($newMessageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
                 if (
                     ! empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages")) or

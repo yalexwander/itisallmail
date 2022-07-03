@@ -31,14 +31,15 @@ class Browser
         if (getenv('IAM_DEBUG_BROWSER_CACHE')) {
             if (file_exists(getenv('IAM_DEBUG_BROWSER_CACHE'))) {
                 $data = file_get_contents(getenv('IAM_DEBUG_BROWSER_CACHE'));
-            }
 
-            return [
-                "status" => "ok",
-                "data" => $data,
-                "headers" => [],
-                "cookies" => []
-            ];
+                return [
+                    "status" => "ok",
+                    "data" => $data,
+                    "headers" => [],
+                    "cookies" => []
+                ];
+
+            }
         }
 
         $data = $client->request('GET', $url)->getBody();
