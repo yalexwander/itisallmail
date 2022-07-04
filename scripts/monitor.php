@@ -13,13 +13,13 @@ class Monitor {
 
     protected $fetchDriverFactory;
     protected $sourceManager;
-    protected $config;
+    protected $appConfig;
 
-    public function __construct(array $config)
+    public function __construct(array $appConfig)
     {
-        $this->fetchDriverFactory = new FetcherDriverFactory($config);
-        $this->sourceManager = new SourceManager($config);
-        $this->config = $config;
+        $this->fetchDriverFactory = new FetcherDriverFactory($appConfig);
+        $this->sourceManager = new SourceManager($appConfig);
+        $this->appConfig = $appConfig;
     }
 
 
@@ -31,7 +31,7 @@ class Monitor {
         foreach ($newSources as $source) {
             $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
 
-            $joinedConfig = new FetcherSourceConfig($this->config, $driver, $source);
+            $joinedConfig = new FetcherSourceConfig($this->appConfig, $driver, $source);
             $sourceUpdateInterval = intval($joinedConfig->getOpt("source_update_interval"))
                 + $driver->getAdditionalDelayBeforeNextFetch($source);
 
@@ -95,7 +95,7 @@ class Monitor {
         $execString = "php \""  . __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php\"";
 
         $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
-        $joinedConfig = new FetcherSourceConfig($this->config, $driver, $source);
+        $joinedConfig = new FetcherSourceConfig($this->appConfig, $driver, $source);
 
         $proxyApp = $joinedConfig->getOpt("fetcher_proxy");
         if (! empty($proxyApp)) {
@@ -113,8 +113,8 @@ class Monitor {
 
 }
 
-$config = yaml_parse_file($__AppConfigFile);
-$monitor = new Monitor($config);
+$appConfig = yaml_parse_file($__AppConfigFile);
+$monitor = new Monitor($appConfig);
 
 $timeMap = [];
 while (true) {

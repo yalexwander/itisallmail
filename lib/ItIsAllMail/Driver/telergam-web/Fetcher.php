@@ -41,8 +41,14 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
         $threadId = $this->getThreadId($sourceURL);
 
+        $topPostContainer = $dom->findOneOrFalse("div.tgme_channel_info");
+
+        if (! $topPostContainer) {
+            throw new \Exception("Seems {$sourceURL} is closed for web view");
+        }
+
         $posts = [
-            $this->getChannelTopPost($dom->findOne("div.tgme_channel_info"), $sourceURL)
+            $this->getChannelTopPost($topPostContainer, $sourceURL)
         ];
 
         foreach ($dom->findMulti("div.tgme_widget_message") as $postNode) {

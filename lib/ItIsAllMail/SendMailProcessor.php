@@ -10,11 +10,11 @@ use ItIsAllMail\Utils\EmailParser;
 
 class SendMailProcessor
 {
-    protected $config;
+    protected $appConfig;
 
-    public function __construct(array $config)
+    public function __construct(array $appConfig)
     {
-        $this->config = $config;
+        $this->appConfig = $appConfig;
     }
 
 
@@ -57,16 +57,16 @@ class SendMailProcessor
 
         $commandResult = 1;
         if ($command === 'catalog') {
-            $catalogActionHandler = new CatalogActionHandler($this->config);
+            $catalogActionHandler = new CatalogActionHandler($this->appConfig);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'add') {
-            $sourceAddActionHandler = new SourceAddActionHandler($this->config);
+            $sourceAddActionHandler = new SourceAddActionHandler($this->appConfig);
             $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'delete') {
-            $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->config);
+            $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->appConfig);
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'post') {
-            $postActionHandler = new PostActionHandler($this->config);
+            $postActionHandler = new PostActionHandler($this->appConfig);
             $commandResult = $postActionHandler->process($commandArg, $rawMessage, $parsedMsg);
         } else {
             print "Wrong command $command" . "\n";

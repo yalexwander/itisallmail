@@ -23,7 +23,7 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
     public function mapMessageToSource(array $msg): ?array
     {
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI];
-        $sourceManager = new SourceManager($this->config);
+        $sourceManager = new SourceManager($this->appConfig);
 
         if (
             ! empty($uri) and
