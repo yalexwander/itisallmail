@@ -23,7 +23,7 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
     {
         $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
 
-        if (preg_match('/@habr.com$/', $toHeader)) {
+        if (preg_match('/@' . preg_replace('/\./', '\\.', $this->driverCode) . '$/', $toHeader)) {
             return true;
         }
 
@@ -64,8 +64,8 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
 
         return [
             "newId"  => $comment["data"]["id"],
-            "status" => 1,
-            "error" => "",
+            "status" => empty($comment["commentAccess"]["isCanComment"]) ? 0 : 1,
+            "error" => $comment["commentAccess"]["cantCommentReason"],
             "response" => $comment
         ];
     }

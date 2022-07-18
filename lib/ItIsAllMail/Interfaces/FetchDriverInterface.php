@@ -12,8 +12,9 @@ interface FetchDriverInterface
 
     /**
      * Must return simple code like "habr.com" or "reddit.com", expecting it
-     * to be appended as domain to each email. It acutally must be a domain to
-     * ovveride symfony email validation constraint.
+     * to be appended as domain to each email. It actually must be a domain to
+     * ovveride symfony email validation constraint. Maybe it will changed
+     * later, but for now ensure it matches [a-z\-\.0-9]+ regex
      */
     public function getCode(): string;
 
