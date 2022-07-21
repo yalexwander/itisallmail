@@ -1,10 +1,33 @@
 # ItIsAllMail
 
-A tool to parse forums, imageboards, all sites with discussions to a
-mailbox format. Tools for working with mail are much more powerful and
-reluctant, than any site interface.
+A tool to parse forums, imageboards, all sites with discussions, and
+even chats and messengers to a mailbox format. Once you've got your
+data into a maildir, you can use it with all mail processing tools.
 
-## Example
+# Usage and basic concepts
+
+ItIsAllMail highly rely on Neomutt mail client, but can be used with any mail client, but with limited features. Each forum thread, telegram chat etc. is treated as "Source". Source identified by its URI. Each source can be configured in unique way, like update interval, prxoxy, mail converting options etc.
+
+Many options can be defined on 3 levels:
+
+ - app level, in `conf/config.yml`
+ - driver level, in corresponding `lib/ItIsAllMail/Driver/<driver>/driver.cfg`
+ - source level, in corresponsing entry of `conf/sources.yml`
+
+Option value defined in source has more priority than driver option, and the driver option has more priority over app option.
+
+So to start you need to add few sources into `conf/sources.yml`, and then start `scripts/monitor.php` from the app root dir. Then you will get all messages from source converted into emails and put into `mailboxes/default/`. From there you can use any mail client which support maildir format, like:
+
+- neomutt
+- mu4e
+- thunderbird
+- clawsmail
+
+Or you can serve this maildir using POP3 or IMAP server, for example Dovecot.
+
+You can reply on these emails messages. So when you create an email in respond to some tweet or telegram message, the message will be shown for all users of tweetter or telegram.
+
+## Example screenshots
 
 ### A web page with tree discussion:
 

@@ -88,7 +88,7 @@ class Message
             new TextPart(
                 $this->body
             ),
-            ... $this->attachements
+            ... array_merge($this->attachements, $this->attachementLinks)
         );
 
         $headers->addTextHeader('Subject', $this->getFormattedSubject($sourceConfig));
@@ -149,24 +149,17 @@ class Message
 
     public function addAttachement(string $title, string $data): Message
     {
-        if (! is_array($this->attachements)) {
-            $this->attachements = [];
-        }
-
         $this->attachements[] = new DataPart($data, $title, null);
         return $this;
     }
 
     public function addAttachementLink(string $title, string $url): Message
     {
-        if (! is_array($this->attachementLinks)) {
-            $this->attachementLinks = [];
-        }
-
-        $this->attachementLinks[] = [
-            'title' => $title,
-            'url' => $url
-        ];
+        $this->attachementLinks[] = new DataPart(
+            "<a href=\"{$url}\">{$title}</a>",
+            "link to " . $title,
+            "text/html"
+        );
 
         return $this;
     }

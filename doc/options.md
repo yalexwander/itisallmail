@@ -36,6 +36,14 @@ Specifies if files attached to post, or linked from post, or somewhere else rela
 
 Can be set on level of: app, driver, source.
 
+### attach_attachements_links
+
+Allowed values: boolean
+
+If true, creates a fake attachement with URI link to real attachement. Needed for cases when you don't want to download all attachements, but still have a way to get direct link instantly. This option support is highly depends on concrete driver.
+
+Can be set on level of: app, driver, source.
+
 ### source_update_interval
 
 Allowed values: integer
