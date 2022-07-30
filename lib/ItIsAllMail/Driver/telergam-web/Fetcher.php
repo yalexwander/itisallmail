@@ -82,7 +82,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
             $msg->setBody(
                 $msg->getBody() . "\n\n[ " .
-                $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href") .
+                $this->getPostUrl($postNode) .
                 " ]\n"
             );
 
@@ -210,7 +210,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
         $video = $postNode->findOneOrFalse(".tgme_widget_message_video_wrap");
         if ($video) {
-            $msg->addAttachementLink("video", "#");
+            $msg->addAttachementLink("video", $this->getPostUrl($postNode));
             $msg->setBody(
                 $msg->getBody() . "\n[ VIDEO ]\n"
             );
@@ -225,5 +225,10 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     protected function messageWithGivenIdAlreadyDownloaded(string $id): bool
     {
         return $this->getMailbox()->msgExists($id);
+    }
+
+    protected function getPostUrl(SimpleHtmlDom $postNode) : string
+    {
+        return $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href");
     }
 }

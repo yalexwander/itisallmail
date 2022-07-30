@@ -12,7 +12,12 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
 
     public function canMapThis(array $msg, string $mapType = null): ?bool
     {
-        $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI];
+        $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI] ?? null;
+
+        if (null === $uri) {
+            throw new \Exception("No attached message to reply to");
+        }
+
         if (preg_match('/habr\.com\//', $uri)) {
             return true;
         }

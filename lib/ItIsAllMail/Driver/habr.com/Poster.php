@@ -33,6 +33,7 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
     public function post(array $msg, array $source = null, array $opts = []): array
     {
         $this->assertEmptyMessage($msg);
+        $this->assertUUEncodedMessage($msg);
 
         $posterConfig = new PosterConfig($this->appConfig, $source, $this);
         $api = new HabrAPI($posterConfig->getOpt("poster_credentials"));

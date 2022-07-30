@@ -44,6 +44,17 @@ class AbstractPosterDriver implements PosterDriverInterface
         }
     }
 
+    /**
+     * For handling situation when message is uuencoded
+     */
+    protected function assertUUEncodedMessage(array $msg): void
+    {
+        if (preg_match('/=/', $msg["body"])) {
+            throw new \Exception("Probably wrong UUE encoded message");
+        }
+    }
+
+
     public function getOpt(string $key)  /* : mixed */
     {
         return $this->posterConfig[$key] ?? null;
