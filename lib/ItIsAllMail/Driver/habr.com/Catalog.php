@@ -5,7 +5,7 @@ namespace ItIsAllMail\Driver;
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
@@ -43,7 +43,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
             $postURI = $postContainer->findOne("h2.tm-article-snippet__title>a")->getAttribute("href");
             $postURI = "https://" . $this->getCode() . $postURI;
 
-            $msg = new Message([
+            $msg = new SerializationMessage([
                 "from" => $author . "@" . $this->getCode(),
                 "subject" => $postTitle,
                 "parent" => null,

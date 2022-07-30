@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail;
 
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Factory\PosterDriverFactory;
 
 class PostingQueue

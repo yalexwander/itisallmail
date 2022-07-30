@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail;
 
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Constants;

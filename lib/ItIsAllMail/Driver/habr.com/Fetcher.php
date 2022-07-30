@@ -6,7 +6,7 @@ use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\Factory\CatalogDriverFactory;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
@@ -53,7 +53,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Make post from the article itself
      */
-    public function getFirstPost(array $source): Message
+    public function getFirstPost(array $source): SerializationMessage
     {
         $html = Browser::getAsString($source["url"]);
         Debug::debug("Downloaded post page");
@@ -70,7 +70,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
 
         $this->defaultCommentDate = HabrDateParser::parseArticleDate($postDate);
 
-        $msg = new Message([
+        $msg = new SerializationMessage([
             "from" => $author . "@" . $this->getCode(),
             "subject" => $postTitle,
             "parent" => null,
@@ -148,7 +148,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 $score = null;
             }
 
-            $comments[] = new Message([
+            $comments[] = new SerializationMessage([
                 "from" => $commentAuthor . "@" . $this->getCode(),
                 "subject" => $commentTitle,
                 "parent" => $parent . "@" . $this->getCode(),

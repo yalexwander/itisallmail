@@ -6,7 +6,7 @@ use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
@@ -64,7 +64,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
             $postId = $this->getPostId($postNode);
 
-            $msg = new Message(
+            $msg = new SerializationMessage(
                 [
                     "from" => $author . "@" . $this->getCode(),
                     "subject" => $title,
@@ -100,7 +100,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         return (new HtmlToText($node->outerHtml()))->getText();
     }
 
-    public function getChannelTopPost(SimpleHtmlDom $postNode, string $sourceURL): Message
+    public function getChannelTopPost(SimpleHtmlDom $postNode, string $sourceURL): SerializationMessage
     {
         $author = preg_replace(
             '/@/',
@@ -117,7 +117,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
         $parent = $postId;
 
-        $msg = new Message(
+        $msg = new SerializationMessage(
             [
                 "from" => $author . "@" . $this->getCode(),
                 "subject" => $title,
@@ -176,7 +176,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
     protected function processPostAttachements(
         SimpleHtmlDom $postNode,
-        Message $msg,
+        SerializationMessage $msg,
         FetcherSourceConfig $sourceConfig
     ): void {
         $attachementsCount = 0;

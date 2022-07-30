@@ -5,7 +5,7 @@ namespace ItIsAllMail\Driver;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\MailHeaderProcessor;
@@ -64,7 +64,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
 
                 $title = $this->getPostTitle($postText);
 
-                $msg = new Message(
+                $msg = new SerializationMessage(
                     [
                         "from" => $author . "@" . $this->getCode(),
                         "subject" => $title,

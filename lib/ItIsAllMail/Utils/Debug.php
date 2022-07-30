@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Utils;
 
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 
 class Debug
 {
@@ -23,7 +23,7 @@ class Debug
     }
 
 
-    public static function dumpMessage(Message $msg): string
+    public static function dumpMessage(SerializationMessage $msg): string
     {
         return <<<EOT
         subject: {$msg->getSubject()}

@@ -5,7 +5,7 @@ namespace ItIsAllMail\Driver;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\Message;
+use ItIsAllMail\SerializationMessage;
 use ItIsAllMail\Utils\Storage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
@@ -78,7 +78,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
                 $postText = $this->getPostText($postNode);
                 $title = $this->getPostTitle($postNode, $postText);
 
-                $msg = new Message(
+                $msg = new SerializationMessage(
                     [
                         "from" => $author . "@" . $this->getCode(),
                         "subject" => $title,

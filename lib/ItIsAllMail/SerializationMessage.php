@@ -19,7 +19,7 @@ use ItIsAllMail\Constants;
  * mapped to MIME.
  */
 
-class Message
+class SerializationMessage
 {
     protected $subject;
     protected $from;
@@ -147,13 +147,13 @@ class Message
         return $this->created;
     }
 
-    public function addAttachement(string $title, string $data): Message
+    public function addAttachement(string $title, string $data): SerializationMessage
     {
         $this->attachements[] = new DataPart($data, $title, null);
         return $this;
     }
 
-    public function addAttachementLink(string $title, string $url): Message
+    public function addAttachementLink(string $title, string $url): SerializationMessage
     {
         $this->attachementLinks[] = new DataPart(
             "<a href=\"{$url}\">{$title}</a>",
