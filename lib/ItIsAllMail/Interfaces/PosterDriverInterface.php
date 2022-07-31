@@ -2,6 +2,8 @@
 
 namespace ItIsAllMail\Interfaces;
 
+use ItIsAllMail\SendMailProcessor;
+
 interface PosterDriverInterface
 {
     public function __construct(array $appConfig, array $posterConfig);
@@ -9,7 +11,7 @@ interface PosterDriverInterface
     /**
      * Must return true if you think your driver must handle given message
      */
-    public function canProcessMessage(array $msg): bool;
+    public function canProcessMessage(ParsedMessage $msg): bool;
 
     /**
      * Must return simple code like "habr.com" or "reddit.com", expecting it
@@ -31,5 +33,5 @@ interface PosterDriverInterface
      *
      * The only "status" field is required
      */
-    public function post(array $msg, array $source = null, array $opts = []): array;
+    public function post(ParsedMessage $msg, array $source = null, array $opts = []): array;
 }

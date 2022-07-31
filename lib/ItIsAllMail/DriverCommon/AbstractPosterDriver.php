@@ -5,6 +5,7 @@ namespace ItIsAllMail\DriverCommon;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
@@ -19,7 +20,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         $this->posterConfig = $posterConfig;
     }
 
-    public function canProcessMessage(array $msg): bool
+    public function canProcessMessage(ParsedMessage $msg): bool
     {
         return false;
     }
@@ -29,7 +30,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         return $this->code;
     }
 
-    public function post(array $msg, array $source = null, array $opts = []): array
+    public function post(ParsedMessage $msg, array $source = null, array $opts = []): array
     {
         throw new \Exception("Not implemented");
     }
@@ -37,7 +38,7 @@ class AbstractPosterDriver implements PosterDriverInterface
     /**
      * For handling situation when blank message was sent by mistake
      */
-    protected function assertEmptyMessage(array $msg): void
+    protected function assertEmptyMessage(ParsedMessage $msg): void
     {
         if (empty($msg["body"])) {
             throw new \Exception("Can not send blank message");
@@ -47,7 +48,7 @@ class AbstractPosterDriver implements PosterDriverInterface
     /**
      * For handling situation when message is uuencoded
      */
-    protected function assertUUEncodedMessage(array $msg): void
+    protected function assertUUEncodedMessage(ParsedMessage $msg): void
     {
         if (preg_match('/=/', $msg["body"])) {
             throw new \Exception("Probably wrong UUE encoded message");

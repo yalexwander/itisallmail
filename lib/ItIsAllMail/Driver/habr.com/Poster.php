@@ -9,6 +9,7 @@ use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractPosterDriver;
 use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Config\PosterConfig;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
@@ -19,7 +20,7 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
     protected $posterConfig;
     protected $driverCode = "habr.com";
 
-    public function canProcessMessage(array $msg): bool
+    public function canProcessMessage(ParsedMessage $msg): bool
     {
         $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
 
@@ -30,7 +31,7 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
         return false;
     }
 
-    public function post(array $msg, array $source = null, array $opts = []): array
+    public function post(ParsedMessage $msg, array $source = null, array $opts = []): array
     {
         $this->assertEmptyMessage($msg);
         $this->assertUUEncodedMessage($msg);

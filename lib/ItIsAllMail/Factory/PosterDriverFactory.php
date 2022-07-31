@@ -4,6 +4,7 @@ namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Config\DriverConfig;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class PosterDriverFactory
 {
@@ -15,7 +16,7 @@ class PosterDriverFactory
         $this->appConfig = $appConfig;
     }
 
-    public function findPoster(array $msg): PosterDriverInterface
+    public function findPoster(ParsedMessage $msg): PosterDriverInterface
     {
         $toHeader = $msg["referenced_message"]["headers"]["to"] ?? $msg["headers"]["to"];
         $parts = explode("@", $toHeader);

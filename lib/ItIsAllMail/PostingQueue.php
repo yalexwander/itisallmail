@@ -4,6 +4,7 @@ namespace ItIsAllMail;
 
 use ItIsAllMail\CoreTypes\SerializationMessage;
 use ItIsAllMail\Factory\PosterDriverFactory;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class PostingQueue
 {
@@ -15,11 +16,11 @@ class PostingQueue
         $this->appConfig = $appConfig;
     }
 
-    public function add(array $msg): void
+    public function add(ParsedMessage $msg): void
     {
     }
 
-    public function send(array $msg): array
+    public function send(ParsedMessage $msg): array
     {
         $posterDriverFactory = new PosterDriverFactory($this->appConfig);
         $poster = $posterDriverFactory->findPoster($msg);

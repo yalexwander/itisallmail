@@ -57,7 +57,7 @@ class PostActionHandler
     }
 
 
-    protected function getProxyCommand(array $msg, array $source): ?string
+    protected function getProxyCommand(ParsedMessage $msg, array $source): ?string
     {
 
         $proxyCommand = null;
