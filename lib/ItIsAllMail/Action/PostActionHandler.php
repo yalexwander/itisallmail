@@ -9,6 +9,7 @@ use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class PostActionHandler
 {
@@ -20,7 +21,7 @@ class PostActionHandler
         $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, string $rawMessage, array $msg): int
+    public function process(string $arg, string $rawMessage, ParsedMessage $msg): int
     {
         $result = 1;
 

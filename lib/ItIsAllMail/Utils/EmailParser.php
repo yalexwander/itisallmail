@@ -3,11 +3,12 @@
 namespace ItIsAllMail\Utils;
 
 use ItIsAllMail\Utils\Debug;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class EmailParser
 {
 
-    public static function parseMessage(string $rawMessage): array
+    public static function parseMessage(string $rawMessage): ParsedMessage
     {
         $mime = mailparse_msg_create();
 
@@ -18,7 +19,7 @@ class EmailParser
 
         $msgStructure = mailparse_msg_get_structure($mime);
 
-        $parsedMessage = [
+        $parsedMessage = new ParsedMessage([
             "headers"      => [],
             "attachements" => [],
             "body"         => "",
@@ -27,7 +28,7 @@ class EmailParser
 
             // for cases of multicitation for future, must NOT include the "referenced_message"
             // "related_messages" => []
-        ];
+        ]);
 
         /**
          * Below we assume that the most complex structure of MIME file we can

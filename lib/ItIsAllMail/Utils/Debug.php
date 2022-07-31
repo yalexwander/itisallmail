@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\Utils;
 
-use ItIsAllMail\SerializationMessage;
+use ItIsAllMail\CoreTypes\SerializationMessage;
 
 class Debug
 {

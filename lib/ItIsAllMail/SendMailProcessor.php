@@ -7,6 +7,7 @@ use ItIsAllMail\Action\SourceAddActionHandler;
 use ItIsAllMail\Action\SourceDeleteActionHandler;
 use ItIsAllMail\Action\PostActionHandler;
 use ItIsAllMail\Utils\EmailParser;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class SendMailProcessor
 {
@@ -30,7 +31,7 @@ class SendMailProcessor
         return 1;
     }
 
-    protected function isCommandMessage(array $parsedMsg, array $options): bool
+    protected function isCommandMessage(ParsedMessage $parsedMsg, array $options): bool
     {
         if (preg_match('/^\/([a-z]+)/', $parsedMsg["body"])) {
             return true;
@@ -47,7 +48,7 @@ class SendMailProcessor
      * Adding new commands remember, that this dunction must return 0 on
      * success, because this exit code will be passed as sendmail exit code
      */
-    protected function processCommand(string $rawMessage, array $parsedMsg, array $options): int
+    protected function processCommand(string $rawMessage, ParsedMessage $parsedMsg, array $options): int
     {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 

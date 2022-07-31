@@ -5,7 +5,7 @@ namespace ItIsAllMail\Driver;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\SerializationMessage;
+use ItIsAllMail\CoreTypes\SerializationMessage;
 use ItIsAllMail\Utils\Storage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;

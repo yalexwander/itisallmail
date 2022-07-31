@@ -6,7 +6,7 @@ use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\DriverCommon\AbstractFetcherDriver;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\HtmlToText;
-use ItIsAllMail\SerializationMessage;
+use ItIsAllMail\CoreTypes\SerializationMessage;
 use ItIsAllMail\Utils\Browser;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;

@@ -4,6 +4,7 @@ namespace ItIsAllMail\Action;
 
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Constants;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class SourceAddActionHandler
 {
@@ -14,7 +15,7 @@ class SourceAddActionHandler
         $this->appConfig = $appConfig;
     }
 
-    public function process(string $arg, array $msg): int
+    public function process(string $arg, ParsedMessage $msg): int
     {
         $source = [
             "url" => $msg["headers"][Constants::IAM_HEADER_URI]

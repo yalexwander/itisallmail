@@ -6,6 +6,7 @@ use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\Mailbox;
 use ItIsAllMail\Config\CatalogConfig;
 use ItIsAllMail\Factory\CatalogDriverFactory;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class CatalogActionHandler
 {
@@ -20,7 +21,7 @@ class CatalogActionHandler
         $this->catalogDriverFactory = new CatalogDriverFactory($appConfig);
     }
 
-    public function process(string $arg, array $msg): int
+    public function process(string $arg, ParsedMessage $msg): int
     {
         $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ]);
 

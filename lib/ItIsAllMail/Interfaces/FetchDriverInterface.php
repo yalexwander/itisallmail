@@ -19,9 +19,9 @@ interface FetchDriverInterface
     public function getCode(): string;
 
     /**
-     * Must return array of <ItIsAllMail\SerializationMessage> objects. You do not need to
+     * Must return array of <ItIsAllMail\CoreTypes\SerializationMessage> objects. You do not need to
      * care how distinguish old and new messages in thread, just return all of
-     * them normalized to <ItIsAllMail\SerializationMessage>. See its construct method
+     * them normalized to <ItIsAllMail\CoreTypes\SerializationMessage>. See its construct method
      */
     public function getPosts(array $source): array;
 

@@ -6,11 +6,12 @@ use ItIsAllMail\DriverCommon\AbstractAddressMapper;
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Constants;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface
 {
 
-    public function canMapThis(array $msg, string $mapType = null): ?bool
+    public function canMapThis(ParsedMessage $msg, string $mapType = null): ?bool
     {
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI] ?? null;
 
@@ -25,7 +26,7 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
         return false;
     }
 
-    public function mapMessageToSource(array $msg): ?array
+    public function mapMessageToSource(ParsedMessage $msg): ?array
     {
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI];
         $sourceManager = new SourceManager($this->appConfig);

@@ -4,6 +4,7 @@ namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\Config\DriverConfig;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 /**
  * This factory does not load all mappers, because it is almost useless for
@@ -22,7 +23,7 @@ class AddressMapperFactory
         $this->appConfig = $appConfig;
     }
 
-    public function findMapper(array $msg): AddressMapperInterface
+    public function findMapper(ParsedMessage $msg): AddressMapperInterface
     {
         foreach ($this->appConfig["drivers"] as $driverId) {
             $driverOpts = DriverConfig::getDriverConfig($driverId);
