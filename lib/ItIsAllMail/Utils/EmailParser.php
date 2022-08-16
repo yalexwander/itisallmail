@@ -4,6 +4,7 @@ namespace ItIsAllMail\Utils;
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\MUA\Register;
 
 class EmailParser
 {
@@ -24,7 +25,7 @@ class EmailParser
             "attachements" => [],
             "body"         => "",
             // 95% of cases it will be command message or citation here
-            "referenced_message" => [],
+            "referenced_message" => new ParsedMessage(),
 
             // for cases of multicitation for future, must NOT include the "referenced_message"
             // "related_messages" => []
@@ -106,5 +107,11 @@ class EmailParser
         mailparse_msg_free($mime);
 
         return $parsedMessage;
+    }
+
+    public static function loadReferencedMessageFromRegister(string $registerName): ParsedMessage {
+        return self::parseMessage(
+            (new Register())->get("reply")
+        );
     }
 }

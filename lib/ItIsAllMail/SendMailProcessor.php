@@ -19,10 +19,15 @@ class SendMailProcessor
     }
 
 
-
     public function process(string $rawMessage, array $options): int
     {
         $parsed = EmailParser::parseMessage($rawMessage);
+
+        if (isset($options["r"])) {
+            $parsed->setReferencedMessage(
+                EmailParser::loadReferencedMessageFromRegister("reply")
+            );
+        }
 
         if ($this->isCommandMessage($parsed, $options)) {
             return $this->processCommand($rawMessage, $parsed, $options);
@@ -67,7 +72,7 @@ class SendMailProcessor
             $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->appConfig);
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'post') {
-            $postActionHandler = new PostActionHandler($this->appConfig);
+            $postActionHandler = new PostActionHandler($this->appConfig, $options);
             $commandResult = $postActionHandler->process($commandArg, $rawMessage, $parsedMsg);
         } else {
             print "Wrong command $command" . "\n";

@@ -15,10 +15,12 @@ class PostActionHandler
 {
 
     protected $appConfig;
+    protected $cliOpts;
 
-    public function __construct(array $appConfig)
+    public function __construct(array $appConfig, array $cliOpts)
     {
         $this->appConfig = $appConfig;
+        $this->cliOpts = $cliOpts;
     }
 
     public function process(string $arg, string $rawMessage, ParsedMessage $msg): int
@@ -46,6 +48,10 @@ class PostActionHandler
                 . ".." . DIRECTORY_SEPARATOR
                 . "scripts" . DIRECTORY_SEPARATOR . "poster.php\""
                 . " -m \"" . $transferFilename . "\"";
+
+            if (isset($this->cliOpts["r"])) {
+                $execString .= " -r";
+            }
 
             Debug::debug("Starting command:\n" . $execString);
 

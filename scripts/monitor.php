@@ -91,7 +91,7 @@ class Monitor {
     }
 
     
-    function runSourceUpdate(array $source) {
+    function runSourceUpdate(array $source) : int {
         $execString = "php \""  . __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php\"";
 
         $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
@@ -106,9 +106,9 @@ class Monitor {
 
         Debug::debug("Starting command:\n" . $execString);
 
-        system($execString);
+        $result = system($execString);
         
-        return 1;
+        return ! $result;
     }
 
 }

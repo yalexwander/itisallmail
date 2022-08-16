@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Options:
+ * -m - file with message to post
+ * -r - load refernced message from repy register
+ */
+
 require_once("includes.php");
 
 use ItIsAllMail\PostingQueue;
@@ -9,11 +15,16 @@ use ItIsAllMail\Factory\PosterDriverFactory;
 
 $appConfig = yaml_parse_file($__AppConfigFile);
 
-$options = getopt("m:");
+$options = getopt("m:r");
 
 $rawMessage = file_get_contents($options["m"]);
 
 $msg = EmailParser::parseMessage($rawMessage);
+if (isset($options["r"])) {
+    $msg->setReferencedMessage(
+        EmailParser::loadReferencedMessageFromRegister("reply")
+    );
+}
 
 $mapper = (new AddressMapperFactory($appConfig))->findMapper($msg);
 $source = $mapper->mapMessageToSource($msg);

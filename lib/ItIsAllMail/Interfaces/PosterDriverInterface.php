@@ -3,6 +3,7 @@
 namespace ItIsAllMail\Interfaces;
 
 use ItIsAllMail\SendMailProcessor;
+use ItIsAllMail\CoreTypes\ParsedMessage;
 
 interface PosterDriverInterface
 {

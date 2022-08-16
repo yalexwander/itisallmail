@@ -30,8 +30,11 @@ source "display"
 
 unignore x-iam-statusline
 
-# need to sending work
+# needed for replying with attachements work
 set mime_forward=yes
+
+# remove delay when executing multiple commands
+set wait_key=no
 
 # custom keybindings
 source "keybindings"
