@@ -1,6 +1,4 @@
 - url: "https://habr.com/ru/post/536412/"
-- {
-    url: "https://habr.com/ru/post/536508/"
-    driver: "habr.com"
-    mailbox: "default"
-  }
+- url: "https://habr.com/ru/post/536508/"
+  driver: "habr.com"
+  mailbox: "default"

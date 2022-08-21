@@ -32,6 +32,12 @@ class Monitor {
             $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
 
             $joinedConfig = new FetcherSourceConfig($this->appConfig, $driver, $source);
+
+            if (! empty($joinedConfig->getOpt("fetch_disabled"))) {
+                Debug::debug("Source {$source["url"]} is disabled. Skipping");
+                continue;
+            }
+
             $sourceUpdateInterval = intval($joinedConfig->getOpt("source_update_interval"))
                 + $driver->getAdditionalDelayBeforeNextFetch($source);
 

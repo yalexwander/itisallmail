@@ -154,3 +154,11 @@ Allowed values: boolean
 If set, update statusline header in saved message when source message updated.
 
 Warning: correct display of changed data highly relies on mail reading software you use!
+
+### fetch_disabled
+
+Allowed values: boolean
+
+If set and true, the source will be ignored by monitor script.
+
+Can be set on level of: app, driver, source.
