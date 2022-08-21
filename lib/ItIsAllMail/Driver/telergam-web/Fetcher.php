@@ -210,9 +210,11 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
         $video = $postNode->findOneOrFalse(".tgme_widget_message_video_wrap");
         if ($video) {
-            $msg->addAttachementLink("video", $this->getPostUrl($postNode));
+            $videoNotUpportedInBrowser = $video->findOneOrFalse(".message_media_not_supported");
+            $videoURL = $videoNotUpportedInBrowser ? "Unsupported in browser" : $this->getPostUrl($postNode);
+            $msg->addAttachementLink("video", $videoURL);
             $msg->setBody(
-                $msg->getBody() . "\n[ VIDEO ]\n"
+                $msg->getBody() . "\n[ VIDEO {$videoURL} ]\n"
             );
         }
     }
