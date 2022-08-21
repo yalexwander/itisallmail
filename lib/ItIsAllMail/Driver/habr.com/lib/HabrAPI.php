@@ -47,6 +47,7 @@ class HabrAPI
      */
     public function sendComment(array $comment): array
     {
+        // print_r($comment);exit(1);
 
         $jsonRequest = [
             "isMarkdown" => true,
@@ -110,28 +111,54 @@ class HabrAPI
             "content" => []
         ];
 
+        $collectBlock = [];
         foreach ($paragraphs as $p) {
             if (empty($p)) {
                 continue;
             }
 
-            $md["content"][] = [
+            if (preg_match('/^>\s*(.+)/', $p, $matches)) {
+                $collectBlock[] = $matches[1];
+            }
+            else {
+                if (count($collectBlock)) {
+                    $md["content"][] = $this->renderBlockquote($collectBlock);
+                    $collectBlock = [];
+                }
+                $md["content"][] = $this->renderParagraph($p);
+            }
+        }
+
+        if (count($collectBlock)) {
+            $md["content"][] = $this->renderBlockquote($collectBlock);
+        }
+
+        $json = json_encode($md, JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+    protected function renderParagraph(string $p): array {
+        return [
                 "type" => "paragraph",
-                "attrs" => [
-                    "align" => null,
-                    "simple" => false,
-                    "persona" => false
-                ],
                 "content" => [
                     [
                         "type" => "text",
                         "text" => $p
                     ]
                 ]
-            ];
-        }
-
-        $json = json_encode($md, JSON_UNESCAPED_UNICODE);
-        return $json;
+        ];
     }
+
+    protected function renderBlockquote(array $quotes): array {
+        return [
+                "type" => "blockquote",
+                "content" => array_map(
+                    function($q) {
+                        return $this->renderParagraph($q);
+                    },
+                    $quotes
+                )
+        ];
+    }
+
 }
