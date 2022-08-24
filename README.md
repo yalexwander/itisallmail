@@ -1,12 +1,30 @@
 # ItIsAllMail
 
-A tool to parse forums, imageboards, all sites with discussions, and
-even chats and messengers to a mailbox format. Once you've got your
-data into a maildir, you can use it with all mail processing tools.
+This software claims to be a bridge between your local mailbox(and email clients) and any other source of information like:
+
+- web forums and bulletin boards
+- telegram, discord, facebook, etc
+- anything that you want to handle via your email client
 
 # Usage and basic concepts
 
-ItIsAllMail highly rely on Neomutt mail client, but can be used with any mail client, but with limited features. Each forum thread, telegram chat etc. is treated as "Source". Source identified by its URI. Each source can be configured in unique way, like update interval, prxoxy, mail converting options etc.
+The core conception of ItIsAllMail is a source. Source is a shortcut for telegram chat, forum thread, reddit thread, main page of news site, github issues page etc. There is a `scripts/monitor.php` which monitors sources list from file `conf/sources.yml` for changes. Source is identified by `url` key.
+
+All new messages from source converted to email messages in MIME format and stored to corresponding maildir. Then you can choose how to operate with it. You can use some GUI email clients like Thunderbird and Clawsmail to just read new messages avoid using browser. Or you can use more sophisticated clients like Mutt/Neomutt to do posting on site/chat via email client if it is supported by a driver.
+
+To support different sources of information different drivers used. Each driver has few parts:
+
+- Fetcher resposnds for fetching new messages from source. It is the most required and basic part which fetches web page or queries a chat for new messages and then transform it into an unified message format. This unified message is dumped to maildir by ItIsAllMail using settings for a given source.
+
+- Catalog responds for quering information from site. There is a special maildir called catalog shipped with ItIsAllMail. Catalag driver part can be called from CLI or from client like Neomutt and list of potential sources. It works like search for channels in IRC or Telegram, but the list of channels is dumped to list of emails. Then you can select one of such message and add as a source, like if you subscribe/join that channel but in terms of ItIsAllMail. Usually Catalog cleans its maildir before each call, but it also can be used as feed collector.
+
+- Poster responds for posting to a site/chat using your email client. Basically each post requires a source to be bind to, but not required if you want to create a new thread for example. Adress Mapper is required by a poster, so when email message to send feeded to ItIsAllMail, it can map email to correct poster to handle.
+
+# Using with Neomutt 
+
+ItIsAllMail highly adopted for usage with Neomutt email client and its limitations. Please see the [tutorial](https://yalexwander.github.io/itsallmail/en/articles/neomutt-tutorial.html).
+
+# Configuration
 
 Many options can be defined on 3 levels:
 
@@ -14,18 +32,17 @@ Many options can be defined on 3 levels:
  - driver level, in corresponding `lib/ItIsAllMail/Driver/<driver>/driver.cfg`
  - source level, in corresponsing entry of `conf/sources.yml`
 
-Option value defined in source has more priority than driver option, and the driver option has more priority over app option.
+Option value defined in source has more priority than driver option, and the driver option has more priority over app option. You can see thi list of options here
 
-So to start you need to add few sources into `conf/sources.yml`, and then start `scripts/monitor.php` from the app root dir. Then you will get all messages from source converted into emails and put into `mailboxes/default/`. From there you can use any mail client which support maildir format, like:
+So to start you need to add few sources into `conf/sources.yml`, and then start `scripts/monitor.php` from the app root dir(it is important). Then you will get all messages from source converted into emails and put into `mailboxes/default/`. From there you can use any mail client which support maildir format, like:
 
 - neomutt
 - mu4e
 - thunderbird
 - clawsmail
+- emacs wanderlust
 
 Or you can serve this maildir using POP3 or IMAP server, for example Dovecot.
-
-You can reply on these emails messages. So when you create an email in respond to some tweet or telegram message, the message will be shown for all users of tweetter or telegram.
 
 ## Example screenshots
 
@@ -39,7 +56,7 @@ You can reply on these emails messages. So when you create an email in respond t
 ![Article or post](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/example_message_view.png)
 
 
-## Usage
+## Installation on Debian/Ubuntu
 
 1. Dependencies for Debian-based distributions:
 
