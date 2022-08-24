@@ -69,6 +69,14 @@ class EmailParser
                         $partContent["starting-pos-body"],
                         $partContent["ending-pos-body"] - $partContent["starting-pos-body"]
                     );
+
+                    if (
+                        !empty($parsedMessage["headers"]["content-transfer-encoding"]) and
+                        $parsedMessage["headers"]["content-transfer-encoding"] === "quoted-printable"
+                    ) {
+                        $parsedMessage["body"] = quoted_printable_decode($parsedMessage["body"]);
+                    }
+
                     break;
                 }
             }

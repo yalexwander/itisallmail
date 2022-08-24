@@ -51,7 +51,7 @@ class AbstractPosterDriver implements PosterDriverInterface
     protected function assertUUEncodedMessage(ParsedMessage $msg): void
     {
         if (preg_match('/=/', $msg["body"])) {
-            throw new \Exception("Probably wrong UUE encoded message");
+            throw new \Exception("Probably wrong UUE encoded message: {$msg["body"]}");
         }
     }
 

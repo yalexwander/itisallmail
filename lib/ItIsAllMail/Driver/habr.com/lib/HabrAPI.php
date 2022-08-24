@@ -47,8 +47,6 @@ class HabrAPI
      */
     public function sendComment(array $comment): array
     {
-        // print_r($comment);exit(1);
-
         $jsonRequest = [
             "isMarkdown" => true,
             "parentId" => $comment["parent"],
