@@ -33,6 +33,7 @@ class SendMailProcessor
             return $this->processCommand($rawMessage, $parsed, $options);
         }
 
+        print "Sending message without command\n";
         return 1;
     }
 
