@@ -35,4 +35,10 @@ interface PosterDriverInterface
      * The only "status" field is required
      */
     public function post(ParsedMessage $msg, array $source = null, array $opts = []): array;
+
+    /**
+     * Execute all needed check before posting, to ensure data is correct. exit(1) in case of some problems
+     */
+    public function checkBeforePost(ParsedMessage $msg, array $source = null, array $opts = []): void;
+
 }

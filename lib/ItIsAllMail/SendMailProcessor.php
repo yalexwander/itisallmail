@@ -33,7 +33,7 @@ class SendMailProcessor
             return $this->processCommand($rawMessage, $parsed, $options);
         }
 
-        print "Sending message without command\n";
+        print "Sending message without command: $rawMessage\n";
         return 1;
     }
 
@@ -51,7 +51,7 @@ class SendMailProcessor
     }
 
     /**
-     * Adding new commands remember, that this dunction must return 0 on
+     * Adding new commands remember, that this function must return 0 on
      * success, because this exit code will be passed as sendmail exit code
      */
     protected function processCommand(string $rawMessage, ParsedMessage $parsedMsg, array $options): int

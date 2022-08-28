@@ -55,6 +55,11 @@ class AbstractPosterDriver implements PosterDriverInterface
         }
     }
 
+    public function checkBeforePost(ParsedMessage $msg, array $source = null, array $opts = []): void
+    {
+        $this->assertEmptyMessage($msg);
+        $this->assertUUEncodedMessage($msg);
+    }
 
     public function getOpt(string $key)  /* : mixed */
     {

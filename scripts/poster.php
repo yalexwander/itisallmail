@@ -33,6 +33,7 @@ $posterFactory = new PosterDriverFactory($appConfig);
 $poster = $posterFactory->findPoster($msg);
 
 try {
+    $poster->checkBeforePost($msg, $source);
     $result = $poster->post($msg, $source);
 
     if ($result["status"]) {
