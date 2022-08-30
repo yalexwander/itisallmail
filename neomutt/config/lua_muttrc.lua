@@ -3,6 +3,7 @@ IAM = {}
 IAM.normal_editor = "emacsclient -c -t"
 IAM.script_editor = "php neomutt/utils/dumb_editor/editor.php"
 IAM.sendmail = "php scripts/sendmail.php"
+IAM.script_register = "php neomutt/utils/register/register.php"
 
 IAM.set_script_editor = function(editor_param)
    editor_param = editor_param or ""
@@ -19,3 +20,6 @@ IAM.set_sendmail_args = function(args)
    mutt.set("sendmail", IAM.sendmail .. " " .. args)
 end
 
+IAM.clear_register = function(register_name)
+   os.execute(IAM.script_register .. " -c " .. register_name)
+end

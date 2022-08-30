@@ -8,8 +8,9 @@
  * not only last passed message, but a previous one too.
  *
  * Usage:
- *  cat mime_file | php register.php -s  // save to register
- *  php register.php -r  // get from register
+ *  cat mime_file | php register.php -s <register> // save to register
+ *  php register.php -r <register> // get from register
+ *  php register.php -c <register> // clear register
  */
 
 require_once(
@@ -18,7 +19,7 @@ require_once(
     "Register.php"
 );
 
-$options = getopt("s:g:");
+$options = getopt("s:g:c:");
 
 if (! empty($options["s"])) {
     (new ItIsAllMail\MUA\Register())->set(
@@ -28,4 +29,10 @@ if (! empty($options["s"])) {
 }
 elseif(! empty($options["g"])) {
     print (new ItIsAllMail\MUA\Register())->get($options["g"]);
+}
+elseif(! empty($options["c"])) {
+    (new ItIsAllMail\MUA\Register())->set(
+        $options["c"],
+        ""
+    );
 }
