@@ -16,6 +16,7 @@ between_source_update_interval: 5
 fetcher_proxy : ""
 poster_proxy : ""
 use_posting_queue : 0
+fetch_disabled: false
 
 drivers :
   - "habr.com"

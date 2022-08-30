@@ -5,8 +5,9 @@ namespace ItIsAllMail;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\MailboxUpdater;
+use ItIsAllMail\Interfaces\MessageStorageInterface;
 
-class Mailbox
+class Mailbox implements MessageStorageInterface
 {
     protected $sourceConfig;
     protected $path;
@@ -60,7 +61,6 @@ class Mailbox
             return $this->localMessages[$id];
         }
     }
-
 
     /**
      * Read mailbox for a list of already known IDs . It highly rely on
@@ -118,7 +118,7 @@ class Mailbox
         return $mergeStats;
     }
 
-    public function getPath(): string
+    public function getLabel(): string
     {
         return $this->path;
     }

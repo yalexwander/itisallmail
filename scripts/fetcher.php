@@ -40,7 +40,7 @@ try {
     $mergeResult = $mailbox->mergeMessages($posts);
     
     if ($mergeResult["added"]) {
-        Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getPath()}");
+        Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getLabel()}");
     }
 
     Debug::debug("Source processing finished");
