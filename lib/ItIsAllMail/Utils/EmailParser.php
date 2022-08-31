@@ -118,8 +118,15 @@ class EmailParser
     }
 
     public static function loadReferencedMessageFromRegister(string $registerName): ParsedMessage {
-        return self::parseMessage(
-            (new Register())->get("reply")
-        );
+        $registerContent = (new Register())->get("reply");
+
+        if (empty($registerContent)) {
+            return new ParsedMessage();
+        }
+        else {
+            return self::parseMessage(
+                (new Register())->get("reply")
+            );
+        }
     }
 }

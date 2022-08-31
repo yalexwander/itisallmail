@@ -56,7 +56,7 @@ class SendMailProcessor
      */
     protected function processCommand(string $rawMessage, ParsedMessage $parsedMsg, array $options): int
     {
-        $commandSource = $parsedMsg["body"] ?? $options["c"];
+        $commandSource = $options["c"] ?? $parsedMsg["body"];
 
         preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
         $command = $matches[1];

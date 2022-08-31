@@ -1,15 +1,30 @@
 # macro definition
 # change catalog dir here too
 
-macro index ,c 'y/mailboxes/catalog<enter><enter>D.*<enter>$y:lua IAM.set_script_editor("-b /catalog -i ")<enter>:lua IAM.clear_register("reply")<enter>mnta@b.c<enter>sx<enter>:lua IAM.set_normal_editor()<enter>ey'
+macro index ,c 'y/mailboxes/catalog<enter><enter>\
+:lua IAM.emit_catalog_blank_message()<enter>\
+D.*<enter>$y\
+:lua IAM.set_sendmail_args("")<enter>\
+:lua IAM.set_script_editor("-b /catalog -i ")<enter>\
+:lua IAM.clear_register("reply")<enter>\
+m\
+n\
+t\
+a@b.c<enter>\
+s\
+x<enter>\
+:lua IAM.set_normal_editor()<enter>\
+e\
+y'
 
 # macro description
 
-# :lua IAM.set_script_editor("-b /catalog -i ")<enter> -- sets fake editor to add IAM catalog command to email body
+# :lua IAM.set_script_editor("-b /catalog -i ")<enter><enter> -- sets fake editor to add IAM catalog command to email body
 # y -- open mailbox selection dialog
 # /mailboxes/catalog<enter> -- type the name of the catalog mailbox
 # <enter> -- sumbit the mailbox choice
 # D.*<enter>$y -- delete all messages in catalog
+# :lua IAM.set_sendmail_args("")<enter> -- prevent -c arg to sendmail.php be sent
 # :lua IAM.set_script_editor("-b /catalog -i ") -- create blank message with /catalog command
 # :lua IAM.clear_register("reply")<enter> -- clear "reply" register before sending message
 # m -- create new message
