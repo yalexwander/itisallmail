@@ -7,14 +7,15 @@ class Storage
     protected static $storageDir =  __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
         . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
 
-    public static function get(string $driver, string $key): ?string
+    public static function get(string $driverCode, string $key): ?string
     {
-        $driverDir = self::$storageDir . self::sanitizeFilename($driver);
+        $driverDir = self::getDriverdir($driverCode);
+        $keyFilename = self::getKeyFilename($driverDir, $key);
+
         if (! file_exists($driverDir)) {
             return null;
         }
 
-        $keyFilename = $driverDir . DIRECTORY_SEPARATOR . self::sanitizeFilename($key);
         if (! file_exists($keyFilename)) {
             return null;
         }
@@ -25,14 +26,15 @@ class Storage
     /**
      * Saves value to a file in the driver's cache directory
      */
-    public static function set(string $driver, string $key, string $value): void
+    public static function set(string $driverCode, string $key, string $value): void
     {
-        $driverDir = self::$storageDir . self::sanitizeFilename($driver);
+        $driverDir = self::getDriverdir($driverCode);
+        $keyFilename = self::getKeyFilename($driverDir, $key);
+
         if (! file_exists($driverDir)) {
             mkdir($driverDir);
         }
 
-        $keyFilename = $driverDir . DIRECTORY_SEPARATOR . self::sanitizeFilename($key);
         file_put_contents($keyFilename, $value);
     }
 
@@ -47,5 +49,21 @@ class Storage
             '-',
             $key
         );
+    }
+
+    protected static function getDriverdir(string $driverCode): string {
+        return self::$storageDir . self::sanitizeFilename($driverCode);
+    }
+
+    protected static function getKeyFilename(string $driverDir, string $key): string {
+        return $driverDir . DIRECTORY_SEPARATOR . self::sanitizeFilename($key);
+    }
+
+
+    public static function clear(string $driverCode, string $key): void {
+        $driverDir = self::getDriverdir($driverCode);
+        $keyFilename = self::getKeyFilename($driverDir, $key);
+
+        unlink($keyFilename);
     }
 }

@@ -6,6 +6,7 @@ use ItIsAllMail\Interfaces\CatalogDriverInterface;
 use ItIsAllMail\Config\CatalogConfig;
 use ItIsAllMail\Factory\CatalogDriverFactory;
 use ItIsAllMail\Factory\AddressMapperFactory;
+use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 
@@ -29,6 +30,9 @@ class SourceDeleteActionHandler
         if ($source === null) {
             return 1;
         }
+
+        $fetcherDriver = (new FetcherDriverFactory($this->appConfig))->getFetchDriverForSource($source);
+        $fetcherDriver->clearSourceCache($source);
 
         $sourceManager = new SourceManager($this->appConfig);
         $sourceManager->deleteSource($source);

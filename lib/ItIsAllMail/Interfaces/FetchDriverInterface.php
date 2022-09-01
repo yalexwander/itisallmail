@@ -29,4 +29,9 @@ interface FetchDriverInterface
      * Must return driver option by given name.
      */
     public function getOpt(string $key)  /* : mixed */;
+
+    /**
+     * Clear any additional data left from this source, like cache, avatars, etc
+     */
+    public function clearSourceCache(array $source): void;
 }

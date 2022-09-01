@@ -3,7 +3,7 @@
 namespace ItIsAllMail\DriverCommon;
 
 use ItIsAllMail\Utils\Storage;
-use ItIsAllMail\Mailbox;
+use ItIsAllMail\Interfaces\MessageStorageInterface;
 
 class AbstractFetcherDriver
 {
@@ -76,12 +76,12 @@ class AbstractFetcherDriver
      * source posts change id or oder on site, but logically it is the same
      * posts that already was downloaded.
      */
-    public function setMailbox(Mailbox $m): void
+    public function setMailbox(MessageStorageInterface $m): void
     {
         $this->mailbox = $m;
     }
 
-    protected function getMailbox(): Mailbox
+    protected function getMailbox(): MessageStorageInterface
     {
         if ($this->mailbox === null) {
             die('Mailbox is not set for current driver instance');
@@ -101,5 +101,13 @@ class AbstractFetcherDriver
     public function getAdditionalDelayBeforeNextFetch(array $source): int
     {
         return 0;
+    }
+
+    /**
+     * Clear common files can be left after source fetching, like list of
+     * pages already fetched
+     */
+    public function clearSourceCache(array $source): void {
+        Storage::clear($this->driverCode, $source["url"] . "_last_page");
     }
 }
