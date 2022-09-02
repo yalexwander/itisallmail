@@ -17,4 +17,10 @@ class AbstractCatalogDriver
     {
         return false;
     }
+
+    public function getCode(string $catalogType = null): string
+    {
+        return $this->driverCode;
+    }
+
 }

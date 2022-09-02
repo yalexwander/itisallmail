@@ -13,6 +13,7 @@ use ItIsAllMail\Utils\URLProcessor;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use ItIsAllMail\CoreTypes\SerializationAttachement;
 
 class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
@@ -78,6 +79,9 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
 
             if (! $this->messageWithGivenIdAlreadyDownloaded($postId . "@" . $this->getCode())) {
                 $this->processPostAttachements($postNode, $msg, $sourceConfig);
+            }
+            elseif ($this->postContainsAttachements($postNode)) {
+                $msg->setExternalAttachements([ new SerializationAttachement() ]);
             }
 
             $msg->setBody(
@@ -232,5 +236,12 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     protected function getPostUrl(SimpleHtmlDom $postNode) : string
     {
         return $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href");
+    }
+
+    protected function postContainsAttachements(SimpleHtmlDom $postNode) : bool {
+        return (
+            $postNode->findOneOrFalse(".tgme_widget_message_photo_wrap") or
+            $postNode->findOneOrFalse(".tgme_widget_message_video_wrap")
+        );
     }
 }

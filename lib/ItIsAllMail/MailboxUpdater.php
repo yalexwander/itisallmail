@@ -50,7 +50,7 @@ class MailboxUpdater
                 ! empty($oldMsg["headers"][$header]) and
                 $oldMsg["headers"][$header] !== $newHeader
             ) {
-                Debug::log("Header mismatch for \"{$header}\":\n\"{$oldMsg["headers"][$header]}\"\nvs\n\"{$newHeader}\"");
+                Debug::debug("Header mismatch for \"{$header}\":\n\"{$oldMsg["headers"][$header]}\"\nvs\n\"{$newHeader}\"");
                 $needUpdate = true;
             }
         }

@@ -5,6 +5,7 @@ namespace ItIsAllMail\CoreTypes;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Constants;
+use ItIsAllMail\CoreTypes\SerializationAttachement;
 
 /**
  * This class represents internal message. It does not maps directly to MIME
@@ -45,6 +46,10 @@ class SerializationMessage
     // URI that specifies link of filepath, ot unique ID that can be directly
     // converted to message source
     protected $uri;
+
+    // needed for rendering purposes when we know attachements could be
+    // already downloaded
+    protected $externalAttachements = [];
 
     public function __construct(array $source)
     {
@@ -160,20 +165,22 @@ class SerializationMessage
 
     public function addAttachement(string $title, string $data): SerializationMessage
     {
-        $this->attachements[] = [ 'title' => $title, 'data' => $data, 'type' => 'application',
-                                  'subtype' => 'octet-stream'
-        ];
+        $this->attachements[] = new SerializationAttachement(
+            [ 'title' => $title, 'data' => $data, 'type' => 'application',
+              'subtype' => 'octet-stream'
+              
+            ]);
         return $this;
     }
 
     public function addAttachementLink(string $title, string $url): SerializationMessage
     {
-        $this->attachementLinks[] = [
+        $this->attachementLinks[] = new SerializationAttachement([
             'title' => "link to " . $title,
             'data' => "<a href=\"{$url}\">{$title}</a>",
             'type' => "text",
             'subtype' => "html"
-        ];
+        ]);
 
         return $this;
     }
@@ -225,7 +232,7 @@ class SerializationMessage
         }
 
         if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
-            if (count($this->attachementLinks)) {
+            if (count($this->attachements) or count($this->attachementLinks) or count($this->externalAttachements)) {
                 $subject = "[A] " . $subject;
             }
         }
@@ -254,5 +261,13 @@ class SerializationMessage
         else {
             throw new \Exception("Unsupported header $header");
         }
+    }
+
+    public function getExternalAttachements() : array {
+        return $this->externalAttachements;
+    }
+
+    public function setExternalAttachements($externalAttachements) : void {
+        $this->externalAttachements = $externalAttachements;
     }
 }
