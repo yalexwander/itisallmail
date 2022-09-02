@@ -104,12 +104,18 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
 
         $defaultCommentDate = new \DateTime('2000-01-01');
         $comments = [];
+        $visitedMap = [];
         foreach ($dom->findMulti("article.tm-comment-thread__comment") as $node) {
             $commentTextWidget = $node->findOneOrFalse(".tm-comment__body-content");
 
             $postId = $this->getCommentIdFromLink(
                 $node->findOne("a")->getAttribute("name")
             );
+
+            if (isset($visitedMap[$postId])) {
+                continue;
+            }
+            $visitedMap[$postId] = true;
 
             $parent = $node->parentNode()->parentNode()->parentNode();
 
