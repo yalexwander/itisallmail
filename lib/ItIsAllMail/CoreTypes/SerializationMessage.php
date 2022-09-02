@@ -191,7 +191,10 @@ class SerializationMessage
         }
 
         if ($sourceConfig->getOpt('add_statusline_header')) {
-            $headers[] = Constants::IAM_HEADER_STATUSLINE . ": " . $this->generateStatusLineHeader($sourceConfig);
+            $statusline = $this->generateStatusLineHeader($sourceConfig);
+            if (strlen($statusline)) {
+                $headers[] = Constants::IAM_HEADER_STATUSLINE . ": " . $this->generateStatusLineHeader($sourceConfig);
+            }
         }
         
         return $headers;
