@@ -30,7 +30,7 @@ class MailboxUpdater
         }
     }
 
-    public function updateMessageHeaders(string $sourceMIMEFile, Message $msg): int
+    public function updateMessageHeaders(string $sourceMIMEFile, SerializationMessage $msg): int
     {
         if (! count($this->headersToUpdate)) {
             return 0;
@@ -50,7 +50,7 @@ class MailboxUpdater
                 ! empty($oldMsg["headers"][$header]) and
                 $oldMsg["headers"][$header] !== $newHeader
             ) {
-                Debug::log("Header mismatch for \"{$header}\":\n{$oldMsg["headers"][$header]}\nvs\n{$newHeader}");
+                Debug::log("Header mismatch for \"{$header}\":\n\"{$oldMsg["headers"][$header]}\"\nvs\n\"{$newHeader}\"");
                 $needUpdate = true;
             }
         }
