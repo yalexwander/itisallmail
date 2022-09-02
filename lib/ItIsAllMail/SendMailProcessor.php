@@ -33,7 +33,9 @@ class SendMailProcessor
             return $this->processCommand($rawMessage, $parsed, $options);
         }
 
-        print "Sending message without command: $rawMessage\n";
+        print "Sending message without command.\n";
+        print "Raw message: $rawMessage\n";
+        print "CLI options: " . print_r($options, true) . "\n";
         return 1;
     }
 

@@ -4,7 +4,6 @@
     "require": {
 	"nesbot/carbon" : "^2.0",
         "voku/simple_html_dom" : "^4.7",
-        "symfony/mime": "^5.2",
         "egulias/email-validator": "^3.0",
         "html2text/html2text": "^4.3",
         "thefox/imapd": "^0.5.0",

@@ -2,12 +2,6 @@
 
 namespace ItIsAllMail\CoreTypes;
 
-use Symfony\Component\Mime\Header\Headers;
-use Symfony\Component\Mime\Message as MIMEMessage;
-use Symfony\Component\Mime\Part\Multipart\AlternativePart;
-use Symfony\Component\Mime\Part\TextPart;
-use Symfony\Component\Mime\Part\DataPart;
-use Symfony\Component\Mime\Header\DateHeader;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Constants;
@@ -67,37 +61,54 @@ class SerializationMessage
         $this->score = $source["score"] ?? null;
     }
 
+
     public function toMIMEString(HierarchicConfigInterface $sourceConfig): string
     {
-
         Debug::debug("Trying convert to MIME:");
         Debug::debug(Debug::dumpMessage($this));
-        $headers = (new Headers())
-            ->addMailboxListHeader('To', [ $this->thread ])
-            ->addDateHeader('Date', $this->created)
-            ->addIdHeader('Message-id', [ $this->getId() ])
-            ->addMailboxListHeader('From', [ $this->from ]);
+        $envelope = [];
+        $envelope["from"]= $this->from;
+        $envelope["to"]  = $this->thread;
+        $envelope["date"]  = $this->created->format("D, d M Y H:i:s O");
+        $envelope["subject"]  = $this->getFormattedSubject($sourceConfig);
+        $envelope["message_id"]  = "<" . $this->getId() . ">";
 
-        $headers->setMaxLineLength($this->subjectMaxChars * 2);
-
+        $envelope["custom_headers"] = $this->createExtraHeaders($sourceConfig);
+        
         if ($this->parent !== null) {
-            $headers->addIdHeader('References', [ $this->getParent() ]);
+            $envelope["custom_headers"][] = "References: <" . $this->getParent() . ">";
         }
 
-        $body = new AlternativePart(
-            new TextPart(
-                $this->body
-            ),
-            ... array_merge($this->attachements, $this->attachementLinks)
-        );
+        $bodies = [];
+        $allAttachements = array_merge($this->attachements, $this->attachementLinks);
 
-        $headers->addTextHeader('Subject', $this->getFormattedSubject($sourceConfig));
+        if (count($allAttachements)) {
+            $bodies[] = [
+                "type" => TYPEMULTIPART,
+                "subtype" => "alternative"
+            ];
+        }
 
-        $this->setExtraHeaders($headers, $sourceConfig);
+        $bodyPart = [
+            "type" => "text",
+            "subtype" => "plain",
+            "charset" => "utf-8",
+            "contents.data" => $this->body
+        ];
+        
+        $bodies[] = $bodyPart;
 
-        $message = new MIMEMessage($headers, $body);
+        foreach ($allAttachements as $attachment) {
+            $bodies[] = [
+                "type" => $attachment["type"],
+                "subtype" => $attachment["subtype"],
+                "encoding" => ENCBINARY,
+                "description" => $attachment["title"],
+                "contents.data" => $attachment["data"]
+            ];
+        }
 
-        return $message->toString();
+        return imap_mail_compose($envelope, $bodies);
     }
 
     public function getId(): string
@@ -149,35 +160,43 @@ class SerializationMessage
 
     public function addAttachement(string $title, string $data): SerializationMessage
     {
-        $this->attachements[] = new DataPart($data, $title, null);
+        $this->attachements[] = [ 'title' => $title, 'data' => $data, 'type' => 'application',
+                                  'subtype' => 'octet-stream'
+        ];
         return $this;
     }
 
     public function addAttachementLink(string $title, string $url): SerializationMessage
     {
-        $this->attachementLinks[] = new DataPart(
-            "<a href=\"{$url}\">{$title}</a>",
-            "link to " . $title,
-            "text/html"
-        );
+        $this->attachementLinks[] = [
+            'title' => "link to " . $title,
+            'data' => "<a href=\"{$url}\">{$title}</a>",
+            'type' => "text",
+            'subtype' => "html"
+        ];
 
         return $this;
     }
 
-    protected function setExtraHeaders(Headers $headers, HierarchicConfigInterface $sourceConfig): void
+    protected function createExtraHeaders(HierarchicConfigInterface $sourceConfig): array
     {
+        $headers = [];
+        
         if ($this->getUri() !== null) {
-            $headers->addTextHeader(Constants::IAM_HEADER_URI, $this->getUri());
+            $headers[] = Constants::IAM_HEADER_URI . ": " . $this->getUri();
         }
 
         if (!empty($score)) {
-            $headers->addTextHeader(Constants::IAM_HEADER_SCORE, implode(",", $this->getScore()));
+            $headers[] = Constants::IAM_HEADER_SCORE . ": " . implode(",", $this->getScore());
         }
 
         if ($sourceConfig->getOpt('add_statusline_header')) {
-            $headers->addTextHeader(Constants::IAM_HEADER_STATUSLINE, $this->generateStatusLineHeader($sourceConfig));
+            $headers[] = Constants::IAM_HEADER_STATUSLINE . ": " . $this->generateStatusLineHeader($sourceConfig);
         }
+        
+        return $headers;
     }
+
 
     protected function generateStatusLineHeader(HierarchicConfigInterface $sourceConfig) : ?string {
         $statusline = "";
