@@ -13,7 +13,6 @@ IAM.set_script_editor = function(editor_param)
 end
 
 IAM.set_normal_editor = function()
-   mutt.set("include", "ask-yes")
    mutt.set("editor", IAM.normal_editor)
 end
 
