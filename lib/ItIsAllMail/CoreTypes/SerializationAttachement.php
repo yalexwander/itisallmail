@@ -2,5 +2,5 @@
 
 namespace ItIsAllMail\CoreTypes;
 
-class SerializationAttachement extends \ArrayObject{   
+class SerializationAttachement extends \ArrayObject{
 }

@@ -48,12 +48,11 @@ Or you can serve this maildir using POP3 or IMAP server, for example Dovecot.
 
 ### A web page with tree discussion:
 
-![Web page](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/example_website.png)
+![Web page](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/browser_example.png)
 
 
 ### Same discussion in representation of maildir, opened in Neomutt:
-![Comments as thread](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/example_discussion.png)
-![Article or post](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/example_message_view.png)
+![Comments as thread](https://raw.githubusercontent.com/yalexwander/itisallmail/master/doc/images/neomutt_example.png)
 
 
 ## Installation on Debian/Ubuntu
