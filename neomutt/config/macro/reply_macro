@@ -5,18 +5,18 @@ unbind index,pager r
 macro pager,index ,r '\
 |neomutt/utils/register/register.php -s reply<enter>\
 :lua IAM.set_normal_editor()<enter>\
+:lua IAM.set_sendmail_args("-c /post -r")<enter>\
 :exec reply<enter>n\
-:set include=no<enter>\
-:lua IAM.set_sendmail_args("-c /post -r")<enter>'
+:set include=no<enter>'
 
 # with quote
 macro pager,index ,R '\
 |neomutt/utils/register/register.php -s reply<enter>\
 :lua IAM.set_normal_editor()<enter>\
+:lua IAM.set_sendmail_args("-c /post -r")<enter>\
 :set include=ask-yes<enter>\
 :exec reply<enter>\
-y\
-:lua IAM.set_sendmail_args("-c /post -r")<enter>'
+y'
 
 # |  - pipe message to command
 # neomutt/utils/register/register.php -s reply<enter> - call register save command
