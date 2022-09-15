@@ -112,15 +112,12 @@ class MailboxUpdater
                 ! empty($oldMsg["headers"][$header]) and
                 $oldMsg["headers"][$header] !== $newHeader
             ) {
-                // print_r($oldMsg);
-                // print_r($newHeader);
                 Debug::debug("Header mismatch for \"{$header}\":\n\"{$oldMsg["headers"][$header]}\"\nvs\n\"{$newHeader}\"");
 
-                $headerOffsetStart = mb_strpos($oldMsgRaw, "\r\nSubject: ") + 2;
-                $headerOffsetEnd = mb_strpos($oldMsgRaw, "\r\n", $headerOffsetStart + 4);
+                $headerOffsetStart = mb_strpos($newMsgRaw, "\r\n{$this->headerMap[$header]}: ") + 2;
+                $headerOffsetEnd = mb_strpos($newMsgRaw, "\r\n", $headerOffsetStart + 4);
 
                 $newMsgRaw = mb_substr($newMsgRaw, 0, $headerOffsetStart) . $this->headerMap[$header] . ": " . $newHeader . mb_substr($newMsgRaw, $headerOffsetEnd);
-                                    
                 $needUpdate = true;
             }
         }
