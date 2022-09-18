@@ -28,6 +28,7 @@ lua-source "neomutt/config/lua_muttrc.lua"
 source "colors"
 source "display"
 
+# show IAM headers
 unignore x-iam-statusline
 
 # needed for replying with attachements work
@@ -35,6 +36,10 @@ set mime_forward=yes
 
 # to prevent citation date comment
 set attribution=""
+
+# set no signature
+set sig_dashes=no
+set signature=""
 
 # remove delay when executing multiple commands
 set wait_key=no

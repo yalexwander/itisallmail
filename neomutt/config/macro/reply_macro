@@ -6,8 +6,9 @@ macro pager,index ,r '\
 |neomutt/utils/register/register.php -s reply<enter>\
 :lua IAM.set_normal_editor()<enter>\
 :lua IAM.set_sendmail_args("-c /post -r")<enter>\
-:exec reply<enter>n\
-:set include=no<enter>'
+:set include=no<enter>\
+:exec reply<enter>'
+
 
 # with quote
 macro pager,index ,R '\

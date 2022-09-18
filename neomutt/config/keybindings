@@ -22,3 +22,9 @@ macro pager,index \' '<tab>'
 
 # ' for next subthread with marking it as read
 macro pager,index \" '<Esc>r'
+
+# to quickly jump between current message and its parent
+macro index P  "t<previous-undeleted><parent-message>"
+macro index p  "/~T<enter>t<previous-undeleted>"
+macro pager P  "qP<enter>"
+macro pager p  "qp<enter>"
