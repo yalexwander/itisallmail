@@ -4,6 +4,7 @@ namespace ItIsAllMail\DriverCommon;
 
 use ItIsAllMail\Utils\Storage;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 class AbstractFetcherDriver
 {
@@ -98,7 +99,7 @@ class AbstractFetcherDriver
     /**
      * Can be used to add time before next fetch in monitor
      */
-    public function getAdditionalDelayBeforeNextFetch(array $source): int
+    public function getAdditionalDelayBeforeNextFetch(Source $source): int
     {
         return 0;
     }
@@ -107,7 +108,7 @@ class AbstractFetcherDriver
      * Clear common files can be left after source fetching, like list of
      * pages already fetched
      */
-    public function clearSourceCache(array $source): void {
+    public function clearSourceCache(Source $source): void {
         Storage::clear($this->driverCode, $source["url"] . "_last_page");
     }
 }

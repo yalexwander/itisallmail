@@ -4,6 +4,7 @@ namespace ItIsAllMail\Config;
 
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 class FetcherSourceConfig implements HierarchicConfigInterface
 {
@@ -12,7 +13,7 @@ class FetcherSourceConfig implements HierarchicConfigInterface
     protected $driver;
     protected $sourceConfig;
 
-    public function __construct(array $appConfig, FetchDriverInterface $driver, array $sourceConfig)
+    public function __construct(array $appConfig, FetchDriverInterface $driver, Source $sourceConfig)
     {
         $this->appConfig = $appConfig;
         $this->driver = $driver;

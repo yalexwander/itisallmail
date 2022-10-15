@@ -4,6 +4,7 @@ namespace ItIsAllMail\Factory;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\Config\DriverConfig;
+use ItIsAllMail\CoreTypes\Source;
 
 class FetcherDriverFactory
 {
@@ -34,7 +35,7 @@ class FetcherDriverFactory
     /**
      * Tries to find matching driver
      */
-    public function getFetchDriverForSource(array $source): FetchDriverInterface
+    public function getFetchDriverForSource(Source $source): FetchDriverInterface
     {
         foreach ($this->driverList as $driver) {
             if (

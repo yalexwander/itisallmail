@@ -14,6 +14,7 @@ use ItIsAllMail\Utils\MailHeaderProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
 use ItIsAllMail\CoreTypes\SerializationAttachement;
+use ItIsAllMail\CoreTypes\Source;
 
 class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
@@ -30,7 +31,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     /**
      * Return array of all posts in thread, including original article
      */
-    public function getPosts(array $source): array
+    public function getPosts(Source $source): array
     {
         $sourceURL = URLProcessor::normalizeStartURL($source["url"]);
 

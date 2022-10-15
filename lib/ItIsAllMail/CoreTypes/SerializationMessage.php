@@ -242,7 +242,7 @@ class SerializationMessage
             }
         }
 
-        $subject = preg_replace('/ +/', ' ', $subject);
+        $subject = preg_replace('/( +)|([\r\n])/', ' ', $subject);
 
         return $subject;
     }

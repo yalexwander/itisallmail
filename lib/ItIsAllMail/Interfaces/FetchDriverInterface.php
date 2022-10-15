@@ -2,6 +2,8 @@
 
 namespace ItIsAllMail\Interfaces;
 
+use ItIsAllMail\CoreTypes\Source;
+
 interface FetchDriverInterface
 {
 
@@ -23,7 +25,7 @@ interface FetchDriverInterface
      * care how distinguish old and new messages in thread, just return all of
      * them normalized to <ItIsAllMail\CoreTypes\SerializationMessage>. See its construct method
      */
-    public function getPosts(array $source): array;
+    public function getPosts(Source $source): array;
 
     /**
      * Must return driver option by given name.
@@ -33,5 +35,5 @@ interface FetchDriverInterface
     /**
      * Clear any additional data left from this source, like cache, avatars, etc
      */
-    public function clearSourceCache(array $source): void;
+    public function clearSourceCache(Source $source): void;
 }

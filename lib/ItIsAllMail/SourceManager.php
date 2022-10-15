@@ -1,6 +1,7 @@
 <?php
 
 namespace ItIsAllMail;
+use ItIsAllMail\CoreTypes\Source;
 
 class SourceManager
 {
@@ -18,7 +19,7 @@ class SourceManager
             . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
     }
 
-    public function addSource(array $source): int
+    public function addSource(Source $source): int
     {
         $this->validateSource($source);
 
@@ -73,10 +74,16 @@ class SourceManager
 
     public function getSources(): array
     {
-        return yaml_parse_file($this->sourcesFile);
+        $sources = [];
+        
+        foreach (yaml_parse_file($this->sourcesFile) as $config) {
+            $sources[] = new Source($config);
+        }
+        
+        return $sources;
     }
 
-    public function getSourceById(string $url): ?array
+    public function getSourceById(string $url): ?Source
     {
         foreach ($this->getSources() as $source) {
             if ($source["url"] === $url) {

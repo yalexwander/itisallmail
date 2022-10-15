@@ -8,6 +8,7 @@ use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
+use ItIsAllMail\CoreTypes\Source;
 
 class Monitor {
 
@@ -97,7 +98,7 @@ class Monitor {
     }
 
     
-    function runSourceUpdate(array $source) : int {
+    function runSourceUpdate(Source $source) : int {
         $execString = "php \""  . __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php\"";
 
         $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
@@ -125,6 +126,11 @@ $monitor = new Monitor($appConfig);
 $timeMap = [];
 while (true) {
     $timeMap = $monitor->rebuildUpdateTimeMap($timeMap);
+
+    Debug::debug("New timemap is\n");
+    foreach ($timeMap as $sourceId => $mapEntry) {
+        Debug::debug("     " . $sourceId . " => " . date("Y-m-d H:i:s", $mapEntry["next_update"]));
+    }
 
     foreach ($timeMap as $sourceId => $mapEntry) {
         if ( time() >= $mapEntry["next_update"] ) {

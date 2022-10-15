@@ -58,7 +58,10 @@ class EmailParser
                 $parsedMessage["headers"] = $partContent["headers"];
 
                 // assuming we parsing the root part of multipart message
-                if (false !== strstr($parsedMessage["headers"]["content-type"], "multipart/mixed;")) {
+                if (
+                    (! empty($parsedMessage["headers"]["content-type"])) and
+                    (false !== strstr($parsedMessage["headers"]["content-type"], "multipart/mixed;"))
+                ) {
                     $complexMessage = true;
                     continue;
                 }

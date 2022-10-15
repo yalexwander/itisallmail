@@ -13,6 +13,7 @@ use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
 use voku\helper\SimpleHtmlDomInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrDateParser.php");
 
@@ -31,7 +32,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Return array of all posts in thread, including original article
      */
-    public function getPosts(array $source): array
+    public function getPosts(Source $source): array
     {
         $posts = [];
 
