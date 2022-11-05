@@ -36,14 +36,14 @@ class SourceManager
 
         if (! $sourceExists) {
             array_push($sources, $source);
-            yaml_emit_file($this->sourcesFile, $sources);
+            yaml_emit_file($this->sourcesFile, $this->preSerialize($sources));
             return 1;
         } else {
             return 0;
         }
     }
 
-    public function deleteSource(array $source): int
+    public function deleteSource(Source $source): int
     {
         $sources = $this->getSources();
 
@@ -58,14 +58,14 @@ class SourceManager
         }
 
         if ($deleted) {
-            yaml_emit_file($this->sourcesFile, $newSources);
+            yaml_emit_file($this->sourcesFile, $this->preSerialize($newSources));
             return 1;
         } else {
             return 0;
         }
     }
 
-    protected function validateSource(array $source): void
+    protected function validateSource(Source $source): void
     {
         if (empty($source["url"])) {
             throw new \Exception("url parameter is required");
@@ -92,5 +92,12 @@ class SourceManager
         }
 
         return null;
+    }
+
+    protected function preSerialize(array $sources) : array {
+        foreach ($sources as &$s) {
+            $s = $s->getArrayCopy();
+        }
+        return $sources;
     }
 }

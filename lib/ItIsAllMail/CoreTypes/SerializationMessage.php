@@ -51,19 +51,19 @@ class SerializationMessage
     // already downloaded
     protected $externalAttachements = [];
 
-    public function __construct(array $source)
+    public function __construct(array $msgSource)
     {
-        $this->subject = $source["subject"];
-        $this->from = $source["from"];
-        $this->parent = $source["parent"];
-        $this->created = $source["created"];
-        $this->id = $source["id"];
-        $this->body = $source["body"];
-        $this->thread = $source["thread"];
-        $this->attachements = $source["attachements"] ?? [];
-        $this->mentions = $source["mentions"] ?? [];
-        $this->uri = $source["uri"] ?? null;
-        $this->score = $source["score"] ?? null;
+        $this->subject = $msgSource["subject"];
+        $this->from = $msgSource["from"];
+        $this->parent = $msgSource["parent"];
+        $this->created = $msgSource["created"];
+        $this->id = $msgSource["id"];
+        $this->body = $msgSource["body"];
+        $this->thread = $msgSource["thread"];
+        $this->attachements = $msgSource["attachements"] ?? [];
+        $this->mentions = $msgSource["mentions"] ?? [];
+        $this->uri = $msgSource["uri"] ?? null;
+        $this->score = $msgSource["score"] ?? null;
     }
 
 

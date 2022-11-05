@@ -4,19 +4,20 @@ namespace ItIsAllMail\Config;
 
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Interfaces\CatalogDriverInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 class CatalogConfig implements HierarchicConfigInterface
 {
 
     protected $appConfig;
     protected $driver;
-    protected $sourceConfig;
+    protected $source;
 
-    public function __construct(array $appConfig, CatalogDriverInterface $driver, array $sourceConfig)
+    public function __construct(array $appConfig, CatalogDriverInterface $driver, Source $source)
     {
         $this->appConfig = $appConfig;
         $this->driver = $driver;
-        $this->sourceConfig = $sourceConfig;
+        $this->source = $source;
     }
 
     /**
@@ -24,8 +25,8 @@ class CatalogConfig implements HierarchicConfigInterface
      */
     public function getOpt(string $key) /* : mixed */
     {
-        if (isset($this->sourceConfig[$key])) {
-            return $this->sourceConfig[$key];
+        if (isset($this->source[$key])) {
+            return $this->source[$key];
         } elseif (isset($this->appConfig[$key])) {
             return $this->appConfig[$key];
         } else {

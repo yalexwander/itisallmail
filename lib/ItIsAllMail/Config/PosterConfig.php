@@ -7,6 +7,7 @@ use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Interfaces\FetchDriverInterface;
 use ItIsAllMail\Factory\PosterDriverFactory;
 use ItIsAllMail\Factory\FetcherDriverFactory;
+use ItIsAllMail\CoreTypes\Source;
 
 /**
   Logic of this config is based on such priorty:
@@ -22,14 +23,14 @@ class PosterConfig implements HierarchicConfigInterface
 
     protected $appConfig;
     protected $fetcherConfig;
-    protected $sourceConfig;
+    protected $source;
     protected $posterDriver;
     protected $fetcherDriver;
 
-    public function __construct(array $appConfig, array $sourceConfig, PosterDriverInterface $posterDriver)
+    public function __construct(array $appConfig, Source $source, PosterDriverInterface $posterDriver)
     {
         $this->appConfig = $appConfig;
-        $this->sourceConfig = $sourceConfig;
+        $this->source = $source;
         $this->posterDriver = $posterDriver;
     }
 
@@ -38,14 +39,14 @@ class PosterConfig implements HierarchicConfigInterface
      */
     public function getOpt(string $key) /* : mixed */
     {
-        if (isset($this->sourceConfig[$key])) {
-            return $this->sourceConfig[$key];
+        if (isset($this->source[$key])) {
+            return $this->source[$key];
         }
 
         $this->fetcherDriver = (new FetcherDriverFactory($this->appConfig))
-            ->getFetchDriverForSource($this->sourceConfig);
+            ->getFetchDriverForSource($this->source);
 
-        $this->fetcherConfig = new FetcherSourceConfig($this->appConfig, $this->fetcherDriver, $this->sourceConfig);
+        $this->fetcherConfig = new FetcherSourceConfig($this->appConfig, $this->fetcherDriver, $this->source);
 
         try {
             if (!empty($this->fetcherConfig->getOpt($key))) {

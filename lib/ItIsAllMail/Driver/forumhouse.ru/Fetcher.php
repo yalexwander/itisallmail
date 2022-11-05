@@ -13,6 +13,7 @@ use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
 use voku\helper\SimpleHtmlDomInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
@@ -22,7 +23,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
     /**
      * Return array of all posts in thread, including original article
      */
-    public function getPosts(array $source): array
+    public function getPosts(Source $source): array
     {
         $posts = [];
 

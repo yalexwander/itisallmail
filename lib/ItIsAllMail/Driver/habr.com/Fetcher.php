@@ -54,7 +54,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Make post from the article itself
      */
-    public function getFirstPost(array $source): SerializationMessage
+    public function getFirstPost(Source $source): SerializationMessage
     {
         $html = Browser::getAsString($source["url"]);
         Debug::debug("Downloaded post page");
@@ -92,7 +92,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Parse comments to array
      */
-    public function getComments(array $source): array
+    public function getComments(Source $source): array
     {
         $commentsURL = URLProcessor::normalizeStartURL($source["url"]);
         $commentsURL .= "comments/";
@@ -193,7 +193,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         return $id[1];
     }
 
-    protected function isCatalogQuery(array $source): bool
+    protected function isCatalogQuery(Source $source): bool
     {
         if (preg_match('/\/[0-9]+\/$/', $source["url"])) {
             return false;

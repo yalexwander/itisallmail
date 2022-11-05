@@ -10,6 +10,7 @@ use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 class PostActionHandler
 {
@@ -63,7 +64,7 @@ class PostActionHandler
     }
 
 
-    protected function getProxyCommand(ParsedMessage $msg, array $source): ?string
+    protected function getProxyCommand(ParsedMessage $msg, Source $source): ?string
     {
 
         $proxyCommand = null;

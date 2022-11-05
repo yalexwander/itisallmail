@@ -10,6 +10,7 @@ use ItIsAllMail\DriverCommon\AbstractPosterDriver;
 use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
@@ -31,7 +32,7 @@ class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
         return false;
     }
 
-    public function post(ParsedMessage $msg, array $source = null, array $opts = []): array
+    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): array
     {
         $posterConfig = new PosterConfig($this->appConfig, $source, $this);
         $api = new HabrAPI($posterConfig->getOpt("poster_credentials"));

@@ -6,6 +6,7 @@ use ItIsAllMail\Interfaces\PosterDriverInterface;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
@@ -30,7 +31,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         return $this->code;
     }
 
-    public function post(ParsedMessage $msg, array $source = null, array $opts = []): array
+    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): array
     {
         throw new \Exception("Not implemented");
     }
@@ -55,7 +56,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         }
     }
 
-    public function checkBeforePost(ParsedMessage $msg, array $source = null, array $opts = []): void
+    public function checkBeforePost(ParsedMessage $msg, Source $source = null, array $opts = []): void
     {
         $this->assertEmptyMessage($msg);
         $this->assertUUEncodedMessage($msg);
