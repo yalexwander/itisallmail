@@ -3,6 +3,7 @@
 namespace ItIsAllMail\Interfaces;
 
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 interface AddressMapperInterface
 {
@@ -14,7 +15,7 @@ interface AddressMapperInterface
 
       $msg - is an array with parsed email message
      */
-    public function mapMessageToSource(ParsedMessage $msg): ?array;
+    public function mapMessageToSource(ParsedMessage $msg): ?Source;
 
     public function canMapThis(ParsedMessage $msg, string $mapType = null): ?bool;
 }

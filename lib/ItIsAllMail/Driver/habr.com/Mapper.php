@@ -7,6 +7,7 @@ use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Constants;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface
 {
@@ -26,7 +27,7 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
         return false;
     }
 
-    public function mapMessageToSource(ParsedMessage $msg): ?array
+    public function mapMessageToSource(ParsedMessage $msg): ?Source
     {
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI];
         $sourceManager = new SourceManager($this->appConfig);

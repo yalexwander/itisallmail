@@ -4,6 +4,7 @@ namespace ItIsAllMail\DriverCommon;
 
 use ItIsAllMail\Interfaces\AddressMapperInterface;
 use ItIsAllMail\CoreTypes\ParsedMessage;
+use ItIsAllMail\CoreTypes\Source;
 
 class AbstractAddressMapper implements AddressMapperInterface
 {
@@ -15,7 +16,7 @@ class AbstractAddressMapper implements AddressMapperInterface
         $this->appConfig = $appConfig;
     }
 
-    public function mapMessageToSource(ParsedMessage $msg): ?array
+    public function mapMessageToSource(ParsedMessage $msg): ?Source
     {
         throw new \Exception("Not implemented");
     }
