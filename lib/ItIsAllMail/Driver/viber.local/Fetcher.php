@@ -104,7 +104,7 @@ class ViberLocalFetcher extends AbstractFetcherDriver implements FetchDriverInte
 
             if (strlen($row["Info"]) > 2) {
                 $info = json_decode($row["Info"], true);
-                if (! empty($info["quote"])) {
+                if (! empty($info["quote"]["text"])) {
                     $body = ">" . $info["quote"]["text"] . "\n\n" . $body;
                 }
              
@@ -123,8 +123,6 @@ class ViberLocalFetcher extends AbstractFetcherDriver implements FetchDriverInte
                 "thread" => $thread  . "@" . $this->getCode(),
                 "uri" => $source["url"] . "#event_" . $row["EventID"],
             ]);
-
-            print $row["Body"] . "\n";
 
             $posts[] = $comment;
         }
