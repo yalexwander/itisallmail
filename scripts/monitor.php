@@ -23,7 +23,6 @@ class Monitor {
         $this->appConfig = $appConfig;
     }
 
-
     function rebuildUpdateTimeMap(array $oldMap) {
         $newMap = [];
         $newSources = $this->sourceManager->getSources();

@@ -27,6 +27,8 @@ if ($source === null) {
 $driver = $driverFactory->getFetchDriverForSource($source);
 $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 
+ini_set('max_execution_time', intval($sourceConfig->getOpt('max_fetch_time')));
+
 $mailbox = new Mailbox($sourceConfig);
 $driver->setMailbox($mailbox);
 

@@ -39,12 +39,17 @@ class FetcherDriverFactory
     {
         foreach ($this->driverList as $driver) {
             if (
-                (!empty($source["driver"]) and $driver->getCode() === $source["driver"]) or
-                $driver->matchURL($source["url"])
+                (!empty($source["driver"]) and $driver->getCode() === $source["driver"])
             ) {
                 return $driver;
             }
         }
+
+        foreach ($this->driverList as $driver) {
+            if ($driver->matchURL($source["url"])) {
+                return $driver;
+            }
+        }       
 
         throw new \Exception("Driver for url \"{$source["url"]}\" not found");
     }
