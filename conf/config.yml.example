@@ -17,6 +17,8 @@ fetcher_proxy : ""
 poster_proxy : ""
 use_posting_queue : 0
 fetch_disabled: false
+max_fetch_time: 120
+attach_raw_message: false
 
 drivers :
   - "habr.com"

@@ -51,6 +51,9 @@ class SerializationMessage
     // already downloaded
     protected $externalAttachements = [];
 
+    // to store raw message data from source like json/html/etc
+    protected $rawSourceData;
+
     public function __construct(array $msgSource)
     {
         $this->subject = $msgSource["subject"];
@@ -64,6 +67,7 @@ class SerializationMessage
         $this->mentions = $msgSource["mentions"] ?? [];
         $this->uri = $msgSource["uri"] ?? null;
         $this->score = $msgSource["score"] ?? null;
+        $this->rawSourceData = $msgSource["rawSourceData"] ?? null;
     }
 
 
@@ -85,6 +89,10 @@ class SerializationMessage
         }
 
         $bodies = [];
+        if ($sourceConfig->getOpt("attach_raw_message")) {
+            $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
+        }
+
         $allAttachements = array_merge($this->attachements, $this->attachementLinks);
 
         if (count($allAttachements)) {
@@ -163,12 +171,11 @@ class SerializationMessage
         return $this->created;
     }
 
-    public function addAttachement(string $title, string $data): SerializationMessage
+    public function addAttachement(string $title, string $data, $type = 'application', $subtype = 'octet-stream'): SerializationMessage
     {
         $this->attachements[] = new SerializationAttachement(
-            [ 'title' => $title, 'data' => $data, 'type' => 'application',
-              'subtype' => 'octet-stream'
-              
+            [ 'title' => $title, 'data' => $data, 'type' => $type,
+              'subtype' => $subtype
             ]);
         return $this;
     }
