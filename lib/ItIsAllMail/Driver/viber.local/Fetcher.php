@@ -76,7 +76,6 @@ class ViberLocalFetcher extends AbstractFetcherDriver implements FetchDriverInte
         $result = $db->query($query);
 
         while (false !== $row = $result->fetchArray()) {
-
             // skip likes or what is it
             if ($row["Type"] === 3) {
                 continue;
@@ -118,10 +117,11 @@ class ViberLocalFetcher extends AbstractFetcherDriver implements FetchDriverInte
                 "subject" => $subject,
                 "parent" => $parent . "@" . $this->getCode(),
                 "created" => $created,
-                "id" => $row["EventID"] . "@" . $this->getCode(),
+                "id" => $row["EventID"] . "lost" . "@" . $this->getCode(),
                 "body" => $body,
                 "thread" => $thread  . "@" . $this->getCode(),
                 "uri" => $source["url"] . "#event_" . $row["EventID"],
+                "rawSourceData" => json_encode($row)
             ]);
 
             $posts[] = $comment;
