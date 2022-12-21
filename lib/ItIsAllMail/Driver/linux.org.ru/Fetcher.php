@@ -93,10 +93,10 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
                 $posts[] = $msg;
             }
 
-            $nextPage = $dom->findMulti("#comments .nav a.page-number");
+            $nextPage = $dom->findMulti(".nav a.page-number");
             $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
 
-            if (($nextPage !== null) and strstr($nextPage->text(), "→")) {
+            if ($nextPage and strstr($nextPage->text(), "→")) {
                 $url = URLProcessor::getNodeBaseURI($dom, $url) . $nextPage->getAttribute("href");
                 Debug::debug("New url: $url");
             } else {
