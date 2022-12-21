@@ -90,7 +90,7 @@ class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverIn
             }
 
             $nextPage = $dom->findMulti('div.pageNavLinkGroup a.text');
-            $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
+            $nextPage = count($nextPage) ? $nextPage[count($nextPage) - 1] : false;
 
             if ($nextPage and strstr($nextPage->text(), "Вперёд")) {
                 $url = URLProcessor::getNodeBaseURI($dom, $url) . "/" . $nextPage->getAttribute("href");

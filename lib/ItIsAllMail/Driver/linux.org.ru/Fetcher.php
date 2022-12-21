@@ -94,7 +94,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
             }
 
             $nextPage = $dom->findMulti(".nav a.page-number");
-            $nextPage = $nextPage->count() ? $nextPage->offsetGet($nextPage->count() - 1) : false;
+            $nextPage = count($nextPage) ? $nextPage[count($nextPage) - 1] : false;
 
             if ($nextPage and strstr($nextPage->text(), "→")) {
                 $url = URLProcessor::getNodeBaseURI($dom, $url) . $nextPage->getAttribute("href");
