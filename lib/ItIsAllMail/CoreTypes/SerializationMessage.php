@@ -16,43 +16,43 @@ use ItIsAllMail\CoreTypes\SerializationAttachement;
 
 class SerializationMessage
 {
-    protected $subject;
-    protected $from;
-    protected $parent;
-    protected $created;
-    protected $id;
-    protected $body;
-    protected $thread;
-    protected $attachements = [];
-    protected $attachementLinks = [];
+    protected ?string $subject;
+    protected ?string $from;
+    protected ?string $parent;
+    protected \DateTime $created;
+    protected string $id;
+    protected string $body;
+    protected ?string $thread;
+    protected ?array $attachements = [];
+    protected ?array $attachementLinks = [];
 
     // this is list of extra headers, that can be useful in many places
-    protected $extraHeaders = [
+    protected array $extraHeaders = [
         'mentions', 'score', 'reference', 'uri'
     ];
 
     // maximal length of subject
-    protected $subjectMaxChars = 128;
+    protected int $subjectMaxChars = 128;
 
     // list of all users of given site/network/messenger mention in this message
-    protected $mentions;
+    protected ?array $mentions;
 
     // count of likes and dislikes if presented
-    protected $score;
+    protected ?array $score;
 
     // list of message IDs this message references to
-    protected $reference;
+    protected ?array $reference;
 
     // URI that specifies link of filepath, ot unique ID that can be directly
     // converted to message source
-    protected $uri;
+    protected ?string $uri;
 
     // needed for rendering purposes when we know attachements could be
     // already downloaded
-    protected $externalAttachements = [];
+    protected ?array $externalAttachements = [];
 
     // to store raw message data from source like json/html/etc
-    protected $rawSourceData;
+    protected ?string $rawSourceData;
 
     public function __construct(array $msgSource)
     {
@@ -171,7 +171,7 @@ class SerializationMessage
         return $this->created;
     }
 
-    public function addAttachement(string $title, string $data, $type = 'application', $subtype = 'octet-stream'): SerializationMessage
+    public function addAttachement(string $title, string $data, string $type = 'application', string $subtype = 'octet-stream'): SerializationMessage
     {
         $this->attachements[] = new SerializationAttachement(
             [ 'title' => $title, 'data' => $data, 'type' => $type,
@@ -274,7 +274,7 @@ class SerializationMessage
         return $this->externalAttachements;
     }
 
-    public function setExternalAttachements($externalAttachements) : void {
+    public function setExternalAttachements(array $externalAttachements) : void {
         $this->externalAttachements = $externalAttachements;
     }
 }

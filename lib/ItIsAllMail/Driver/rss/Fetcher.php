@@ -17,8 +17,7 @@ use ItIsAllMail\CoreTypes\Source;
 
 class RSSFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $crawler;
-    protected $driverCode = "rss";
+    protected string $driverCode = "rss";
 
     /**
      * Return array of all posts in thread, including original article

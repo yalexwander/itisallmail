@@ -21,11 +21,11 @@ use ItIsAllMail\CoreTypes\Source;
 class PosterConfig implements HierarchicConfigInterface
 {
 
-    protected $appConfig;
-    protected $fetcherConfig;
-    protected $source;
-    protected $posterDriver;
-    protected $fetcherDriver;
+    protected array $appConfig;
+    protected FetcherSourceConfig $fetcherConfig;
+    protected Source $source;
+    protected PosterDriverInterface $posterDriver;
+    protected FetchDriverInterface $fetcherDriver;
 
     public function __construct(array $appConfig, Source $source, PosterDriverInterface $posterDriver)
     {

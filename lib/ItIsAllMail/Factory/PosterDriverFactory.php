@@ -8,8 +8,7 @@ use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class PosterDriverFactory
 {
-
-    protected $appConfig;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {

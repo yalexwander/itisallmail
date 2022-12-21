@@ -11,9 +11,9 @@ use ItIsAllMail\CoreTypes\Source;
 class AbstractPosterDriver implements PosterDriverInterface
 {
 
-    protected $appConfig;
-    protected $posterConfig;
-    protected $code;
+    protected array $appConfig;
+    protected array $posterConfig;
+    protected string $code;
 
     public function __construct(array $appConfig, array $posterConfig)
     {

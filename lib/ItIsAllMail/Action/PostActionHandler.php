@@ -14,9 +14,10 @@ use ItIsAllMail\CoreTypes\Source;
 
 class PostActionHandler
 {
-
-    protected $appConfig;
-    protected $cliOpts;
+    /** @var array<string, mixed> */
+    protected array $appConfig;
+    /** @var array<string, mixed> */
+    protected array $cliOpts;
 
     public function __construct(array $appConfig, array $cliOpts)
     {

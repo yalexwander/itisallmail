@@ -9,9 +9,9 @@ use ItIsAllMail\CoreTypes\Source;
 class CatalogConfig implements HierarchicConfigInterface
 {
 
-    protected $appConfig;
-    protected $driver;
-    protected $source;
+    protected array $appConfig;
+    protected CatalogDriverInterface $driver;
+    protected Source $source;
 
     public function __construct(array $appConfig, CatalogDriverInterface $driver, Source $source)
     {

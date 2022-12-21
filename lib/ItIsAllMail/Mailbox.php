@@ -6,14 +6,15 @@ use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\MailboxUpdater;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
+use ItIsAllMail\CoreTypes\Source;
 
 class Mailbox implements MessageStorageInterface
 {
-    protected $sourceConfig;
-    protected $path;
-    protected $localMessages;
-    protected $mailSubdirs;
-    protected $mailboxUpdater;
+    protected HierarchicConfigInterface $sourceConfig;
+    protected string $path;
+    protected array $localMessages;
+    protected array $mailSubdirs;
+    protected MailboxUpdater $mailboxUpdater;
 
     public function __construct(HierarchicConfigInterface $sourceConfig)
     {
@@ -110,7 +111,7 @@ class Mailbox implements MessageStorageInterface
                     ! empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
                 ) {
                     $mergeStats["modified"]++;
-                    $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
+                    $this->mailboxUpdater->handleExistingMessage($messageFilepath, $msg);
                 }
             }
         }

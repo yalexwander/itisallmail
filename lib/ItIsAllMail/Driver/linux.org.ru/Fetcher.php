@@ -18,10 +18,9 @@ use ItIsAllMail\CoreTypes\Source;
 
 class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $crawler;
-    protected $driverCode = "linux.org.ru";
+    protected string $driverCode = "linux.org.ru";
 
-    protected $threadMessageMap;
+    protected array $threadMessageMap;
 
     /**
      * Return array of all posts in thread, including original article
@@ -113,7 +112,7 @@ class LinuxOrgRuFetcher extends AbstractFetcherDriver implements FetchDriverInte
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function getPostText(SimpleHtmlDom $post): string
+    protected function getPostText(SimpleHtmlDomInterface $post): string
     {
         $bodyWidget = $post->findOne(".msg_body");
 

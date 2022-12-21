@@ -8,10 +8,9 @@ use ItIsAllMail\CoreTypes\Source;
 
 class AbstractAddressMapper implements AddressMapperInterface
 {
+    protected array $appConfig;
 
-    protected $appConfig;
-
-    public function __construct($appConfig)
+    public function __construct(array $appConfig)
     {
         $this->appConfig = $appConfig;
     }

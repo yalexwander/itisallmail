@@ -4,8 +4,9 @@ namespace ItIsAllMail\DriverCommon;
 
 class AbstractCatalogDriver
 {
-    protected $appConfig;
-    protected $catalogDriverConfig;
+    protected array $appConfig;
+    protected array $catalogDriverConfig;
+    protected string $driverCode;
 
     public function __construct(array $appConfig, array $catalogDriverConfig)
     {

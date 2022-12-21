@@ -4,7 +4,7 @@ namespace ItIsAllMail\Utils;
 
 class Storage
 {
-    protected static $storageDir =  __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
+    protected static string $storageDir =  __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
         . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
 
     public static function get(string $driverCode, string $key): ?string

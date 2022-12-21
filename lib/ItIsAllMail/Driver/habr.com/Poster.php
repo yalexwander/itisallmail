@@ -14,12 +14,13 @@ use ItIsAllMail\CoreTypes\Source;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrAPI.php");
 
+use ItIsAllMail\Driver\HabrAPI;
+
 class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
 {
-
-    protected $appConfig;
-    protected $posterConfig;
-    protected $driverCode = "habr.com";
+    protected array $appConfig;
+    protected PosterConfig $posterConfig;
+    protected string $driverCode = "habr.com";
 
     public function canProcessMessage(ParsedMessage $msg): bool
     {

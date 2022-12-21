@@ -5,10 +5,9 @@ use ItIsAllMail\CoreTypes\Source;
 
 class SourceManager
 {
+    protected array $appConfig;
 
-    protected $appConfig;
-
-    protected $sourcesFile;
+    protected string $sourcesFile;
 
 
     public function __construct(array $appConfig)

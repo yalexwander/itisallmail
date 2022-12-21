@@ -17,8 +17,7 @@ use ItIsAllMail\CoreTypes\Source;
 
 class ViberLocalFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $crawler;
-    protected $driverCode = "viber.local";
+    protected string $driverCode = "viber.local";
 
     /**
      * Return array of all posts in thread, including original article

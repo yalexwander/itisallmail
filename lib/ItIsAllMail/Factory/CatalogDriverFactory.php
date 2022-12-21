@@ -9,8 +9,8 @@ use ItIsAllMail\DriverCommon\AbstractCatalogDriver;
 
 class CatalogDriverFactory
 {
-    protected $driverList = [];
-    protected $appConfig;
+    protected array $driverList;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {

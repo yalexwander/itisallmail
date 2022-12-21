@@ -13,13 +13,14 @@ use ItIsAllMail\Utils\URLProcessor;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use voku\helper\SimpleHtmlDomInterface;
 use ItIsAllMail\CoreTypes\SerializationAttachement;
 use ItIsAllMail\CoreTypes\Source;
 
 class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $driverCode = "t.me";
-    protected $defaultCommentDate;
+    protected string $driverCode = "t.me";
+    private \DateTime $defaultCommentDate;
 
     public function __construct(array $appConfig, array $opts)
     {
@@ -100,12 +101,12 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     /**
      * Convert to text readable by CLI mail client
      */
-    protected function postToText(SimpleHtmlDom $node): string
+    protected function postToText(SimpleHtmlDomInterface $node): string
     {
         return (new HtmlToText($node->outerHtml()))->getText();
     }
 
-    public function getChannelTopPost(SimpleHtmlDom $postNode, string $sourceURL): SerializationMessage
+    public function getChannelTopPost(SimpleHtmlDomInterface $postNode, string $sourceURL): SerializationMessage
     {
         $author = preg_replace(
             '/@/',
@@ -137,7 +138,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         return $msg;
     }
 
-    public function getPostText($node): string
+    public function getPostText(SimpleHtmlDomInterface $node): string
     {
         $textNode = $node->findOneOrFalse("div.tgme_widget_message_text");
 
@@ -161,7 +162,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         return $title;
     }
 
-    protected function getPostId(SimpleHtmlDom $post): string
+    protected function getPostId(SimpleHtmlDomInterface $post): string
     {
         return preg_replace('/[^A-Za-z0-9\-_\.]/', '_', $post->getAttribute("data-post"));
     }
@@ -172,7 +173,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         return $id[1];
     }
 
-    protected function getCreated(SimpleHtmlDom $post): \DateTime
+    protected function getCreated(SimpleHtmlDomInterface $post): \DateTime
     {
         return new \DateTime(
             $post->findOneOrFalse("time.time")->getAttribute('datetime')
@@ -180,7 +181,7 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
     }
 
     protected function processPostAttachements(
-        SimpleHtmlDom $postNode,
+        SimpleHtmlDomInterface $postNode,
         SerializationMessage $msg,
         FetcherSourceConfig $sourceConfig
     ): void {
@@ -234,12 +235,12 @@ class TelegramWebFetcher extends AbstractFetcherDriver implements FetchDriverInt
         return $this->getMailbox()->msgExists($id);
     }
 
-    protected function getPostUrl(SimpleHtmlDom $postNode) : string
+    protected function getPostUrl(SimpleHtmlDomInterface $postNode) : string
     {
         return $postNode->findOneOrFalse("a.tgme_widget_message_date")->getAttribute("href");
     }
 
-    protected function postContainsAttachements(SimpleHtmlDom $postNode) : bool {
+    protected function postContainsAttachements(SimpleHtmlDomInterface $postNode) : bool {
         return (
             $postNode->findOneOrFalse(".tgme_widget_message_photo_wrap") or
             $postNode->findOneOrFalse(".tgme_widget_message_video_wrap")

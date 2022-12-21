@@ -8,8 +8,7 @@ use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class PostingQueue
 {
-
-    protected $appConfig;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {

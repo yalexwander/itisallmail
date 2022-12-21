@@ -8,10 +8,9 @@ use ItIsAllMail\CoreTypes\Source;
 
 class FetcherSourceConfig implements HierarchicConfigInterface
 {
-
-    protected $appConfig;
-    protected $driver;
-    protected $sourceConfig;
+    protected array $appConfig;
+    protected FetchDriverInterface $driver;
+    protected Source $sourceConfig;
 
     public function __construct(array $appConfig, FetchDriverInterface $driver, Source $sourceConfig)
     {

@@ -42,4 +42,8 @@ interface PosterDriverInterface
      */
     public function checkBeforePost(ParsedMessage $msg, Source $source = null, array $opts = []): void;
 
+    /**
+     * Option from "poster" section of "driver.cfg"
+     */
+    public function getOpt(string $key);
 }

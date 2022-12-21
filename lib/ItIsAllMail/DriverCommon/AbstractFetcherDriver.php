@@ -5,13 +5,14 @@ namespace ItIsAllMail\DriverCommon;
 use ItIsAllMail\Utils\Storage;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Mailbox;
 
 class AbstractFetcherDriver
 {
-    protected $opts;
-    protected $driverCode;
-    protected $mailbox;
-    protected $appConfig;
+    protected array $opts;
+    protected string $driverCode;
+    protected MessageStorageInterface $mailbox;
+    protected array $appConfig;
 
     public function __construct(array $appConfig, array $opts)
     {
@@ -84,7 +85,7 @@ class AbstractFetcherDriver
 
     protected function getMailbox(): MessageStorageInterface
     {
-        if ($this->mailbox === null) {
+        if ($this->mailbox == null) {
             die('Mailbox is not set for current driver instance');
         }
 
@@ -110,5 +111,11 @@ class AbstractFetcherDriver
      */
     public function clearSourceCache(Source $source): void {
         Storage::clear($this->driverCode, $source["url"] . "_last_page");
+    }
+
+    /**
+     * Called after merging mailbox with merge result
+     */
+    public function correctFetchStrategy(array $mergeResult): void {
     }
 }

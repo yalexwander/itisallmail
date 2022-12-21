@@ -17,8 +17,7 @@ use ItIsAllMail\CoreTypes\Source;
 
 class ForumhouseRuFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $crawler;
-    protected $driverCode = "forumhouse.ru";
+    protected string $driverCode = "forumhouse.ru";
 
     /**
      * Return array of all posts in thread, including original article

@@ -8,9 +8,8 @@ use ItIsAllMail\CoreTypes\Source;
 
 class FetcherDriverFactory
 {
-    protected $driverList = [];
-
-    protected $appConfig = [];
+    protected array $driverList;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {
@@ -49,7 +48,7 @@ class FetcherDriverFactory
             if ($driver->matchURL($source["url"])) {
                 return $driver;
             }
-        }       
+        }
 
         throw new \Exception("Driver for url \"{$source["url"]}\" not found");
     }

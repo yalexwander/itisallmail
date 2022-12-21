@@ -19,8 +19,8 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "Habr
 
 class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInterface
 {
-    protected $driverCode = "habr.com";
-    protected $defaultCommentDate;
+    protected string $driverCode = "habr.com";
+    protected \DateTimeInterface $defaultCommentDate;
 
     public function __construct(array $appConfig, array $opts)
     {

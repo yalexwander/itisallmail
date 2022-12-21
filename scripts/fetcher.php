@@ -45,6 +45,8 @@ try {
         Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getLabel()}");
     }
 
+    $driver->correctFetchStrategy($mergeResult);
+
     Debug::debug("Source processing finished");
 } catch (\Exception $e) {
     printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());

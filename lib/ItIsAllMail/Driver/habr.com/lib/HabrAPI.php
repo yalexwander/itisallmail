@@ -11,10 +11,9 @@ use ItIsAllMail\Utils\Debug;
 
 class HabrAPI
 {
-
-    protected $credentials;
-    protected $client;
-    protected $cookieJar;
+    protected array $credentials;
+    protected Client $client;
+    protected CookieJar $cookieJar;
 
     public function __construct(array $credentials)
     {
@@ -53,7 +52,7 @@ class HabrAPI
             "text" => [
                 "source" => $this->formatTextToPseudoMarkdown($comment["text"])
             ],
-            "editorVersion" => 2
+            "editorVersion" => "2"
         ];
 
         $jsonData = json_encode($jsonRequest, JSON_UNESCAPED_UNICODE);
@@ -95,6 +94,9 @@ class HabrAPI
             ]
         );
         $content = $response->getBody()->getContents();
+        if (preg_match('/auth\/habrahabr-register/', $content)) {
+            throw new \Exception("habr.com thinks you are not logged in");
+        }
         preg_match('/<meta name="csrf-token" content="(.+?)">/', $content, $token);
 
         return $token[1];

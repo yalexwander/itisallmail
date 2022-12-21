@@ -15,8 +15,7 @@ use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class AddressMapperFactory
 {
-
-    protected $appConfig;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {

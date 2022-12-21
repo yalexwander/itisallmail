@@ -7,15 +7,13 @@
  * 3) Attach all attachements from old message
  * 4) Rewrite the old message file with serialized data
  *
- * Here is 2 function that works more or less:
+ * Here is 2 functions that works more or less:
  *
- *     updateMessageHeaders:
- * fast but
- * dirty way with preserving attachements and with dirty header update, can
- * break if parser or serializer will be changed or new headers to update
- * added
+ * - updateMessageHeaders:
+ * fast but dirty way with preserving attachements and with dirty header update, can
+ * break if parser or serializer will be changed or new headers to update added
  *
- *     updateMessageHeadersRebuild:
+ * - updateMessageHeadersRebuild:
  * Loses attachements but will not broke headers in any circuimstances
  */
 
@@ -26,19 +24,16 @@ use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Constants;
 use ItIsAllMail\Utils\Debug;
-
-/**
- * Now it just rewrites the message with full serialization. It is slow, but more reliable.
- */
+use ItIsAllMail\CoreTypes\Source;
 
 class MailboxUpdater
 {
-    protected $sourceConfig;
-    protected $headersToUpdate;
+    protected HierarchicConfigInterface $sourceConfig;
+    protected array $headersToUpdate;
 
     // anywhere in the system headers tried to keep lowercased. But MIME
     // serializators use capitalized names, at least for standard headers
-    protected $headerMap = [
+    protected array $headerMap = [
         "subject" => "Subject",
         Constants::IAM_HEADER_STATUSLINE => Constants::IAM_HEADER_STATUSLINE
     ];
@@ -54,6 +49,10 @@ class MailboxUpdater
         if ($sourceConfig->getOpt('update_subject_header_on_changed_messages')) {
             $this->headersToUpdate[] = Constants::IAM_HEADER_STATUSLINE;
         }
+    }
+
+    public function handleExistingMessage(string $messageFilepath, SerializationMessage $msg): void {
+        $this->updateMessageHeaders($messageFilepath, $msg);
     }
 
     public function updateMessageHeadersRebuild(string $sourceMIMEFile, SerializationMessage $msg): int

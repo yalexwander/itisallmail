@@ -11,13 +11,14 @@ use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Utils\URLProcessor;
 use voku\helper\HtmlDomParser;
 use voku\helper\SimpleHtmlDom;
+use voku\helper\SimpleHtmlDomInterface;
 
 require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "HabrDateParser.php");
 
 class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverInterface
 {
 
-    protected $driverCode = "habr.com";
+    protected string $driverCode = "habr.com";
 
     public function queryCatalog(string $query, array $opts = []): array
     {
@@ -74,7 +75,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
         return false;
     }
 
-    protected function postToText(SimpleHtmlDom $node): string
+    protected function postToText(SimpleHtmlDomInterface $node): string
     {
         return (new HtmlToText($node->outerHtml()))->getText();
     }

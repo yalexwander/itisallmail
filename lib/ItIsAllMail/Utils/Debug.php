@@ -37,7 +37,7 @@ EOT;
     }
 
 
-    public static function dumpResponse($response): string
+    public static function dumpResponse(mixed $response): string
     {
         $result = "";
 

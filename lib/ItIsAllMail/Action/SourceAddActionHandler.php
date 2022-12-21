@@ -9,7 +9,7 @@ use ItIsAllMail\CoreTypes\Source;
 
 class SourceAddActionHandler
 {
-    protected $appConfig;
+    protected array $appConfig;
 
     public function __construct(array $appConfig)
     {
