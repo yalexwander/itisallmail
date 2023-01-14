@@ -10,12 +10,12 @@ class SourceManager
     protected string $sourcesFile;
 
 
-    public function __construct(array $appConfig)
+    public function __construct(array $appConfig, ?string $sourcesFile = null)
     {
         $this->appConfig = $appConfig;
 
-        $this->sourcesFile = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR
-            . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
+        $this->sourcesFile = $sourcesFile ?? __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
+            . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
     }
 
     public function addSource(Source $source): int

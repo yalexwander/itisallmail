@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * This is light static wrap around GuzzleHttp\Client. While it is enough for
+ * most cases, if you think you need more contol on browser, please use the
+ * GuzzleHttp\Client itself.
+ */
+
 namespace ItIsAllMail\Utils;
 
 use GuzzleHttp\Client;

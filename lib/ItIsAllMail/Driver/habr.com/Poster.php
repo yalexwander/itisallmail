@@ -19,7 +19,7 @@ use ItIsAllMail\Driver\HabrAPI;
 class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
 {
     protected array $appConfig;
-    protected PosterConfig $posterConfig;
+    protected array $posterConfig;
     protected string $driverCode = "habr.com";
 
     public function canProcessMessage(ParsedMessage $msg): bool

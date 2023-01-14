@@ -43,7 +43,7 @@ class Mailbox implements MessageStorageInterface
     }
 
     /**
-     * Checks if image with such id already exists
+     * Checks if message file with such id already exists
      */
     public function msgExists(string $id): bool
     {
@@ -86,7 +86,6 @@ class Mailbox implements MessageStorageInterface
             }
 
         }
-
     }
 
     public function mergeMessages(array $messages): array

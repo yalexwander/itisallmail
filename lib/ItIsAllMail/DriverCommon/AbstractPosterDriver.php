@@ -7,18 +7,19 @@ use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Config\PosterConfig;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
 
     protected array $appConfig;
-    protected array $posterConfig;
+    protected array $driverPosterSectionConfig;
     protected string $code;
 
-    public function __construct(array $appConfig, array $posterConfig)
+    public function __construct(array $appConfig, array $driverPosterSectionConfig)
     {
         $this->appConfig = $appConfig;
-        $this->posterConfig = $posterConfig;
+        $this->driverPosterSectionConfig = $driverPosterSectionConfig;
     }
 
     public function canProcessMessage(ParsedMessage $msg): bool
@@ -64,6 +65,6 @@ class AbstractPosterDriver implements PosterDriverInterface
 
     public function getOpt(string $key)  /* : mixed */
     {
-        return $this->posterConfig[$key] ?? null;
+        return $this->driverPosterSectionConfig[$key] ?? null;
     }
 }

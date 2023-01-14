@@ -1,0 +1,5 @@
+---
+- url: test_rss_url
+  driver: rss
+  source_update_interval: 60
+...

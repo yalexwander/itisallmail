@@ -1,0 +1,24 @@
+mailbox : "default"
+mailbox_base_dir: "/tmp/iam_test_mailboxes"
+catalog_mailbox : "catalog"
+update_interval: 300
+change_subject_if_attachements: true
+change_subject_if_score: true
+add_statusline_header : true
+download_attachements: "none"
+attach_attachements_links: true
+nickname_transformation: "readable"
+catalog_default_driver : "habr.com"
+source_update_interval: 180
+between_source_update_interval: 3
+fetcher_proxy : ""
+poster_proxy : ""
+use_posting_queue : 0
+update_subject_header_on_changed_messages: true
+update_statusline_header_on_changed_messages: true
+fetch_disabled: false
+max_fetch_time: 120
+attach_raw_message: false
+
+drivers:
+  - "rss"

@@ -3,7 +3,7 @@
 /**
  * Options:
  * -m - file with message to post
- * -r - load refernced message from repy register
+ * -r - load refernced message from reply register
  */
 
 require_once("includes.php");

@@ -5,10 +5,11 @@ namespace ItIsAllMail\Interfaces;
 use ItIsAllMail\SendMailProcessor;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Config\PosterConfig;
 
 interface PosterDriverInterface
 {
-    public function __construct(array $appConfig, array $posterConfig);
+    public function __construct(array $appConfig, array $driverPosterSectionConfig);
 
     /**
      * Must return true if you think your driver must handle given message
