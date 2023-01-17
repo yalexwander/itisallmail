@@ -1,6 +1,6 @@
 # macro definition
 
-macro index,pager ,d ':lua IAM.set_sendmail_args("-c /delete")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>^D$y:lua mutt.message("Source deleted")<enter>'
+macro index,pager ,d ':lua IAM.set_sendmail_args("-c !del")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>^D$y:lua mutt.message("Source deleted")<enter>'
 
 # macro description
 

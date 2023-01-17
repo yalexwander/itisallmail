@@ -5,7 +5,7 @@ macro index ,c 'y/mailboxes/catalog<enter><enter>\
 :lua IAM.emit_catalog_blank_message()<enter>\
 D.*<enter>$y\
 :lua IAM.set_sendmail_args("")<enter>\
-:lua IAM.set_script_editor("-b /catalog -i ")<enter>\
+:lua IAM.set_script_editor("-b !cat -i ")<enter>\
 :lua IAM.clear_register("reply")<enter>\
 m\
 n\

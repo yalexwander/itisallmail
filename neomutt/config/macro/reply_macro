@@ -5,7 +5,7 @@ unbind index,pager r
 macro pager,index ,r '\
 |neomutt/utils/register/register.php -s reply<enter>\
 :lua IAM.set_normal_editor()<enter>\
-:lua IAM.set_sendmail_args("-c /post -r")<enter>\
+:lua IAM.set_sendmail_args("-c !post -r")<enter>\
 :set include=no<enter>\
 :exec reply<enter>'
 
@@ -14,7 +14,7 @@ macro pager,index ,r '\
 macro pager,index ,R '\
 |neomutt/utils/register/register.php -s reply<enter>\
 :lua IAM.set_normal_editor()<enter>\
-:lua IAM.set_sendmail_args("-c /post -r")<enter>\
+:lua IAM.set_sendmail_args("-c !post -r")<enter>\
 :set include=ask-yes<enter>\
 :exec reply<enter>\
 y'
@@ -24,4 +24,4 @@ y'
 # :lua IAM.set_normal_editor()<enter> -- set normal deitor if scripted was set
 # :exec reply<enter> - invode <reply>
 # y - yes/no to quote
-# :lua IAM.set_sendmail_args("-c /post -r")<enter> - prepare sendmail
+# :lua IAM.set_sendmail_args("-c !post -r")<enter> - prepare sendmail

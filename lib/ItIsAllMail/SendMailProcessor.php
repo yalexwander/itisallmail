@@ -60,18 +60,18 @@ class SendMailProcessor
     {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
-        preg_match('/^\/([a-z_\-]+)( (.+))*/', $commandSource, $matches);
+        preg_match('/^\!([a-z_\-]+)( (.+))*/', $commandSource, $matches);
         $command = $matches[1];
         $commandArg = empty($matches[3]) ? "" : $matches[3];
 
         $commandResult = 1;
-        if ($command === 'catalog') {
+        if ($command === 'cat') {
             $catalogActionHandler = new CatalogActionHandler($this->appConfig);
             $commandResult = $catalogActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'add') {
             $sourceAddActionHandler = new SourceAddActionHandler($this->appConfig);
             $commandResult = $sourceAddActionHandler->process($commandArg, $parsedMsg);
-        } elseif ($command === 'delete') {
+        } elseif ($command === 'del') {
             $sourceDeleteActionHandler = new SourceDeleteActionHandler($this->appConfig);
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'post') {
