@@ -65,7 +65,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
         $postText = $this->postToText(
             $postContainer->findOne(".tm-article-body")
         );
-        $postDate = $postContainer->findOne(".tm-article-snippet__datetime-published > time")->getAttribute("datetime");
+        $postDate = $postContainer->findOne(".tm-article-datetime-published > time")->getAttribute("datetime");
         $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
         $postId = $this->getThreadIdFromURL($source["url"]);
 
@@ -144,7 +144,7 @@ class HabrFetcherDriver extends AbstractFetcherDriver implements FetchDriverInte
                 $commentBody = $this->postToText($commentTextWidget);
                 $commentAuthor = $node->findOne(".tm-user-info__username")->text();
                 $commentDate = HabrDateParser::parseCommentDate(
-                    $node->findOne(".tm-comment-thread__comment-link")->text()
+                    $node->findOne("time")->getAttribute("datetime")
                 );
             }
 

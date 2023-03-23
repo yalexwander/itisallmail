@@ -36,7 +36,7 @@ class HabrCatalogDriver extends AbstractCatalogDriver implements CatalogDriverIn
             );
 
             $postDate = HabrDateParser::parseArticleDate(
-                $postContainer->findOne(".tm-article-snippet__datetime-published > time")->getAttribute("datetime")
+                $postContainer->findOne(".tm-article-datetime-published > time")->getAttribute("datetime")
             );
             $postTitle = $postContainer->findOne(".tm-article-snippet__title")->text();
             $postId = $postContainer->getAttribute("id");
