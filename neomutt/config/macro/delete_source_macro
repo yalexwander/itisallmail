@@ -4,7 +4,7 @@ macro index,pager ,d ':lua IAM.set_sendmail_args("-c !del")<enter>ba@b.c<enter>y
 
 # macro description
 
-# :lua IAM.set_sendmail_args("-c /delete")<enter> -- set sendmail to delete mode
+# :lua IAM.set_sendmail_args("-c !del")<enter> -- set sendmail to delete mode
 # b -- bounce message under cursor
 # a@b.c<enter> -- set dummy recepient
 # y -- send message

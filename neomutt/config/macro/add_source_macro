@@ -1,7 +1,7 @@
 # macro definition
 
 macro index,pager ,a '\
-:lua IAM.set_sendmail_args("-c /add")<enter>\
+:lua IAM.set_sendmail_args("-c !add")<enter>\
 b\
 a@b.c<enter>\
 y\
@@ -10,7 +10,7 @@ y\
 
 # macro description
 
-#:lua IAM.set_sendmail_args("-c /add")<enter>  -- set sendmail to add mode
+#:lua IAM.set_sendmail_args("-c !add")<enter>  -- set sendmail to add mode
 # b -- bounce message under cursor
 # a@b.c<enter> -- set dummy recepient
 # y -- send message
