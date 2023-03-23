@@ -1,0 +1,3 @@
+[submodule "lib/ItIsAllMail/Driver/linux.org.ru"]
+	path = lib/ItIsAllMail/Driver/linux.org.ru
+	url = git@github.com:yalexwander/iam-driver-linux.org.ru.git

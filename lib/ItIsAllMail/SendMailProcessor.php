@@ -41,7 +41,7 @@ class SendMailProcessor
 
     protected function isCommandMessage(ParsedMessage $parsedMsg, array $options): bool
     {
-        if (preg_match('/^\/([a-z]+)/', $parsedMsg["body"])) {
+        if (preg_match('/^\!([a-z]+)/', $parsedMsg["body"])) {
             return true;
         }
 

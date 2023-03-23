@@ -98,7 +98,7 @@ class AbstractFetcherDriver
     }
 
     /**
-     * Can be used to add time before next fetch in monitor
+     * Can be used to add time before next fetch in monitor. Can be negative.
      */
     public function getAdditionalDelayBeforeNextFetch(Source $source): int
     {
