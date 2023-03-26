@@ -1,13 +1,13 @@
 <?php
 
 /**
- * If resource is very closed for all sort of scripts, fetchers and spiders, curl-impersonated can be used. This is a wrapper for this CLI utility. It works only if you installed 
+ * If resource is very closed for all sort of scripts, fetchers and spiders, curl-impersonated can be used. This is a wrapper for this CLI utility. It works only if you installed
  */
 
 namespace ItIsAllMail\Utils;
 
 class CurlImpersonatedBrowser
-{   
+{
     public static function getAsString(string $url, array $headers = [], $curlBinary): ?string
     {
         $headersString = '';
@@ -29,7 +29,7 @@ class CurlImpersonatedBrowser
             $result .= fgets($fp, 4096);
         }
         pclose($fp);
-        
+
         return $result;
     }
 }
