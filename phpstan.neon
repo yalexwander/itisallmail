@@ -1,8 +1,9 @@
 parameters:
-	level: 6
-	paths:
-		- lib
-	ignoreErrors:
-		- '#Property [a-zA-Z0-9\\_]+::\$[a-zA-Z0-9\\_]+ has no typehint specified.#'
-		- '#Method [a-zA-Z0-9\\_]+::[a-zA-Z0-9\\_\(\)]+ has parameter \$[a-zA-Z0-9\\_]+ with no value type specified in iterable type array#'
-		- '#return type has no value type specified in iterable type array#'
+    level: 6
+    paths:
+        - lib
+    ignoreErrors:
+        - '#return type has no value type specified in iterable type array#'
+        - '#no value type specified in iterable type#'
+        - '#getOpt\(\) has no return typehint#'
+        - '#extends generic class ArrayObject#'
