@@ -119,7 +119,7 @@ class Monitor {
 
 }
 
-$appConfig = yaml_parse_file($__AppConfigFile);
+$appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 $monitor = new Monitor($appConfig);
 
 $timeMap = [];

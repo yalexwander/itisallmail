@@ -12,8 +12,7 @@ final class SourceManagerTest extends TestCase {
 
     protected function setUp(): void
     {
-        global $__AppConfDir;
-        $this->sourceManager = new SourceManager([], $__AppConfDir . DIRECTORY_SEPARATOR . "sources.yml");
+        $this->sourceManager = new SourceManager([], $GLOBALS['__AppConfigDir'] . DIRECTORY_SEPARATOR . "sources.yml");
     }
     
     public function testGetSourceById(): void {

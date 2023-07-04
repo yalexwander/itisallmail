@@ -89,7 +89,7 @@ class SerializationMessage
         }
 
         $bodies = [];
-        if ($sourceConfig->getOpt("attach_raw_message")) {
+        if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
             $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
         }
 

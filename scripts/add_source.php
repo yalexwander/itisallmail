@@ -19,7 +19,7 @@ if (empty($url)) {
 
 $url = $url[0];
 
-$config = yaml_parse_file($__AppConfigFile);
+$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 $sourceManager = new SourceManager($config);
 
 $newSource = [

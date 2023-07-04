@@ -10,7 +10,7 @@ require_once("includes.php");
 
 use ItIsAllMail\SendMailProcessor;
 
-$config = yaml_parse_file($__AppConfigFile);
+$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 
 $processor = new SendMailProcessor($config);
 

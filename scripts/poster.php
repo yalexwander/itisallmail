@@ -13,7 +13,7 @@ use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\Factory\PosterDriverFactory;
 
-$appConfig = yaml_parse_file($__AppConfigFile);
+$appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 
 $options = getopt("m:r");
 

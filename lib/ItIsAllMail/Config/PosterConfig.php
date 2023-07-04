@@ -37,7 +37,7 @@ class PosterConfig implements HierarchicConfigInterface
     /**
      * Return specified config value based on where it was set
      */
-    public function getOpt(string $key) /* : mixed */
+    public function getOpt(string $key) : mixed
     {
         if (isset($this->source[$key])) {
             return $this->source[$key];

@@ -13,7 +13,7 @@ if (empty($argv[1])) {
     exit(1);
 }
 
-$config = yaml_parse_file($__AppConfigFile);
+$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 
 $sourceManager = new SourceManager($config);
 $driverFactory = new FetcherDriverFactory($config);
