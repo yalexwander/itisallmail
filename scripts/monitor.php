@@ -12,15 +12,31 @@ use ItIsAllMail\CoreTypes\Source;
 
 class Monitor {
 
-    protected $fetchDriverFactory;
-    protected $sourceManager;
-    protected $appConfig;
+    protected FetcherDriverFactory $fetchDriverFactory;
+    protected SourceManager $sourceManager;
+    protected array $appConfig;
+    protected string $socketFile;
+    protected \Socket $socket;
 
     public function __construct(array $appConfig)
     {
         $this->fetchDriverFactory = new FetcherDriverFactory($appConfig);
         $this->sourceManager = new SourceManager($appConfig);
         $this->appConfig = $appConfig;
+        $this->createExchangeSocket();
+    }
+
+    public function createExchangeSocket(): void {
+        $this->socketFile = tempnam(sys_get_temp_dir(), "iam-fetchback");
+        $this->socket = socket_create(AF_UNIX, SOCK_DGRAM, 0);
+        if ($this->socket === false) {
+            die("Failed to create exchange socket");
+        }
+
+        unlink($this->socketFile);
+        if (! socket_bind($this->socket, $this->socketFile)) {
+            die("Failed to bind exchange socket");
+        }
     }
 
     function rebuildUpdateTimeMap(array $oldMap) {
@@ -97,8 +113,8 @@ class Monitor {
     }
 
     
-    function runSourceUpdate(Source $source) : int {
-        $execString = "php \""  . __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php\"";
+    function runSourceUpdate(Source $source) : array {
+        $execString = PHP_BINARY . " \""  . __DIR__ . DIRECTORY_SEPARATOR . "fetcher.php\" ";
 
         $driver = $this->fetchDriverFactory->getFetchDriverForSource($source);
         $joinedConfig = new FetcherSourceConfig($this->appConfig, $driver, $source);
@@ -108,13 +124,18 @@ class Monitor {
             $execString = $proxyApp . " " . $execString;
         }
 
-        $execString .= " \"" . $source["url"] . "\"";
+        $execString .= " \"" . $source["url"] . "\" \"" . $this->socketFile ."\"";
 
         Debug::debug("Starting command:\n" . $execString);
 
         $result = system($execString);
-        
-        return ! $result;
+        $resultExtended = '';
+        $portOut = null;
+        $address = $this->socketFile;
+        socket_recvfrom($this->socket, $resultExtended, 1024 * 1024 * 1000, 0, $address, $portOut);
+        $resultExtended = json_decode($resultExtended, true);
+
+        return $resultExtended;
     }
 
 }
@@ -133,7 +154,8 @@ while (true) {
 
     foreach ($timeMap as $sourceId => $mapEntry) {
         if ( time() >= $mapEntry["next_update"] ) {
-            $timeMap[$sourceId]["updated"] = $monitor->runSourceUpdate($mapEntry["source"]);
+            $result = $monitor->runSourceUpdate($mapEntry["source"]);
+            $timeMap[$sourceId]["updated"] = $result["status"];
         }
     }
 

@@ -24,6 +24,12 @@ if ($source === null) {
     throw new \Exception("Source with url $argv[1] not found. Add it first");
 }
 
+$socket = null;
+$socketFile = $argv[2];
+if (! empty($socketFile)) {
+    $socket = socket_create(AF_UNIX, SOCK_DGRAM, 0);
+}
+
 $driver = $driverFactory->getFetchDriverForSource($source);
 $sourceConfig = new FetcherSourceConfig($config, $driver, $source);
 
@@ -34,22 +40,30 @@ $driver->setMailbox($mailbox);
 
 Debug::debug("Processing source " . $source["url"] . " with driver " . $driver->getCode());
 
-// We have 2 main fail points here:
-// 1) problems with site like connection or markup changes
-// 2) Producing emails incompatible with standards
+$result = [
+    "status" => false,
+    "merge" => [],
+];
 try {
     $posts = $driver->getPosts($source);
     $mergeResult = $mailbox->mergeMessages($posts);
+    $result["merge"] = $mergeResult;
     
     if ($mergeResult["added"]) {
         Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getLabel()}");
     }
 
-    $driver->correctFetchStrategy($mergeResult);
+    $driver->correctFetchStrategy($source, $mergeResult);
 
     Debug::debug("Source processing finished");
+    $result["status"] = true;
 } catch (\Exception $e) {
     printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
     printf("Details:\n%s\n", $e->__toString());
     Debug::debug("Source processing failed");
+}
+
+if ($socket !== null) {
+    $encodedResult = json_encode($result);
+    socket_sendto($socket, $encodedResult, strlen($encodedResult), 0, $socketFile, 0);
 }
