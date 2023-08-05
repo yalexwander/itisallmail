@@ -43,8 +43,7 @@ class CatalogDriverFactory
                 if ($driver->getCode() === $opts["catalog_default_driver"]) {
                     return $driver;
                 }
-            }
-            else {
+            } else {
                 if ($driver->canHandleQuery($query, $opts)) {
                     return $driver;
                 }

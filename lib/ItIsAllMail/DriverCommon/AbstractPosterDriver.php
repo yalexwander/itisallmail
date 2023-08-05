@@ -11,7 +11,6 @@ use ItIsAllMail\Config\PosterConfig;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
-
     protected array $appConfig;
     protected array $driverPosterSectionConfig;
     protected string $code;
@@ -63,7 +62,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         $this->assertUUEncodedMessage($msg);
     }
 
-    public function getOpt(string $key)  /* : mixed */
+    public function getOpt(string $key): mixed
     {
         return $this->driverPosterSectionConfig[$key] ?? null;
     }

@@ -7,7 +7,6 @@ use ItIsAllMail\CoreTypes\Source;
 
 interface AddressMapperInterface
 {
-
     /**
       Given some thread id it tries to return the id/url of the source, which
       can be directly mapped to one of the sources from sources.yml Returning

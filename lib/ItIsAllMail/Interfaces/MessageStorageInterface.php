@@ -9,7 +9,8 @@ use ItIsAllMail\Interfaces\HierarchicConfigInterface;
  * For email-first orientation of ItIsAllMail, there are some methods you will probably stub.
  */
 
-interface MessageStorageInterface {
+interface MessageStorageInterface
+{
     public function __construct(HierarchicConfigInterface $sourceConfig);
     public function msgExists(string $id): bool;
     public function mergeMessages(array $messages): array;

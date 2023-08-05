@@ -8,7 +8,6 @@ use ItIsAllMail\MUA\Register;
 
 class EmailParser
 {
-
     public static function parseMessage(string $rawMessage): ParsedMessage
     {
         $mime = mailparse_msg_create();
@@ -120,20 +119,21 @@ class EmailParser
         return $parsedMessage;
     }
 
-    public static function loadReferencedMessageFromRegister(string $registerName): ParsedMessage {
+    public static function loadReferencedMessageFromRegister(string $registerName): ParsedMessage
+    {
         $registerContent = (new Register())->get("reply");
 
         if (empty($registerContent)) {
             return new ParsedMessage();
-        }
-        else {
+        } else {
             return self::parseMessage(
                 (new Register())->get("reply")
             );
         }
     }
 
-    public static function parseJSONMessage(string $jsonMessage): ParsedMessage {
+    public static function parseJSONMessage(string $jsonMessage): ParsedMessage
+    {
         return new ParsedMessage(json_decode($jsonMessage, true));
     }
 }

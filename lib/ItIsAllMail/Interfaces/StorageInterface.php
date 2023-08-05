@@ -6,8 +6,9 @@
 
 namespace ItIsAllMail\Interfaces;
 
-interface StorageInterface {
-    public function set(string $driverCode, string $key, string $value);
+interface StorageInterface
+{
+    public function set(string $driverCode, string $key, string $value): void;
     public function get(string $driverCode, string $key): ?string;
     public function clear(string $driverCode, string $key): void;
 }

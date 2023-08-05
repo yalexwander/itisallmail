@@ -38,8 +38,7 @@ try {
 
     if ($result["status"]) {
         exit(0);
-    }
-    else {
+    } else {
         print_r($result);
         exit(1);
     }

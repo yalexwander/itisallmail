@@ -4,19 +4,22 @@ namespace ItIsAllMail;
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Interfaces\VisitedMessagesInterface;
 
 class VisitedMessages implements VisitedMessagesInterface
 {
     protected array $visitedIds;
     protected Source $source;
 
-    public function __construct(Source $source) {
+    public function __construct(Source $source)
+    {
         $this->visitedIds = [];
         $this->source = $source;
         $this->loadStoredIds();
     }
 
-    public function add($string $id, $delayed = false) : void {
+    public function add(string $id, bool $delayed = false): void
+    {
         $this->visitedIds[$id] = true;
 
         if (! $delayed) {
@@ -24,7 +27,8 @@ class VisitedMessages implements VisitedMessagesInterface
         }
     }
 
-    public function remove($string $id, $delayed = false) : void {
+    public function remove(string $id, bool $delayed = false): void
+    {
         unset($this->visitedIds[$id]);
 
         if (! $delayed) {
@@ -32,14 +36,17 @@ class VisitedMessages implements VisitedMessagesInterface
         }
     }
 
-    public function check($string $id) : bool {
-        return !empty($this->$visitedIds[$id]);
+    public function check(string $id): bool
+    {
+        return !empty($this->visitedIds[$id]);
     }
 
-    public function persist() {
+    public function persist(): void
+    {
     }
 
 
-    protected function loadStoredIds(): void {
+    protected function loadStoredIds(): void
+    {
     }
 }

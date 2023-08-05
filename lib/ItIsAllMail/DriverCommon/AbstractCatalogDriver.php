@@ -23,5 +23,4 @@ class AbstractCatalogDriver
     {
         return $this->driverCode;
     }
-
 }

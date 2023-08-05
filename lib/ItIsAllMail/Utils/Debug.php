@@ -6,7 +6,6 @@ use ItIsAllMail\CoreTypes\SerializationMessage;
 
 class Debug
 {
-
     public static function debug(string $str): void
     {
         if (getenv('IAM_DEBUG')) {

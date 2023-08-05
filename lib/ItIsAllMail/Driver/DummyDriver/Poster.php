@@ -16,7 +16,6 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR . "Habr
 
 class HabrPoster extends AbstractPosterDriver implements PosterDriverInterface
 {
-
     protected array $appConfig;
     protected PosterConfig $posterConfig;
     protected string $driverCode = "dummy_post";

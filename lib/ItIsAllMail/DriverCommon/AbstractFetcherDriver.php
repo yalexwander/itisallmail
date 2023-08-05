@@ -37,7 +37,7 @@ class AbstractFetcherDriver
         return $this->driverCode;
     }
 
-    public function getOpt(string $key) : mixed
+    public function getOpt(string $key): mixed
     {
         return $this->opts[$key] ?? null;
     }
@@ -111,13 +111,15 @@ class AbstractFetcherDriver
      * Clear common files can be left after source fetching, like list of
      * pages already fetched
      */
-    public function clearSourceCache(Source $source): void {
+    public function clearSourceCache(Source $source): void
+    {
         $this->storage->clear($this->driverCode, $source["url"] . "_last_page");
     }
 
     /**
      * Called after merging mailbox with merge result
      */
-    public function correctFetchStrategy(Source $source, array $mergeResult): void {
+    public function correctFetchStrategy(Source $source, array $mergeResult): void
+    {
     }
 }

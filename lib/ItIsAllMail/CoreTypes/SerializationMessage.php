@@ -76,14 +76,14 @@ class SerializationMessage
         Debug::debug("Trying convert to MIME:");
         Debug::debug(Debug::dumpMessage($this));
         $envelope = [];
-        $envelope["from"]= $this->from;
+        $envelope["from"] = $this->from;
         $envelope["to"]  = $this->thread;
         $envelope["date"]  = $this->created->format("D, d M Y H:i:s O");
         $envelope["subject"]  = $this->getFormattedSubject($sourceConfig);
         $envelope["message_id"]  = "<" . $this->getId() . ">";
 
         $envelope["custom_headers"] = $this->createExtraHeaders($sourceConfig);
-        
+
         if ($this->parent !== null) {
             $envelope["custom_headers"][] = "References: <" . $this->getParent() . ">";
         }
@@ -108,7 +108,7 @@ class SerializationMessage
             "charset" => "utf-8",
             "contents.data" => $this->body
         ];
-        
+
         $bodies[] = $bodyPart;
 
         foreach ($allAttachements as $attachment) {
@@ -171,12 +171,14 @@ class SerializationMessage
         return $this->created;
     }
 
-    public function addAttachement(string $title, string $data, string $type = 'application', string $subtype = 'octet-stream'): SerializationMessage
+    // see imap-mail-compose for type and subtype detailed reference
+    public function addAttachement(string $title, string $data, int $type = TYPEAPPLICATION, string $subtype = 'octet-stream'): SerializationMessage
     {
         $this->attachements[] = new SerializationAttachement(
             [ 'title' => $title, 'data' => $data, 'type' => $type,
               'subtype' => $subtype
-            ]);
+            ]
+        );
         return $this;
     }
 
@@ -195,12 +197,12 @@ class SerializationMessage
     protected function createExtraHeaders(HierarchicConfigInterface $sourceConfig): array
     {
         $headers = [];
-        
+
         if ($this->getUri() !== null) {
             $headers[] = Constants::IAM_HEADER_URI . ": " . $this->getUri();
         }
 
-        if (!empty($score)) {
+        if (!empty($this->getScore()[0]) or !empty($this->getScore()[1])) {
             $headers[] = Constants::IAM_HEADER_SCORE . ": " . implode(",", $this->getScore());
         }
 
@@ -210,12 +212,13 @@ class SerializationMessage
                 $headers[] = Constants::IAM_HEADER_STATUSLINE . ": " . $this->generateStatusLineHeader($sourceConfig);
             }
         }
-        
+
         return $headers;
     }
 
 
-    protected function generateStatusLineHeader(HierarchicConfigInterface $sourceConfig) : ?string {
+    protected function generateStatusLineHeader(HierarchicConfigInterface $sourceConfig): ?string
+    {
         $statusline = "";
 
         $score = $this->getScore();
@@ -258,23 +261,24 @@ class SerializationMessage
      * This one is for comparing exisitng MIME file with not existing, but
      * that where this message will be serialized into.
      */
-    public function getTranslatedMIMEHeader(string $header, HierarchicConfigInterface $sourceConfig): string {
+    public function getTranslatedMIMEHeader(string $header, HierarchicConfigInterface $sourceConfig): string
+    {
         if ($header === Constants::IAM_HEADER_STATUSLINE) {
             return $this->generateStatusLineHeader($sourceConfig);
-        }
-        elseif ($header === "subject") {
+        } elseif ($header === "subject") {
             return $this->getFormattedSubject($sourceConfig);
-        }
-        else {
+        } else {
             throw new \Exception("Unsupported header $header");
         }
     }
 
-    public function getExternalAttachements() : array {
+    public function getExternalAttachements(): array
+    {
         return $this->externalAttachements;
     }
 
-    public function setExternalAttachements(array $externalAttachements) : void {
+    public function setExternalAttachements(array $externalAttachements): void
+    {
         $this->externalAttachements = $externalAttachements;
     }
 }

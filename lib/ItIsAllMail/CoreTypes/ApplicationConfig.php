@@ -2,5 +2,6 @@
 
 namespace ItIsAllMail\CoreTypes;
 
-class ApplicationConfig extends \ArrayObject {
+class ApplicationConfig extends \ArrayObject
+{
 }

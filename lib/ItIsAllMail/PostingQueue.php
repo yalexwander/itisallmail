@@ -26,7 +26,8 @@ class PostingQueue
 
     public function getNextID(): ?string
     {
-        $ids = array_sort($this->getAllIDs());
+        $ids = $this->getAllIDs();
+        sort($ids);
         return array_shift($ids);
     }
 
@@ -35,7 +36,7 @@ class PostingQueue
         $ids = [];
 
         foreach (scandir($this->queueDir) as $file) {
-            if (strstr($item, '.json') === -1) {
+            if (strpos($file, '.json') === false) {
                 continue;
             }
             $ids[] = $file;
@@ -59,5 +60,4 @@ class PostingQueue
         $msgFile = $this->queueDir . DIRECTORY_SEPARATOR . $id;
         unlink($msgFile);
     }
-
 }

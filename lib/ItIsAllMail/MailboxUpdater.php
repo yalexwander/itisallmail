@@ -51,20 +51,22 @@ class MailboxUpdater
         }
     }
 
-    public function updateRevisions(string $messageFilepath, SerializationMessage $msg): void {
+    public function updateRevisions(string $messageFilepath, SerializationMessage $msg): void
+    {
         $revDir = $this->sourceConfig->getOpt('revisions_dir');
-        
+
         $oldMsg = $this->parseCache[$messageFilepath];
         if (empty($oldMsg)) {
             $oldMsg = EmailParser::parseMessage(file_get_contents($messageFilepath));
         }
 
-        $messagesAreSame = 
+        $messagesAreSame =
             ($msg->getSubject() === $oldMsg["subject"]) &&
             ($msg->getBody() === $oldMsg["body"]);
 
-        if ($messagesAreSame)
+        if ($messagesAreSame) {
             return;
+        }
 
         if (! file_exists($revDir)) {
             mkdir($revDir, 0777, true);
@@ -78,7 +80,7 @@ class MailboxUpdater
         }
 
         if (!empty($revDir)) {
-            $revFilepath = pathinfo($messageFilepath,  PATHINFO_FILENAME);
+            $revFilepath = pathinfo($messageFilepath, PATHINFO_FILENAME);
             $revFilepath = $revDir . DIRECTORY_SEPARATOR . $revFilepath . '.rev.' . time();
             copy($messageFilepath, $revFilepath);
         }
@@ -125,5 +127,4 @@ class MailboxUpdater
 
         return 0;
     }
-
 }

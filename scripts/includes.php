@@ -9,7 +9,8 @@ require_once($__AppMainDir . "lib" . DIRECTORY_SEPARATOR . "autoload.php");
 
 $__AppConfigDir = $__AppMainDir . "conf" . DIRECTORY_SEPARATOR;
 if (getenv('IAM_TEST_ENV')) {
-    $__AppConfigDir = $__AppMainDir . "tests" . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . getenv('IAM_TEST_ENV') . DIRECTORY_SEPARATOR;
+    $__AppConfigDir = $__AppMainDir . "tests" . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR .
+                      getenv('IAM_TEST_ENV') . DIRECTORY_SEPARATOR;
 }
 
 $__AppConfigFile = $__AppConfigDir . "config.yml";

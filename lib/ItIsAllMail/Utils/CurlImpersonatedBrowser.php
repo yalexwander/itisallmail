@@ -8,7 +8,7 @@ namespace ItIsAllMail\Utils;
 
 class CurlImpersonatedBrowser
 {
-    public static function getAsString(string $url, array $headers = [], $curlBinary): ?string
+    public static function getAsString(string $url, array $headers, string $curlBinary): ?string
     {
         $headersString = '';
         foreach ($headers as $hk => $hv) {

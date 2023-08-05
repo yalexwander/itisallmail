@@ -6,7 +6,8 @@
 
 namespace ItIsAllMail\MUA;
 
-class Register {
+class Register
+{
     protected string $registerDir;
 
     public function __construct()
@@ -15,17 +16,18 @@ class Register {
             . ".." . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR . ".register";
     }
 
-    public function set(string $name, string $data): void {
+    public function set(string $name, string $data): void
+    {
         $outputRegisterFile = $this->registerDir . DIRECTORY_SEPARATOR . $name;
-        
+
         file_put_contents(
             $outputRegisterFile,
             $data
         );
     }
 
-    public function get(string $name): ?string {
+    public function get(string $name): ?string
+    {
         return file_get_contents($this->registerDir . DIRECTORY_SEPARATOR . $name);
     }
-
 }

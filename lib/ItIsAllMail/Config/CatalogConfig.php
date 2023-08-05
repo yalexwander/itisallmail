@@ -8,7 +8,6 @@ use ItIsAllMail\CoreTypes\Source;
 
 class CatalogConfig implements HierarchicConfigInterface
 {
-
     protected array $appConfig;
     protected CatalogDriverInterface $driver;
     protected Source $source;

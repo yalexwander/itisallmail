@@ -58,16 +58,19 @@ class Storage implements StorageInterface
         );
     }
 
-    protected function getDriverDir(string $driverCode): string {
-        return $this->$storageDir . $this->sanitizeFilename($driverCode);
+    protected function getDriverDir(string $driverCode): string
+    {
+        return $this->storageDir . $this->sanitizeFilename($driverCode);
     }
 
-    protected function getKeyFilename(string $driverDir, string $key): string {
+    protected function getKeyFilename(string $driverDir, string $key): string
+    {
         return $driverDir . DIRECTORY_SEPARATOR . $this->sanitizeFilename($key);
     }
 
 
-    public function clear(string $driverCode, string $key): void {
+    public function clear(string $driverCode, string $key): void
+    {
         $driverDir = $this->getDriverDir($driverCode);
         $keyFilename = $this->getKeyFilename($driverDir, $key);
 

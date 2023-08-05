@@ -57,8 +57,7 @@ class Mailbox implements MessageStorageInterface
     {
         if (! $this->msgExists($id)) {
             return null;
-        }
-        else {
+        } else {
             return $this->localMessages[$id];
         }
     }
@@ -84,7 +83,6 @@ class Mailbox implements MessageStorageInterface
 
                 $this->localMessages[$msgId] = $msd . DIRECTORY_SEPARATOR . $file;
             }
-
         }
     }
 
@@ -115,7 +113,6 @@ class Mailbox implements MessageStorageInterface
                 if (! empty($this->sourceConfig->getOpt("revisions"))) {
                     $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
                 }
-
             }
         }
 

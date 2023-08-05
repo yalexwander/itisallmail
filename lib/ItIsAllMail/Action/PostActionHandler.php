@@ -41,7 +41,7 @@ class PostActionHandler
         return $execCode;
     }
 
-    public function send(ParsedMessage $msg): int 
+    public function send(ParsedMessage $msg): int
     {
         $execCode = null;
         $transferFilename = tempnam(sys_get_temp_dir(), "iam-post-");
@@ -72,7 +72,7 @@ class PostActionHandler
         unlink($transferFilename);
 
         return $execCode;
-    }   
+    }
 
     protected function getProxyCommand(ParsedMessage $msg, Source $source): ?string
     {

@@ -3,7 +3,5 @@ parameters:
     paths:
         - lib
     ignoreErrors:
-        - '#return type has no value type specified in iterable type array#'
         - '#no value type specified in iterable type#'
-        - '#getOpt\(\) has no return typehint#'
         - '#extends generic class ArrayObject#'

@@ -48,7 +48,7 @@ try {
     $posts = $driver->getPosts($source);
     $mergeResult = $mailbox->mergeMessages($posts);
     $result["merge"] = $mergeResult;
-    
+
     if ($mergeResult["added"]) {
         Debug::log("{$mergeResult["added"]} new messages in {$mailbox->getLabel()}");
     }

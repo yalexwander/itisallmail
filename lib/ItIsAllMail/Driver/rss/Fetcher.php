@@ -38,8 +38,8 @@ class RSSFetcher extends AbstractFetcherDriver implements FetchDriverInterface
             "body" => $source["url"],
             "thread" => $thread,
             "uri" => $source["url"]
-        ]);        
-        
+        ]);
+
         foreach ($data->channel->item as $item) {
             $body = "";
             foreach (explode("\n", $item->description) as $paragraph) {
@@ -59,9 +59,8 @@ class RSSFetcher extends AbstractFetcherDriver implements FetchDriverInterface
                 "thread" => $thread,
                 "uri" => $item->link
             ]);
-
         }
-        
+
         return $posts;
     }
 }

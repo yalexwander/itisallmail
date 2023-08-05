@@ -46,5 +46,5 @@ interface PosterDriverInterface
     /**
      * Option from "poster" section of "driver.cfg"
      */
-    public function getOpt(string $key);
+    public function getOpt(string $key): mixed;
 }

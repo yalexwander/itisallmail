@@ -6,7 +6,6 @@ use ItIsAllMail\CoreTypes\Source;
 
 interface FetchDriverInterface
 {
-
     /**
      * Must return true if you think your driver must handle this URL
      */
@@ -30,7 +29,7 @@ interface FetchDriverInterface
     /**
      * Must return driver option by given name.
      */
-    public function getOpt(string $key) : mixed;
+    public function getOpt(string $key): mixed;
 
     /**
      * Clear any additional data left from this source, like cache, avatars, etc

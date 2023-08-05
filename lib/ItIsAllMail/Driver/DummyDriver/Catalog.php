@@ -52,5 +52,4 @@ class DummyCatalogDriver extends AbstractCatalogDriver implements CatalogDriverI
     {
         return (new HtmlToText($node->outerHtml()))->getText();
     }
-
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace ItIsAllMail;
+
 use ItIsAllMail\CoreTypes\Source;
 
 class SourceManager
@@ -74,11 +75,11 @@ class SourceManager
     public function getSources(): array
     {
         $sources = [];
-        
+
         foreach (yaml_parse_file($this->sourcesFile) as $config) {
             $sources[] = new Source($config);
         }
-        
+
         return $sources;
     }
 
@@ -93,7 +94,8 @@ class SourceManager
         return null;
     }
 
-    protected function preSerialize(array $sources) : array {
+    protected function preSerialize(array $sources): array
+    {
         foreach ($sources as &$s) {
             $s = $s->getArrayCopy();
         }

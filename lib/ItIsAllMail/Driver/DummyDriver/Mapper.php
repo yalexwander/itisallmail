@@ -11,7 +11,6 @@ use ItIsAllMail\CoreTypes\Source;
 
 class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface
 {
-
     public function canMapThis(ParsedMessage $msg, string $mapType = null): ?bool
     {
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI] ?? null;

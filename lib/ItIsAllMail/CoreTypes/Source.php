@@ -2,5 +2,6 @@
 
 namespace ItIsAllMail\CoreTypes;
 
-class Source extends \ArrayObject {
+class Source extends \ArrayObject
+{
 }

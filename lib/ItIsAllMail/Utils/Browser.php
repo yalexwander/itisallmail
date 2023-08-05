@@ -46,7 +46,6 @@ class Browser
                     "headers" => [],
                     "cookies" => []
                 ];
-
             }
         }
 

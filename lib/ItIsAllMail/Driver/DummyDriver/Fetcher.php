@@ -46,5 +46,4 @@ class DummyFetcherDriver extends AbstractFetcherDriver implements FetchDriverInt
 
         return $posts;
     }
-   
 }

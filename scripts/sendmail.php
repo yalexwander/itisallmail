@@ -22,9 +22,7 @@ $result = 1;
 try {
     $result = $processor->process(file_get_contents("php://stdin"), $options);
     exit($result);
-}
-catch (\Exception $e) {
+} catch (\Exception $e) {
     print $e;
     exit(1);
 }
-
