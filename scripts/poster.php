@@ -17,10 +17,10 @@ $appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 
 $options = getopt("m:r");
 
-$rawMessage = file_get_contents($options["m"]);
+$jsonMessage = file_get_contents($options["m"]);
 
-$msg = EmailParser::parseMessage($rawMessage);
-if (isset($options["r"])) {
+$msg = EmailParser::parseJSONMessage($jsonMessage);
+if (isset($options["r"]) and empty($msg->getReferencedMessage())) {
     $msg->setReferencedMessage(
         EmailParser::loadReferencedMessageFromRegister("reply")
     );

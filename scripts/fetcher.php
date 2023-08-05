@@ -24,9 +24,9 @@ if ($source === null) {
     throw new \Exception("Source with url $argv[1] not found. Add it first");
 }
 
-$socket = null;
-$socketFile = $argv[2];
-if (! empty($socketFile)) {
+list($socket, $socketFile) = [null, null];
+if (! empty($argv[2])) {
+    $socketFile = $argv[2];
     $socket = socket_create(AF_UNIX, SOCK_DGRAM, 0);
 }
 

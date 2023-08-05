@@ -39,8 +39,15 @@ class CatalogDriverFactory
         $opts["catalog_default_driver"] = $this->appConfig["catalog_default_driver"];
 
         foreach ($this->driverList as $driver) {
-            if ($driver->canHandleQuery($query, $opts)) {
-                return $driver;
+            if (! empty($opts["catalog_default_driver"]) and ! empty($opts["interactive"])) {
+                if ($driver->getCode() === $opts["catalog_default_driver"]) {
+                    return $driver;
+                }
+            }
+            else {
+                if ($driver->canHandleQuery($query, $opts)) {
+                    return $driver;
+                }
             }
         }
 

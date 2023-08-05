@@ -109,9 +109,13 @@ class Mailbox implements MessageStorageInterface
                     ! empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages")) or
                     ! empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
                 ) {
-                    $mergeStats["modified"]++;
-                    $this->mailboxUpdater->handleExistingMessage($messageFilepath, $msg);
+                    $mergeStats["modified"] += $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
                 }
+
+                if (! empty($this->sourceConfig->getOpt("revisions"))) {
+                    $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
+                }
+
             }
         }
 

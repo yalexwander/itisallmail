@@ -11,6 +11,7 @@ use ItIsAllMail\Config\PosterConfig;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Utils\EmailParser;
 
 class PostActionHandler
 {
@@ -19,51 +20,59 @@ class PostActionHandler
     /** @var array<string, mixed> */
     protected array $cliOpts;
 
-    public function __construct(array $appConfig, array $cliOpts)
+    public function __construct(array $appConfig, array $cliOpts = [])
     {
         $this->appConfig = $appConfig;
         $this->cliOpts = $cliOpts;
     }
 
-    public function process(string $arg, string $rawMessage, ParsedMessage $msg): int
+    public function process(string $arg, ParsedMessage $msg): int
     {
-        $result = 1;
+        $execCode = 1;
 
         if (! empty($this->appConfig["use_posting_queue"])) {
             $queue = new PostingQueue($this->appConfig);
             $queue->add($msg);
+            $execCode = 0;
         } else {
-            $transferFilename = tempnam(sys_get_temp_dir(), "iam-post-");
-            file_put_contents($transferFilename, $rawMessage);
-
-            $mapper = (new AddressMapperFactory($this->appConfig))->findMapper($msg);
-            $source = $mapper->mapMessageToSource($msg);
-
-            $execString = "";
-
-            $proxyCommand = $this->getProxyCommand($msg, $source);
-            $execString .= !empty($proxyCommand) ? ($proxyCommand . " ") : "";
-
-            $execString .= "php \""  . __DIR__ . DIRECTORY_SEPARATOR
-                . ".." . DIRECTORY_SEPARATOR
-                . ".." . DIRECTORY_SEPARATOR
-                . ".." . DIRECTORY_SEPARATOR
-                . "scripts" . DIRECTORY_SEPARATOR . "poster.php\""
-                . " -m \"" . $transferFilename . "\"";
-
-            if (isset($this->cliOpts["r"])) {
-                $execString .= " -r";
-            }
-
-            Debug::debug("Starting command:\n" . $execString);
-
-            system($execString, $result);
-            unlink($transferFilename);
+            $execCode = $this->send($msg);
         }
 
-        return $result;
+        return $execCode;
     }
 
+    public function send(ParsedMessage $msg): int 
+    {
+        $execCode = null;
+        $transferFilename = tempnam(sys_get_temp_dir(), "iam-post-");
+        file_put_contents($transferFilename, $msg->serializeForSend());
+
+        $mapper = (new AddressMapperFactory($this->appConfig))->findMapper($msg);
+        $source = $mapper->mapMessageToSource($msg);
+
+        $execString = "";
+
+        $proxyCommand = $this->getProxyCommand($msg, $source);
+        $execString .= !empty($proxyCommand) ? ($proxyCommand . " ") : "";
+
+        $execString .= PHP_BINARY . " \""  . __DIR__ . DIRECTORY_SEPARATOR
+            . ".." . DIRECTORY_SEPARATOR
+            . ".." . DIRECTORY_SEPARATOR
+            . ".." . DIRECTORY_SEPARATOR
+            . "scripts" . DIRECTORY_SEPARATOR . "poster.php\""
+            . " -m \"" . $transferFilename . "\"";
+
+        if (isset($this->cliOpts["r"])) {
+            $execString .= " -r";
+        }
+
+        Debug::debug("Starting command:\n" . $execString);
+
+        system($execString, $execCode);
+        unlink($transferFilename);
+
+        return $execCode;
+    }   
 
     protected function getProxyCommand(ParsedMessage $msg, Source $source): ?string
     {

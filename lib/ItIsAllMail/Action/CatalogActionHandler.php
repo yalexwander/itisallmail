@@ -24,7 +24,7 @@ class CatalogActionHandler
 
     public function process(string $arg, ParsedMessage $msg): int
     {
-        $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg ]);
+        $driver = $this->catalogDriverFactory->getCatalogDriver($arg, [ "msg" => $msg, 'interactive' => true ]);
 
         $catalogConfig = new CatalogConfig($this->appConfig, $driver, new Source([
             "mailbox" => $this->appConfig["catalog_mailbox"]

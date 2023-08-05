@@ -132,4 +132,8 @@ class EmailParser
             );
         }
     }
+
+    public static function parseJSONMessage(string $jsonMessage): ParsedMessage {
+        return new ParsedMessage(json_decode($jsonMessage, true));
+    }
 }

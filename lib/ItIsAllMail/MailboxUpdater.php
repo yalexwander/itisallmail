@@ -7,14 +7,12 @@
  * 3) Attach all attachements from old message
  * 4) Rewrite the old message file with serialized data
  *
- * Here is 2 functions that works more or less:
+ * Here is a function that works more or less:
  *
  * - updateMessageHeaders:
  * fast but dirty way with preserving attachements and with dirty header update, can
  * break if parser or serializer will be changed or new headers to update added
  *
- * - updateMessageHeadersRebuild:
- * Loses attachements but will not broke headers in any circuimstances
  */
 
 namespace ItIsAllMail;
@@ -30,6 +28,7 @@ class MailboxUpdater
 {
     protected HierarchicConfigInterface $sourceConfig;
     protected array $headersToUpdate;
+    protected array $parseCache;
 
     // anywhere in the system headers tried to keep lowercased. But MIME
     // serializators use capitalized names, at least for standard headers
@@ -42,6 +41,7 @@ class MailboxUpdater
     {
         $this->sourceConfig = $sourceConfig;
         $this->headersToUpdate = [];
+        $this->parseCache = [];
 
         if ($sourceConfig->getOpt('update_statusline_header_on_changed_messages')) {
             $this->headersToUpdate[] = "subject";
@@ -51,42 +51,38 @@ class MailboxUpdater
         }
     }
 
-    public function handleExistingMessage(string $messageFilepath, SerializationMessage $msg): void {
-        $this->updateMessageHeaders($messageFilepath, $msg);
-    }
-
-    public function updateMessageHeadersRebuild(string $sourceMIMEFile, SerializationMessage $msg): int
-    {
-        if (! count($this->headersToUpdate)) {
-            return 0;
-        }
-
-        if (! file_exists($sourceMIMEFile)) {
-            Debug::log("Probably racing condition with your MUA on {$sourceMIMEFile}");
-            return 0;
-        }
+    public function updateRevisions(string $messageFilepath, SerializationMessage $msg): void {
+        $revDir = $this->sourceConfig->getOpt('revisions_dir');
         
-        $oldMsg = EmailParser::parseMessage(file_get_contents($sourceMIMEFile));
-
-        $needUpdate = false;
-        foreach ($this->headersToUpdate as $header) {
-            $newHeader = $msg->getTranslatedMIMEHeader($header, $this->sourceConfig);
-            if (
-                ! empty($oldMsg["headers"][$header]) and
-                $oldMsg["headers"][$header] !== $newHeader
-            ) {
-                Debug::debug("Header mismatch for \"{$header}\":\n\"{$oldMsg["headers"][$header]}\"\nvs\n\"{$newHeader}\"");
-                $needUpdate = true;
-            }
+        $oldMsg = $this->parseCache[$messageFilepath];
+        if (empty($oldMsg)) {
+            $oldMsg = EmailParser::parseMessage(file_get_contents($messageFilepath));
         }
 
-        if ($needUpdate) {
-            Debug::log("Updating headers for $sourceMIMEFile ...");
-            file_put_contents($sourceMIMEFile, $msg->toMIMEString($this->sourceConfig));
-            return 1;
+        $messagesAreSame = 
+            ($msg->getSubject() === $oldMsg["subject"]) &&
+            ($msg->getBody() === $oldMsg["body"]);
+
+        if ($messagesAreSame)
+            return;
+
+        if (! file_exists($revDir)) {
+            mkdir($revDir, 0777, true);
         }
 
-        return 0;
+        $newMsgRaw = $msg->toMIMEString($this->sourceConfig);
+
+        if ($revDir === '%') {
+            $revDir = $this->sourceConfig->getOpt('mailbox_base_dir') . DIRECTORY_SEPARATOR .
+                      $this->sourceConfig->getOpt('mailbox') . DIRECTORY_SEPARATOR . 'new';
+        }
+
+        if (!empty($revDir)) {
+            $revFilepath = pathinfo($messageFilepath,  PATHINFO_FILENAME);
+            $revFilepath = $revDir . DIRECTORY_SEPARATOR . $revFilepath . '.rev.' . time();
+            copy($messageFilepath, $revFilepath);
+        }
+        file_put_contents($messageFilepath, $newMsgRaw);
     }
 
     public function updateMessageHeaders(string $sourceMIMEFile, SerializationMessage $msg): int
@@ -103,6 +99,7 @@ class MailboxUpdater
         $oldMsgRaw = file_get_contents($sourceMIMEFile);
         $newMsgRaw = $oldMsgRaw;
         $oldMsg = EmailParser::parseMessage($oldMsgRaw);
+        $this->parseCache[$sourceMIMEFile] = $oldMsg;
 
         $needUpdate = false;
         foreach ($this->headersToUpdate as $header) {

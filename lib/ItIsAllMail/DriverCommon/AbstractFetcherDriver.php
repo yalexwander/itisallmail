@@ -2,7 +2,7 @@
 
 namespace ItIsAllMail\DriverCommon;
 
-use ItIsAllMail\Utils\Storage;
+use ItIsAllMail\Storage;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
 use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\Mailbox;
@@ -13,11 +13,13 @@ class AbstractFetcherDriver
     protected string $driverCode;
     protected MessageStorageInterface $mailbox;
     protected array $appConfig;
+    protected Storage $storage;
 
     public function __construct(array $appConfig, array $opts)
     {
         $this->appConfig = $appConfig;
         $this->opts = $opts;
+        $this->storage = new Storage();
     }
 
     public function matchURL(string $url): bool
@@ -35,7 +37,7 @@ class AbstractFetcherDriver
         return $this->driverCode;
     }
 
-    public function getOpt(string $key)  /* : mixed */
+    public function getOpt(string $key) : mixed
     {
         return $this->opts[$key] ?? null;
     }
@@ -45,7 +47,7 @@ class AbstractFetcherDriver
      */
     protected function getLastURLVisited(string $threadId): ?string
     {
-        return Storage::get($this->driverCode, $threadId . "_last_page");
+        return $this->storage->get($this->driverCode, $threadId . "_last_page");
     }
 
     /**
@@ -53,16 +55,16 @@ class AbstractFetcherDriver
      */
     protected function setLastURLVisited(string $threadId, string $url): void
     {
-        Storage::set($this->driverCode, $threadId . "_last_page", $url);
+        $this->storage->set($this->driverCode, $threadId . "_last_page", $url);
     }
 
     /**
      * To not re-download first page of discussion try to fetch root message
-     * from cache
+     * from internal storage
      */
     protected function getRootMessage(string $threadId): ?string
     {
-        return Storage::get($this->driverCode, $threadId . "_root_msg");
+        return $this->storage->get($this->driverCode, $threadId . "_root_msg");
     }
 
     /**
@@ -70,12 +72,12 @@ class AbstractFetcherDriver
      */
     protected function setRootMessage(string $threadId, string $msgId): void
     {
-        Storage::set($this->driverCode, $threadId . "_root_msg", $msgId);
+        $this->storage->set($this->driverCode, $threadId . "_root_msg", $msgId);
     }
 
     /**
      * For some cases fetcher need to have access to mailbox, for example when
-     * source posts change id or oder on site, but logically it is the same
+     * source posts change id or order on site, but logically it is the same
      * posts that already was downloaded.
      */
     public function setMailbox(MessageStorageInterface $m): void
@@ -110,12 +112,12 @@ class AbstractFetcherDriver
      * pages already fetched
      */
     public function clearSourceCache(Source $source): void {
-        Storage::clear($this->driverCode, $source["url"] . "_last_page");
+        $this->storage->clear($this->driverCode, $source["url"] . "_last_page");
     }
 
     /**
      * Called after merging mailbox with merge result
      */
-    public function correctFetchStrategy(array $mergeResult): void {
+    public function correctFetchStrategy(Source $source, array $mergeResult): void {
     }
 }

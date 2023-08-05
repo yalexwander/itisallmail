@@ -132,8 +132,11 @@ class Monitor {
         $resultExtended = '';
         $portOut = null;
         $address = $this->socketFile;
-        socket_recvfrom($this->socket, $resultExtended, 1024 * 1024 * 1000, 0, $address, $portOut);
+        socket_recvfrom($this->socket, $resultExtended, 1024 * 1024 * 1000, MSG_DONTWAIT, $address, $portOut);
         $resultExtended = json_decode($resultExtended, true);
+        if ($resultExtended === null) {
+            $resultExtended = [ "status" => false ];
+        }
 
         return $resultExtended;
     }

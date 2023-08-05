@@ -20,6 +20,9 @@ fetch_disabled: false
 max_fetch_time: 120
 attach_raw_message: false
 curl_impersonated_bin: "/opt/bin/curl_ff91esr"
+revisions: false
+revisions_dir: ""
+store_visited: true
 
 drivers :
   - "habr.com"

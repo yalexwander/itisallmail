@@ -76,7 +76,7 @@ class SendMailProcessor
             $commandResult = $sourceDeleteActionHandler->process($commandArg, $parsedMsg);
         } elseif ($command === 'post') {
             $postActionHandler = new PostActionHandler($this->appConfig, $options);
-            $commandResult = $postActionHandler->process($commandArg, $rawMessage, $parsedMsg);
+            $commandResult = $postActionHandler->process($commandArg, $parsedMsg);
         } else {
             print "Wrong command $command" . "\n";
             exit(1);
