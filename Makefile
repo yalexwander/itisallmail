@@ -1,7 +1,8 @@
 tests_unit:
-	IAM_TEST_ENV=default vendor/bin/phpunit -c tests/phpunit.xml
+	IAM_TEST_ENV=default vendor/bin/phpunit -c tests/phpunit_unit.xml
 
-# tests_functional:
+tests_func:
+	IAM_TEST_ENV=func/fetch vendor/bin/phpunit -c tests/phpunit_func.xml
 
 tests: tests_unit
 
@@ -17,3 +18,7 @@ lint_phpcs:
 
 lint_phpcs_emacs:
 	vendor/bin/phpcs --report=emacs lib/ scripts/
+
+precommit_fix:
+	vendor/bin/php-cs-fixer fix scripts/
+	vendor/bin/php-cs-fixer fix	lib/ 

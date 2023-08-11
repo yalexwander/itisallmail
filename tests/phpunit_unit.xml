@@ -1,4 +1,4 @@
-<phpunit bootstrap="unit/bootstrap.php">
+<phpunit bootstrap="func/bootstrap.php">
   <testsuites>
     <testsuite name="unit">
       <directory>unit</directory>

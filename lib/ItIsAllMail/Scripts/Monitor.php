@@ -8,7 +8,7 @@ use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\Utils\Debug;
 
-class Monitor 
+class Monitor
 {
     protected FetcherDriverFactory $fetchDriverFactory;
     protected SourceManager $sourceManager;
@@ -38,7 +38,7 @@ class Monitor
         }
     }
 
-    public function rebuildUpdateTimeMap(array $oldMap)
+    public function rebuildUpdateTimeMap(array $oldMap): array
     {
         $newMap = [];
         $newSources = $this->sourceManager->getSources();
@@ -74,7 +74,7 @@ class Monitor
                     "source" => $source,
                     "updated" => 0
                 ];
-            // source already was loaded
+                // source already was loaded
             } else {
                 // update time already passed
                 if ($oldMap[$sId]["next_update"] < time()) {
@@ -88,7 +88,7 @@ class Monitor
                         "Next update of {$sId} will be at " .
                         (new \DateTime())->setTimestamp($newMap[ $sId ]["next_update"])->format("Y-m-d H:i:s")
                     );
-                // update is in the future, leave as is
+                    // update is in the future, leave as is
                 } else {
                     $newMap[$sId] = $oldMap[$sId];
                 }
@@ -112,7 +112,7 @@ class Monitor
 
     public function runSourceUpdate(Source $source): array
     {
-        $execString = PHP_BINARY . " \""  . __DIR__ . DIRECTORY_SEPARATOR . 
+        $execString = PHP_BINARY . " \""  . __DIR__ . DIRECTORY_SEPARATOR .
             '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .
             'scripts' . DIRECTORY_SEPARATOR . "fetcher.php\" ";
 

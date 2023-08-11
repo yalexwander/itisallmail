@@ -99,9 +99,6 @@ class AbstractFetcherDriver
         return $this->getMailbox()->msgExists($id);
     }
 
-    /**
-     * Can be used to add time before next fetch in monitor. Can be negative.
-     */
     public function getAdditionalDelayBeforeNextFetch(Source $source): int
     {
         return 0;

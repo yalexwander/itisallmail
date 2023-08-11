@@ -8,15 +8,17 @@ class SourceManager
 {
     protected array $appConfig;
 
-    protected string $sourcesFile;
+    protected array $sourceFiles;
 
 
-    public function __construct(array $appConfig, ?string $sourcesFile = null)
+    public function __construct(array $appConfig, ?array $sourceFiles = null)
     {
         $this->appConfig = $appConfig;
 
-        $this->sourcesFile = $sourcesFile ?? __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
-            . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . "sources.yml";
+        $this->sourceFiles = $sourceFiles ?? [
+            __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
+            . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . "sources.yml"
+        ];
     }
 
     public function addSource(Source $source): int
@@ -36,7 +38,7 @@ class SourceManager
 
         if (! $sourceExists) {
             array_push($sources, $source);
-            yaml_emit_file($this->sourcesFile, $this->preSerialize($sources));
+            $this->saveSources($sources);
             return 1;
         } else {
             return 0;
@@ -47,18 +49,16 @@ class SourceManager
     {
         $sources = $this->getSources();
 
-        $newSources = [];
         $deleted = false;
         foreach ($sources as $sId => $existingSource) {
-            if ($existingSource["url"] !== $source["url"]) {
-                $newSources[] = $existingSource;
-            } else {
+            if ($existingSource["url"] === $source["url"]) {
+                unset($sources[$sId]);
                 $deleted = true;
             }
         }
 
         if ($deleted) {
-            yaml_emit_file($this->sourcesFile, $this->preSerialize($newSources));
+            $this->saveSources($sources);
             return 1;
         } else {
             return 0;
@@ -76,8 +76,11 @@ class SourceManager
     {
         $sources = [];
 
-        foreach (yaml_parse_file($this->sourcesFile) as $config) {
-            $sources[] = new Source($config);
+        foreach ($this->sourceFiles as $sourceFile) {
+            foreach (yaml_parse_file($sourceFile) as $config) {
+                $config["source_file"] = $sourceFile;
+                $sources[] = new Source($config);
+            }
         }
 
         return $sources;
@@ -98,7 +101,29 @@ class SourceManager
     {
         foreach ($sources as &$s) {
             $s = $s->getArrayCopy();
+            unset($s["source_file"]);
         }
         return $sources;
+    }
+
+    protected function saveSources(array $sources): void
+    {
+        $defaultFile = $this->sourceFiles[0];
+        $fileMap = [];
+        foreach ($this->sourceFiles as $sourceFile) {
+            $fileMap[$sourceFile] = [];
+        }
+
+        foreach ($sources as $source) {
+            if (isset($fileMap[ $source["source_file"] ])) {
+                $fileMap[ $source["source_file"] ][] = $source;
+            } else {
+                $fileMap[ $defaultFile ][] = $source;
+            }
+        }
+
+        foreach ($fileMap as $sourceFile => $fileSources) {
+            yaml_emit_file($sourceFile, $this->preSerialize($fileSources));
+        }
     }
 }

@@ -7,7 +7,6 @@ require_once("includes.php");
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Scripts\Monitor;
 
-
 $appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 $monitor = new Monitor($appConfig);
 
