@@ -7,18 +7,38 @@ use ItIsAllMail\CoreTypes\Source;
 class SourceManager
 {
     protected array $appConfig;
-
     protected array $sourceFiles;
-
 
     public function __construct(array $appConfig, ?array $sourceFiles = null)
     {
         $this->appConfig = $appConfig;
 
-        $this->sourceFiles = $sourceFiles ?? [
-            __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
-            . DIRECTORY_SEPARATOR . "conf" . DIRECTORY_SEPARATOR . "sources.yml"
-        ];
+        $confDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
+            . DIRECTORY_SEPARATOR . "conf";
+
+        if ($sourceFiles !== null) {
+            $this->sourceFiles = $sourceFiles;
+        } else {
+            $defaultSourceFile = $confDir . DIRECTORY_SEPARATOR . "sources.yml";
+
+            $this->sourceFiles[] = $defaultSourceFile;
+            if (!empty($appConfig["extra_sources"])) {
+                foreach ($appConfig["extra_sources"] as $file) {
+                    $expanded = preg_replace('/%config_dir%/', $confDir, $file);
+                    if (str_ends_with($expanded, "*")) {
+                        $expDir = substr($expanded, 0, mb_strlen($expanded) - 1);
+                        $expandedFiles = scandir($expDir);
+                        foreach ($expandedFiles as $expFile) {
+                            if (str_ends_with($expFile, ".yml")) {
+                                $this->sourceFiles[] = $expDir . DIRECTORY_SEPARATOR . $expFile;
+                            }
+                        }
+                    } else {
+                        $this->sourceFiles[] = $expanded;
+                    }
+                }
+            }
+        }
     }
 
     public function addSource(Source $source): int

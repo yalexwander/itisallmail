@@ -11,3 +11,4 @@ cache/*
 lib/ItIsAllMail/Driver/*
 composer.lock
 tests/.phpunit.result.cache
+conf/sources.d/*
