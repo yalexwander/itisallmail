@@ -18,13 +18,13 @@ interface PosterDriverInterface
 
     /**
      * Must return simple code like "habr.com" or "reddit.com", expecting it
-     * to be appended as domain to each email. It acutally must be a domain to
-     * ovveride symfony email validation constraint.
+     * to be appended as domain to each email. It actually must be a domain to
+     * override symfony email validation constraint.
      */
     public function getCode(): string;
 
     /**
-     * Posting to some resource. For now required parameters are somethin like:
+     * Posting to some resource. For now required parameters are something like:
      * @return array - can have keys:
      *  "newId"  => ID of newly created comment in service you post to. Nullable. It must be something short,
      *              like 12345 or new_post_77 etc.

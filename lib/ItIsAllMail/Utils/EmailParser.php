@@ -24,7 +24,7 @@ class EmailParser
             "attachements" => [],
             "body"         => "",
             // 95% of cases it will be command message or citation here
-            "referenced_message" => new ParsedMessage(),
+            "referenced_message" => null,
 
             // for cases of multicitation for future, must NOT include the "referenced_message"
             // "related_messages" => []
@@ -47,6 +47,7 @@ class EmailParser
 
             if ($waitingForSubmessage) {
                 // copying headers from inlined message
+                $parsedMessage["referenced_message"] = new ParsedMessage();
                 $parsedMessage["referenced_message"]["headers"] = $partContent["headers"];
 
                 // letting to process regular attached files
@@ -66,10 +67,18 @@ class EmailParser
                 }
                 // assuming we have simple single part message
                 else {
-                    $parsedMessage["body"] = substr(
+                    $bodyLength = $partContent["ending-pos-body"] - $partContent["starting-pos-body"];
+
+                    // for handling one line message
+                    $fullMessageLength = mb_strlen($rawMessage);
+                    if ($bodyLength === 0 and $fullMessageLength > $partContent["ending-pos-body"]) {
+                        $bodyLength = $fullMessageLength - $partContent["starting-pos-body"];
+                    }
+
+                    $parsedMessage["body"] = mb_substr(
                         $rawMessage,
                         $partContent["starting-pos-body"],
-                        $partContent["ending-pos-body"] - $partContent["starting-pos-body"]
+                        $bodyLength
                     );
 
                     if (

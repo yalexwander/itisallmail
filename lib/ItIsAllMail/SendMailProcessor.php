@@ -60,6 +60,10 @@ class SendMailProcessor
     {
         $commandSource = $options["c"] ?? $parsedMsg["body"];
 
+        if (!empty($options["c"])) {
+            $commandSource = "!" . $commandSource;
+        }
+
         preg_match('/^\!([a-z_\-]+)( (.+))*/', $commandSource, $matches);
         $command = $matches[1];
         $commandArg = empty($matches[3]) ? "" : $matches[3];

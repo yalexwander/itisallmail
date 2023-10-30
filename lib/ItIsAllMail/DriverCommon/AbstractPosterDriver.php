@@ -2,12 +2,9 @@
 
 namespace ItIsAllMail\DriverCommon;
 
-use ItIsAllMail\Interfaces\PosterDriverInterface;
-use ItIsAllMail\Config\FetcherSourceConfig;
-use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
-use ItIsAllMail\Config\PosterConfig;
+use ItIsAllMail\Interfaces\PosterDriverInterface;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
@@ -47,7 +44,7 @@ class AbstractPosterDriver implements PosterDriverInterface
     }
 
     /**
-     * For handling situation when message is uuencoded
+     * For handling situation when message is uue-encoded
      */
     protected function assertUUEncodedMessage(ParsedMessage $msg): void
     {

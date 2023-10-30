@@ -11,7 +11,7 @@ class Storage implements StorageInterface
     public function __construct()
     {
         $this->storageDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
-            . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
+            . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
     }
 
     public function get(string $driverCode, string $key): ?string

@@ -1,10 +1,10 @@
 # macro definition
 
-macro index,pager ,d ':lua IAM.set_sendmail_args("-c !del")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>^D$y:lua mutt.message("Source deleted")<enter>'
+macro index,pager ,d ':lua IAM.set_sendmail_args("-c del")<enter>ba@b.c<enter>y:lua IAM.set_sendmail_args("")<enter>^D$y:lua mutt.message("Source deleted")<enter>'
 
 # macro description
 
-# :lua IAM.set_sendmail_args("-c !del")<enter> -- set sendmail to delete mode
+# :lua IAM.set_sendmail_args("-c del")<enter> -- set sendmail to delete mode
 # b -- bounce message under cursor
 # a@b.c<enter> -- set dummy recepient
 # y -- send message

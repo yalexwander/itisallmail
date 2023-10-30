@@ -20,7 +20,13 @@ $options = getopt("c:r");
 $result = 1;
 
 try {
-    $result = $processor->process(file_get_contents("php://stdin"), $options);
+    $rawMessage = file_get_contents("php://stdin");
+
+    if (getenv('IAM_DEBUG')) {
+        file_put_contents('sendmail_dump_' . microtime(true), $rawMessage);
+    }
+
+    $result = $processor->process($rawMessage, $options);
     exit($result);
 } catch (\Exception $e) {
     print $e;

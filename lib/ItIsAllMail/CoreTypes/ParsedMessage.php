@@ -6,7 +6,7 @@ use ItIsAllMail\CoreTypes\ParsedMessage;
 
 class ParsedMessage extends \ArrayObject
 {
-    public function getReferencedMessage(): ?ParsedMessage
+    public function getReferencedMessage(): ParsedMessage|array|null
     {
         return $this->offsetGet("referenced_message");
     }
@@ -19,9 +19,6 @@ class ParsedMessage extends \ArrayObject
     public function serializeForSend(): string
     {
         $serialized = clone $this;
-        if ($this->getReferencedMessage() !== null) {
-            $serialized->offsetSet("referenced_message", $this->getReferencedMessage()->serializeForSend());
-        }
-        return json_encode($serialized);
+        return json_encode($serialized, JSON_INVALID_UTF8_SUBSTITUTE | JSON_THROW_ON_ERROR);
     }
 }
