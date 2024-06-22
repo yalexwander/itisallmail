@@ -23,6 +23,7 @@ while (true) {
         if (time() >= $mapEntry["next_update"]) {
             $result = $monitor->runSourceUpdate($mapEntry["source"]);
             $timeMap[$sourceId]["updated"] = $result["status"];
+            $timeMap[$sourceId]["last_fetch_result"] = $result;
         }
     }
 

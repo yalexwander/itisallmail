@@ -4,6 +4,7 @@ require_once("includes.php");
 
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
+use ItIsAllMail\CoreTypes\Source;
 
 // script adds new source to list of sources
 
@@ -22,7 +23,7 @@ $url = $url[0];
 $config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 $sourceManager = new SourceManager($config);
 
-$newSource = [
+$newSourceConfig = [
     "url" => $url
 ];
 
@@ -30,13 +31,13 @@ $driverFactory = new FetcherDriverFactory($config);
 $driver = null;
 if (! empty($opts["d"])) {
     $driver = $driverFactory->getFetchDriverByCode($opts["d"]);
-    $newSource["driver"] = $opts["d"];
+    $newSourceConfig["driver"] = $opts["d"];
 } else {
-    $driver = $driverFactory->getFetchDriverForSource([ "url" => $url ]);
+    $driver = $driverFactory->getFetchDriverForSource(new Source([ "url" => $url ]));
 }
 
 if (! empty($opts["m"])) {
-    $newSource["mailbox"] = $opts["m"];
+    $newSourceConfig["mailbox"] = $opts["m"];
 }
 
-$sourceManager->addSource($newSource);
+$sourceManager->addSource(new Source($newSourceConfig));

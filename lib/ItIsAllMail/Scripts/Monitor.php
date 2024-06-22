@@ -138,6 +138,8 @@ class Monitor
             $resultExtended = [ "status" => false ];
         }
 
+        Debug::debug("Fetch result:\n" . print_r($resultExtended));
+
         return $resultExtended;
     }
 }

@@ -6,6 +6,8 @@ use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Constants;
 use ItIsAllMail\CoreTypes\SerializationAttachement;
+use ItIsAllMail\CoreTypes\MessageCorrData;
+use ItIsAllMail\CoreTypes\Source;
 
 /**
  * This class represents internal message. It does not maps directly to MIME
@@ -25,6 +27,7 @@ class SerializationMessage
     protected ?string $thread;
     protected ?array $attachements = [];
     protected ?array $attachementLinks = [];
+    protected ?MessageCorrData $corrData;
 
     // this is list of extra headers, that can be useful in many places
     protected array $extraHeaders = [
@@ -68,6 +71,7 @@ class SerializationMessage
         $this->uri = $msgSource["uri"] ?? null;
         $this->score = $msgSource["score"] ?? null;
         $this->rawSourceData = $msgSource["rawSourceData"] ?? null;
+        $this->corrData = $msgSource["corrData"] ?? new MessageCorrData();
     }
 
 
@@ -280,5 +284,14 @@ class SerializationMessage
     public function setExternalAttachements(array $externalAttachements): void
     {
         $this->externalAttachements = $externalAttachements;
+    }
+
+    public function getCorrData() {
+        return $this->corrData;
+    }
+
+    public function setCorrData($corrData) {
+        $this->corrData = $corrData;
+        return $this;
     }
 }

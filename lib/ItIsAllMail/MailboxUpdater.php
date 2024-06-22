@@ -55,14 +55,19 @@ class MailboxUpdater
     {
         $revDir = $this->sourceConfig->getOpt('revisions_dir');
 
-        $oldMsg = $this->parseCache[$messageFilepath];
+        if ($revDir === '%') {
+            $revDir = $this->sourceConfig->getOpt('mailbox_base_dir') . DIRECTORY_SEPARATOR .
+                      $this->sourceConfig->getOpt('mailbox') . DIRECTORY_SEPARATOR . 'new';
+        }
+
+        $oldMsg = $this->parseCache[$messageFilepath] ?? null;
         if (empty($oldMsg)) {
             $oldMsg = EmailParser::parseMessage(file_get_contents($messageFilepath));
         }
 
-        $messagesAreSame =
-            ($msg->getSubject() === $oldMsg["subject"]) &&
-            ($msg->getBody() === $oldMsg["body"]);
+        $newBody = $msg->getBody();
+        $messagesAreSame = $msg->getSubject() == $oldMsg["headers"]["subject"];
+        $messagesAreSame = $messagesAreSame && ($newBody === $oldMsg["body"]);
 
         if ($messagesAreSame) {
             return;
@@ -73,11 +78,6 @@ class MailboxUpdater
         }
 
         $newMsgRaw = $msg->toMIMEString($this->sourceConfig);
-
-        if ($revDir === '%') {
-            $revDir = $this->sourceConfig->getOpt('mailbox_base_dir') . DIRECTORY_SEPARATOR .
-                      $this->sourceConfig->getOpt('mailbox') . DIRECTORY_SEPARATOR . 'new';
-        }
 
         if (!empty($revDir)) {
             $revFilepath = pathinfo($messageFilepath, PATHINFO_FILENAME);

@@ -75,7 +75,7 @@ class EmailParser
                         $bodyLength = $fullMessageLength - $partContent["starting-pos-body"];
                     }
 
-                    $parsedMessage["body"] = mb_substr(
+                    $parsedMessage["body"] = substr(
                         $rawMessage,
                         $partContent["starting-pos-body"],
                         $bodyLength
@@ -124,6 +124,15 @@ class EmailParser
         }
 
         mailparse_msg_free($mime);
+
+        // it is hack for overcoming parser addition of \r\n to the end of body
+        $bodyLength = mb_strlen($parsedMessage["body"]);
+        if ($bodyLength >= 2 and mb_substr($parsedMessage["body"], $bodyLength - 2, 2) == "\r\n") {
+            $parsedMessage["body"] = mb_substr($parsedMessage["body"], 0, $bodyLength - 2);
+        }
+        // TODO: find why these symbols injected here
+
+        print_r($parsedMessage);
 
         return $parsedMessage;
     }

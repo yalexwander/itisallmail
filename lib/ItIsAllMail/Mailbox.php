@@ -7,6 +7,7 @@ use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\MailboxUpdater;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\CoreTypes\MessageCorrData;
 
 class Mailbox implements MessageStorageInterface
 {
@@ -96,6 +97,8 @@ class Mailbox implements MessageStorageInterface
         foreach ($messages as $msg) {
             $messageFilepath = $this->getMessageFileById($msg->getId());
 
+            $msg->getCorrData()->source = $this->sourceConfig;
+
             if ($messageFilepath === null) {
                 $newMessageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
                 Debug::log("Adding " . $msg->getId() . " as " . $newMessageFilepath);
@@ -103,15 +106,16 @@ class Mailbox implements MessageStorageInterface
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($newMessageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
+
+                if (! empty($this->sourceConfig->getOpt("revisions"))) {
+                    $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
+                }
+
                 if (
                     ! empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages")) or
                     ! empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
                 ) {
                     $mergeStats["modified"] += $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
-                }
-
-                if (! empty($this->sourceConfig->getOpt("revisions"))) {
-                    $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
                 }
             }
         }

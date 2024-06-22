@@ -54,7 +54,6 @@ try {
     }
 
     $driver->correctFetchStrategy($source, $mergeResult);
-
     Debug::debug("Source processing finished");
     $result["status"] = true;
 } catch (\Exception $e) {
