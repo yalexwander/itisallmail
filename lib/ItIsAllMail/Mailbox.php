@@ -107,16 +107,20 @@ class Mailbox implements MessageStorageInterface
                 file_put_contents($newMessageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
 
+                $messageWasModified = 0;
+
                 if (! empty($this->sourceConfig->getOpt("revisions"))) {
-                    $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
+                    $messageWasModified = $this->mailboxUpdater->updateRevisions($messageFilepath, $msg);
                 }
 
                 if (
                     ! empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages")) or
                     ! empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
                 ) {
-                    $mergeStats["modified"] += $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
+                    $messageWasModified = $this->mailboxUpdater->updateMessageHeaders($messageFilepath, $msg);
                 }
+
+                $mergeStats["modified"] += $messageWasModified;
             }
         }
 

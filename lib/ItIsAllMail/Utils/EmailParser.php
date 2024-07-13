@@ -132,8 +132,6 @@ class EmailParser
         }
         // TODO: find why these symbols injected here
 
-        print_r($parsedMessage);
-
         return $parsedMessage;
     }
 

@@ -62,6 +62,8 @@ try {
     Debug::debug("Source processing failed");
 }
 
+Debug::debug("Source processing stat:\n" . print_r($result, true));
+
 if ($socket !== null) {
     $encodedResult = json_encode($result);
     socket_sendto($socket, $encodedResult, strlen($encodedResult), 0, $socketFile, 0);

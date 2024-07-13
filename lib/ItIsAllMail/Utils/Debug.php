@@ -25,12 +25,13 @@ class Debug
     public static function dumpMessage(SerializationMessage $msg): string
     {
         return <<<EOT
-        subject: {$msg->getSubject()}
-        from: {$msg->getFrom()}
-        parent: {$msg->getParent()}
-        created: {$msg->getCreated()->format("Y-m-d H:i:s")}
-        id: {$msg->getId()}
-        body: {$msg->getBody()}
+
+   subject: {$msg->getSubject()}
+   from: {$msg->getFrom()}
+   parent: {$msg->getParent()}
+   created: {$msg->getCreated()->format("Y-m-d H:i:s")}
+   id: {$msg->getId()}
+   body: {$msg->getBody()}
 ====\n
 EOT;
     }

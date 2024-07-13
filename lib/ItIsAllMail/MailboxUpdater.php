@@ -51,7 +51,7 @@ class MailboxUpdater
         }
     }
 
-    public function updateRevisions(string $messageFilepath, SerializationMessage $msg): void
+    public function updateRevisions(string $messageFilepath, SerializationMessage $msg): int
     {
         $revDir = $this->sourceConfig->getOpt('revisions_dir');
 
@@ -66,11 +66,19 @@ class MailboxUpdater
         }
 
         $newBody = $msg->getBody();
-        $messagesAreSame = $msg->getSubject() == $oldMsg["headers"]["subject"];
-        $messagesAreSame = $messagesAreSame && ($newBody === $oldMsg["body"]);
+        $subjectsAreSame = $msg->getSubject() == $oldMsg["headers"]["subject"];
+        if (! $subjectsAreSame) {
+            Debug::log("New revision for $messageFilepath: headers mismatch:\nOLD: " . $oldMsg["headers"]["subject"] . "\nNEW: " . $msg->getSubject() . "\n");
+        }
+        $bodiesAreSame = ($newBody == $oldMsg["body"]);
+        if (! $bodiesAreSame) {
+            Debug::log("New revision for $messageFilepath: bodies mismatch:\nOLD\n: " . $oldMsg["body"] . "\nNEW\n: " . $newBody . "\n");
+        }
+
+        $messagesAreSame = $subjectsAreSame && $bodiesAreSame;
 
         if ($messagesAreSame) {
-            return;
+            return 0;
         }
 
         if (! file_exists($revDir)) {
@@ -85,6 +93,8 @@ class MailboxUpdater
             copy($messageFilepath, $revFilepath);
         }
         file_put_contents($messageFilepath, $newMsgRaw);
+
+        return 1;
     }
 
     public function updateMessageHeaders(string $sourceMIMEFile, SerializationMessage $msg): int
