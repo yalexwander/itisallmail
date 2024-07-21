@@ -23,6 +23,7 @@ use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Constants;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Utils\MailHeaderProcessor;
 
 class MailboxUpdater
 {
@@ -65,11 +66,13 @@ class MailboxUpdater
             $oldMsg = EmailParser::parseMessage(file_get_contents($messageFilepath));
         }
 
-        $newBody = $msg->getBody();
-        $subjectsAreSame = $msg->getSubject() == $oldMsg["headers"]["subject"];
+        $newSubject = MailHeaderProcessor::sanitizeSubjectHeader($msg->getSubject());
+        $subjectsAreSame = $newSubject == $oldMsg["headers"]["subject"];
         if (! $subjectsAreSame) {
-            Debug::log("New revision for $messageFilepath: headers mismatch:\nOLD: " . $oldMsg["headers"]["subject"] . "\nNEW: " . $msg->getSubject() . "\n");
+            Debug::log("New revision for $messageFilepath: headers mismatch:\nOLD: " . $oldMsg["headers"]["subject"] . "\nNEW: " . $newSubject . "\n");
         }
+
+        $newBody = $msg->getBody();
         $bodiesAreSame = ($newBody == $oldMsg["body"]);
         if (! $bodiesAreSame) {
             Debug::log("New revision for $messageFilepath: bodies mismatch:\nOLD\n: " . $oldMsg["body"] . "\nNEW\n: " . $newBody . "\n");

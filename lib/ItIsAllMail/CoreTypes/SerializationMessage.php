@@ -8,6 +8,7 @@ use ItIsAllMail\Constants;
 use ItIsAllMail\CoreTypes\SerializationAttachement;
 use ItIsAllMail\CoreTypes\MessageCorrData;
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Utils\MailHeaderProcessor;
 
 /**
  * This class represents internal message. It does not maps directly to MIME
@@ -33,9 +34,6 @@ class SerializationMessage
     protected array $extraHeaders = [
         'mentions', 'score', 'reference', 'uri'
     ];
-
-    // maximal length of subject
-    protected int $subjectMaxChars = 128;
 
     // list of all users of given site/network/messenger mention in this message
     protected ?array $mentions;
@@ -241,10 +239,6 @@ class SerializationMessage
     {
         $subject = $this->subject;
 
-        if (mb_strlen($subject) > $this->subjectMaxChars) {
-            $subject = mb_substr($subject, 0, $this->subjectMaxChars) . "...";
-        }
-
         if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
             if (count($this->attachements) or count($this->attachementLinks) or count($this->externalAttachements)) {
                 $subject = "[A] " . $subject;
@@ -256,7 +250,7 @@ class SerializationMessage
             }
         }
 
-        $subject = preg_replace('/( +)|([\r\n])/', ' ', $subject);
+        $subject = MailHeaderProcessor::sanitizeSubjectHeader($subject);
 
         return $subject;
     }

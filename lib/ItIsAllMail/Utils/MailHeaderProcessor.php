@@ -8,6 +8,7 @@ namespace ItIsAllMail\Utils;
  * idea. There are we have few functions to solve thise issue.
  */
 
+use ItIsAllMail\Constants;
 
 class MailHeaderProcessor
 {
@@ -46,5 +47,14 @@ class MailHeaderProcessor
             '_',
             self::rusTranslit($input)
         );
+    }
+
+    public static function sanitizeSubjectHeader(string $subject): string {
+        if (mb_strlen($subject) > Constants::IAM_HEADER_SUBJECT_TRUNCATE_LENGTH) {
+            $subject = mb_substr($subject, 0, Constants::IAM_HEADER_SUBJECT_TRUNCATE_LENGTH) . "...";
+        }
+        $subject = preg_replace('/( +)|([\r\n])/', ' ', $subject);
+
+        return $subject;
     }
 }

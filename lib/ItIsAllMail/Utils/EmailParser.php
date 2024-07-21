@@ -56,11 +56,12 @@ class EmailParser
 
             if (! count($parsedMessage["headers"])) {
                 $parsedMessage["headers"] = $partContent["headers"];
-
+                $currentContentType = strtolower($parsedMessage["headers"]["content-type"]);
                 // assuming we parsing the root part of multipart message
                 if (
                     (! empty($parsedMessage["headers"]["content-type"])) and
-                    (false !== strstr($parsedMessage["headers"]["content-type"], "multipart/mixed;"))
+                    ( (false !== strstr($currentContentType, "multipart/mixed;")) or
+                      (false !== strstr($currentContentType, "multipart/alternative;")) )
                 ) {
                     $complexMessage = true;
                     continue;
@@ -93,10 +94,11 @@ class EmailParser
             }
             // assuming we now parsing some part of multipart message
             elseif ($complexMessage) {
+                $currentContentType = strtolower($partContent["headers"]["content-type"]);
                 // assuming any inlined text part is the message itself
                 if (
                     empty($parsedMessage["body"]) and
-                    (false !== strstr($partContent["headers"]["content-type"], "text/plain;"))
+                    (false !== strstr($currentContentType, "text/plain;"))
                 ) {
                     $bodyText = substr(
                         $rawMessage,
