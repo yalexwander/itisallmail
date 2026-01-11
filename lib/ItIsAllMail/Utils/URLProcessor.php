@@ -46,4 +46,18 @@ class URLProcessor
 
         return $baseURL;
     }
+
+    /**
+     * Convert URL to filesystem frienly name. Try to keep balance between readability and security for possible theing
+     * like nicknames, urls, emails, etc.
+     */
+    public static function sanitizeFilename(string $key): string
+    {
+        return preg_replace(
+            '/[^A-Za-z0-9@\._]+/',
+            '-',
+            $key
+        );
+    }
+
 }

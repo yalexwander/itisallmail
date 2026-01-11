@@ -60,6 +60,17 @@ try {
     printf("Failed to process source %s with driver %s\n", $source["url"], $driver->getCode());
     printf("Details:\n%s\n", $e->__toString());
     Debug::debug("Source processing failed");
+    file_put_contents(
+        implode(DIRECTORY_SEPARATOR, [ __DIR__,  "..", "cache", "fetcher_exceptions_stat.log" ] ),
+        implode("\t", [
+            (new \DateTime())->format("Y-m-d H:i:s"),
+            (new \ReflectionClass($e))->getShortName(),
+            $driver->getCode(),
+            $source["url"],
+            $e->__toString() . "\n\n\n"
+        ]),
+        FILE_APPEND
+    );
 }
 
 Debug::debug("Source processing stat:\n" . print_r($result, true));

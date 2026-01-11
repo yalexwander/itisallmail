@@ -109,6 +109,10 @@ class Monitor
         return $newMap;
     }
 
+    // TODO: make time limit
+    protected function controlableExecute(string $execs): string {
+        return system($execs);
+    }
 
     public function runSourceUpdate(Source $source): array
     {
@@ -128,7 +132,7 @@ class Monitor
 
         Debug::debug("Starting command:\n" . $execString);
 
-        $result = system($execString);
+        $result = $this->controlableExecute($execString);
         $resultExtended = '';
         $portOut = null;
         $address = $this->socketFile;

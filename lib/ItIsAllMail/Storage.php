@@ -3,6 +3,7 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\Interfaces\StorageInterface;
+use ItIsAllMail\Utils\URLProcessor;
 
 class Storage implements StorageInterface
 {
@@ -45,27 +46,14 @@ class Storage implements StorageInterface
         file_put_contents($keyFilename, $value);
     }
 
-    /**
-     * Try to keep balance betwee readability and security for possible theing
-     * like nicknames, urls, emails, etc
-     */
-    protected function sanitizeFilename(string $key): string
-    {
-        return preg_replace(
-            '/[^A-Za-z0-9@\._]+/',
-            '-',
-            $key
-        );
-    }
-
     protected function getDriverDir(string $driverCode): string
     {
-        return $this->storageDir . $this->sanitizeFilename($driverCode);
+        return $this->storageDir . URLProcessor::sanitizeFilename($driverCode);
     }
 
     protected function getKeyFilename(string $driverDir, string $key): string
     {
-        return $driverDir . DIRECTORY_SEPARATOR . $this->sanitizeFilename($key);
+        return $driverDir . DIRECTORY_SEPARATOR . URLProcessor::sanitizeFilename($key);
     }
 
 

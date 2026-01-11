@@ -7,7 +7,6 @@ use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Constants;
 use ItIsAllMail\CoreTypes\SerializationAttachement;
 use ItIsAllMail\CoreTypes\MessageCorrData;
-use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 
 /**
@@ -77,53 +76,93 @@ class SerializationMessage
     {
         Debug::debug("Trying convert to MIME:");
         Debug::debug(Debug::dumpMessage($this));
-        $envelope = [];
-        $envelope["from"] = $this->from;
-        $envelope["to"]  = $this->thread;
-        $envelope["date"]  = $this->created->format("D, d M Y H:i:s O");
-        $envelope["subject"]  = $this->getFormattedSubject($sourceConfig);
-        $envelope["message_id"]  = "<" . $this->getId() . ">";
 
-        $envelope["custom_headers"] = $this->createExtraHeaders($sourceConfig);
+        $mimeOut = "";
+
+        $mimeOut .= "Date: " . $this->created->format("D, d M Y H:i:s O") . "\r\n";
+        $mimeOut .= "From: " . $this->from . "\r\n";
+        $mimeOut .= "Subject: " . $this->getFormattedSubject($sourceConfig) . "\r\n";
+        $mimeOut .= "To: " . mb_rtrim($this->thread, "\n") . "\r\n";
+        $mimeOut .= "Message-Id: " . "<" . $this->getId() . ">" . "\r\n";
+
+        $mimeOut .= "MIME-Version: 1.0\r\n";
+        $mimeOut .= "Content-Type: TEXT/plain; CHARSET=utf-8\r\n";
+
+        $customHeaders = $this->createExtraHeaders($sourceConfig);
 
         if ($this->parent !== null) {
-            $envelope["custom_headers"][] = "References: <" . $this->getParent() . ">";
+            $customHeaders[] = "References: <" . $this->getParent() . ">";
         }
 
-        $bodies = [];
-        if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
-            $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
-        }
+        $mimeOut .= implode("\r\n", $customHeaders);
 
         $allAttachements = array_merge($this->attachements, $this->attachementLinks);
 
-        if (count($allAttachements)) {
-            $bodies[] = [
-                "type" => TYPEMULTIPART,
-                "subtype" => "alternative"
+        if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
+            $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
+            $attachement = [
+                "type" => "text",
+                "subtype" => "plain",
+                "charset" => "utf-8",
+                "contents.data" => $this->body
             ];
+
         }
 
-        $bodyPart = [
-            "type" => "text",
-            "subtype" => "plain",
-            "charset" => "utf-8",
-            "contents.data" => $this->body
-        ];
-
-        $bodies[] = $bodyPart;
-
-        foreach ($allAttachements as $attachment) {
-            $bodies[] = [
-                "type" => $attachment["type"],
-                "subtype" => $attachment["subtype"],
-                "encoding" => ENCBINARY,
-                "description" => $attachment["title"],
-                "contents.data" => $attachment["data"]
+        if (! count($allAttachements)) {
+            $mimeOut .= "\r\n\r\n" . $this->body;
+        }
+        else {
+            $bodyPart = [
+                "type" => "text",
+                "subtype" => "plain",
+                "charset" => "utf-8",
+                "contents.data" => $this->body
             ];
+
+            $this->addAttachement();
+
         }
 
-        return imap_mail_compose($envelope, $bodies);
+        // $bodies = [];
+        // if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
+        //     $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
+        // }
+
+        // $allAttachements = array_merge($this->attachements, $this->attachementLinks);
+
+        // if (count($allAttachements)) {
+        //     $bodies[] = [
+        //         "type" => TYPEMULTIPART,
+        //         "subtype" => "alternative"
+        //     ];
+        // }
+
+        // $bodyPart = [
+        //     "type" => "text",
+        //     "subtype" => "plain",
+        //     "charset" => "utf-8",
+        //     "contents.data" => $this->body
+        // ];
+
+        // $bodies[] = $bodyPart;
+
+        // foreach ($allAttachements as $attachment) {
+        //     $bodies[] = [
+        //         "type" => $attachment["type"],
+        //         "subtype" => $attachment["subtype"],
+        //         "encoding" => ENCBINARY,
+        //         "description" => $attachment["title"],
+        //         "contents.data" => $attachment["data"]
+        //     ];
+        // }
+
+        // return imap_mail_compose($envelope, $bodies);
+
+// print "===========" . "\n";
+// print_r($mimeOut);die();
+// print "===========" . "\n";
+        return $mimeOut;
     }
 
     public function getId(): string
@@ -167,6 +206,9 @@ class SerializationMessage
         return $this->score;
     }
 
+    public function getThread(): ?string {
+        return $this->thread;
+    }
 
     public function getCreated(): ?\DateTime
     {

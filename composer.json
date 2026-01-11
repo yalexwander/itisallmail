@@ -6,7 +6,7 @@
         "voku/simple_html_dom" : "^4",
         "egulias/email-validator": "^4",
         "html2text/html2text": "^4",
-        "guzzlehttp/guzzle" : "^7"
+        "guzzlehttp/guzzle" : "*"
     },
     "require-dev" : {
         "friendsofphp/php-cs-fixer" : "*",

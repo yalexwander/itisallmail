@@ -22,6 +22,14 @@ class FetcherDriverFactory
                 continue;
             }
 
+            if ( !empty($driverOpts["fetcher_config"]["driver_autoloads_file"]) ) {
+                require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
+                    . $driverId . DIRECTORY_SEPARATOR . $driverOpts["fetcher_config"]["driver_autoloads_file"];
+            }
+            else {
+                require_once($GLOBALS['__AppMainDir'] . "vendor" . DIRECTORY_SEPARATOR . "autoload.php");
+            }
+
             require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "Driver" . DIRECTORY_SEPARATOR
                 . $driverId . DIRECTORY_SEPARATOR . $driverOpts["fetcher_config"]["file"];
 

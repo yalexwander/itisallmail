@@ -8,6 +8,8 @@ use ItIsAllMail\MailboxUpdater;
 use ItIsAllMail\Interfaces\MessageStorageInterface;
 use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\CoreTypes\MessageCorrData;
+use ItIsAllMail\Interfaces\VisitedMessagesInterface;
+use ItIsAllMail\VisitedMessages;
 
 class Mailbox implements MessageStorageInterface
 {
@@ -16,6 +18,7 @@ class Mailbox implements MessageStorageInterface
     protected array $localMessages;
     protected array $mailSubdirs;
     protected MailboxUpdater $mailboxUpdater;
+    protected VisitedMessagesInterface $visitedMessages;
 
     public function __construct(HierarchicConfigInterface $sourceConfig)
     {
@@ -41,6 +44,8 @@ class Mailbox implements MessageStorageInterface
         $this->loadMailbox();
 
         $this->mailboxUpdater = new MailboxUpdater($this->sourceConfig);
+
+        $this->visitedMessages = new VisitedMessages($sourceConfig);
     }
 
     /**
@@ -95,6 +100,15 @@ class Mailbox implements MessageStorageInterface
         ];
 
         foreach ($messages as $msg) {
+            // skipping already visited messages.
+            // if ( ! $this->visitedMessages->check($msg->getId()) ) {
+            //     $this->visitedMessages->add($msg->getId(), true);
+            // }
+            // else {
+            //     Debug::log("Skipping " . $msg->getId() . " as it was in Visted Messages already");
+            //     continue;
+            // }
+            $this->visitedMessages->add($msg->getId(), true);
             $messageFilepath = $this->getMessageFileById($msg->getId());
 
             $msg->getCorrData()->source = $this->sourceConfig;
@@ -123,6 +137,7 @@ class Mailbox implements MessageStorageInterface
                 $mergeStats["modified"] += $messageWasModified;
             }
         }
+        $this->visitedMessages->persist();
 
         return $mergeStats;
     }

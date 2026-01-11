@@ -71,4 +71,9 @@ EOT;
 
         return $tmpFile;
     }
+
+    public static function logExceptionForStat(\Exception $e): void
+    {
+    }
+
 }

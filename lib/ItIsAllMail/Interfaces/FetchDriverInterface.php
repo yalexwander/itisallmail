@@ -3,6 +3,7 @@
 namespace ItIsAllMail\Interfaces;
 
 use ItIsAllMail\CoreTypes\Source;
+use ItIsAllMail\Interfaces\MessageStorageInterface;
 
 interface FetchDriverInterface
 {
@@ -41,4 +42,7 @@ interface FetchDriverInterface
      */
     public function getAdditionalDelayBeforeNextFetch(Source $source): int;
 
+    public function setMailbox(MessageStorageInterface $mailbox): void;
+
+    public function correctFetchStrategy(Source $source, array $mergeResult): void;
 }

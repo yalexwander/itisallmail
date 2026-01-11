@@ -4,7 +4,7 @@
 
 $__AppMainDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR;
 
-require_once($__AppMainDir . "vendor" . DIRECTORY_SEPARATOR . "autoload.php");
+//require_once($__AppMainDir . "vendor" . DIRECTORY_SEPARATOR . "autoload.php");
 require_once($__AppMainDir . "lib" . DIRECTORY_SEPARATOR . "autoload.php");
 
 $__AppConfigDir = $__AppMainDir . "conf" . DIRECTORY_SEPARATOR;
