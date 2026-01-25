@@ -5,7 +5,7 @@ namespace ItIsAllMail\CoreTypes;
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Constants;
-use ItIsAllMail\CoreTypes\SerializationAttachement;
+use ItIsAllMail\CoreTypes\SerializationAttachment;
 use ItIsAllMail\CoreTypes\MessageCorrData;
 use ItIsAllMail\Utils\MailHeaderProcessor;
 
@@ -25,8 +25,8 @@ class SerializationMessage
     protected string $id;
     protected string $body;
     protected ?string $thread;
-    protected ?array $attachements = [];
-    protected ?array $attachementLinks = [];
+    protected ?array $attachments = [];
+    protected ?array $attachmentLinks = [];
     protected ?MessageCorrData $corrData;
 
     // this is list of extra headers, that can be useful in many places
@@ -47,9 +47,9 @@ class SerializationMessage
     // converted to message source
     protected ?string $uri;
 
-    // needed for rendering purposes when we know attachements could be
+    // needed for rendering purposes when we know attachments could be
     // already downloaded
-    protected ?array $externalAttachements = [];
+    protected ?array $externalAttachments = [];
 
     // to store raw message data from source like json/html/etc
     protected ?string $rawSourceData;
@@ -63,7 +63,7 @@ class SerializationMessage
         $this->id = $msgSource["id"];
         $this->body = $msgSource["body"];
         $this->thread = $msgSource["thread"];
-        $this->attachements = $msgSource["attachements"] ?? [];
+        $this->attachments = $msgSource["attachments"] ?? [];
         $this->mentions = $msgSource["mentions"] ?? [];
         $this->uri = $msgSource["uri"] ?? null;
         $this->score = $msgSource["score"] ?? null;
@@ -79,89 +79,52 @@ class SerializationMessage
 
         $mimeOut = "";
 
-        $mimeOut .= "Date: " . $this->created->format("D, d M Y H:i:s O") . "\r\n";
         $mimeOut .= "From: " . $this->from . "\r\n";
+        $mimeOut .= "Date: " . $this->created->format("D, d M Y H:i:s O") . "\r\n";
         $mimeOut .= "Subject: " . $this->getFormattedSubject($sourceConfig) . "\r\n";
         $mimeOut .= "To: " . mb_rtrim($this->thread, "\n") . "\r\n";
         $mimeOut .= "Message-Id: " . "<" . $this->getId() . ">" . "\r\n";
 
         $mimeOut .= "MIME-Version: 1.0\r\n";
-        $mimeOut .= "Content-Type: TEXT/plain; CHARSET=utf-8\r\n";
 
         $customHeaders = $this->createExtraHeaders($sourceConfig);
-
         if ($this->parent !== null) {
             $customHeaders[] = "References: <" . $this->getParent() . ">";
         }
 
-        $mimeOut .= implode("\r\n", $customHeaders);
-
-        $allAttachements = array_merge($this->attachements, $this->attachementLinks);
+        if (count($customHeaders)) {
+            $mimeOut .= implode("\r\n", $customHeaders) . "\r\n";
+        }
 
         if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
-            $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
-            $attachement = [
-                "type" => "text",
-                "subtype" => "plain",
-                "charset" => "utf-8",
-                "contents.data" => $this->body
-            ];
-
+            $this->addAttachment("iam_raw_message.txt", $this->rawSourceData, "text", "plain");
         }
 
-        if (! count($allAttachements)) {
-            $mimeOut .= "\r\n\r\n" . $this->body;
+        $allAttachments = array_merge($this->attachments, $this->attachmentLinks);
+
+        if (count($allAttachments)) {
+            $boundary = "woxfrutxkwocy9auscdouqeo";
+            $mimeOut .= "Content-Type: multipart/alternative; boundary=\"$boundary\"\r\n\r\n";
+
+            foreach ($allAttachments as $attachment) {
+                $mimeOut .= "\r\n--$boundary\r\n";
+                $mimeOut .= "Content-Type: " . $attachment["type"] . "/" . $attachment["subtype"] . "; name=\"" . $attachment["title"] . "\"\r\n";
+                $mimeOut .= "Content-Transfer-Encoding: base64\r\n\r\n";
+                $mimeOut .= chunk_split(base64_encode($attachment["data"]), 76, "\r\n");
+            }
+
+            $mimeOut .= "--$boundary\r\n";
+            $mimeOut .= "Content-Type: TEXT/plain; charset=utf-8\r\n";
+            $mimeOut .= "Content-Transfer-Encoding: binary\r\n\r\n";
+
+            $mimeOut .= $this->body;
+
+            $mimeOut .= "--$boundary--";
         }
         else {
-            $bodyPart = [
-                "type" => "text",
-                "subtype" => "plain",
-                "charset" => "utf-8",
-                "contents.data" => $this->body
-            ];
-
-            $this->addAttachement();
-
+            $mimeOut .= "Content-Type: TEXT/plain; CHARSET=utf-8\r\n\r\n" . $this->body;
         }
 
-        // $bodies = [];
-        // if ($sourceConfig->getOpt("attach_raw_message") and $this->rawSourceData !== null) {
-        //     $this->addAttachement("iam_raw_message.txt", $this->rawSourceData);
-        // }
-
-        // $allAttachements = array_merge($this->attachements, $this->attachementLinks);
-
-        // if (count($allAttachements)) {
-        //     $bodies[] = [
-        //         "type" => TYPEMULTIPART,
-        //         "subtype" => "alternative"
-        //     ];
-        // }
-
-        // $bodyPart = [
-        //     "type" => "text",
-        //     "subtype" => "plain",
-        //     "charset" => "utf-8",
-        //     "contents.data" => $this->body
-        // ];
-
-        // $bodies[] = $bodyPart;
-
-        // foreach ($allAttachements as $attachment) {
-        //     $bodies[] = [
-        //         "type" => $attachment["type"],
-        //         "subtype" => $attachment["subtype"],
-        //         "encoding" => ENCBINARY,
-        //         "description" => $attachment["title"],
-        //         "contents.data" => $attachment["data"]
-        //     ];
-        // }
-
-        // return imap_mail_compose($envelope, $bodies);
-
-// print "===========" . "\n";
-// print_r($mimeOut);die();
-// print "===========" . "\n";
         return $mimeOut;
     }
 
@@ -216,19 +179,22 @@ class SerializationMessage
     }
 
     // see imap-mail-compose for type and subtype detailed reference
-    public function addAttachement(string $title, string $data, int $type = TYPEAPPLICATION, string $subtype = 'octet-stream'): SerializationMessage
+    public function addAttachment(string $title, string $data, string $type = "application", string $subtype = 'octet-stream'): SerializationMessage
     {
-        $this->attachements[] = new SerializationAttachement(
-            [ 'title' => $title, 'data' => $data, 'type' => $type,
-              'subtype' => $subtype
+        $this->attachments[] = new SerializationAttachment(
+            [ 
+                'title'   => $title, 
+                'data'    => $data, 
+                'type'    => $type,
+                'subtype' => $subtype
             ]
         );
         return $this;
     }
 
-    public function addAttachementLink(string $title, string $url): SerializationMessage
+    public function addAttachmentLink(string $title, string $url): SerializationMessage
     {
-        $this->attachementLinks[] = new SerializationAttachement([
+        $this->attachmentLinks[] = new SerializationAttachment([
             'title' => "link to " . $title,
             'data' => "<a href=\"{$url}\">{$title}</a>",
             'type' => "text",
@@ -270,7 +236,7 @@ class SerializationMessage
             $statusline .= "\u{2764}" . $score[0] . " \u{26a1}" . $score[1] . " ";
         }
 
-        if (count($this->attachements)) {
+        if (count($this->attachments)) {
             $statusline .= "\u{1f4be} ";
         }
 
@@ -281,8 +247,8 @@ class SerializationMessage
     {
         $subject = $this->subject;
 
-        if (! empty($sourceConfig->getOpt("change_subject_if_attachements"))) {
-            if (count($this->attachements) or count($this->attachementLinks) or count($this->externalAttachements)) {
+        if (! empty($sourceConfig->getOpt("change_subject_if_attachments"))) {
+            if (count($this->attachments) or count($this->attachmentLinks) or count($this->externalAttachments)) {
                 $subject = "[A] " . $subject;
             }
         }
@@ -312,14 +278,14 @@ class SerializationMessage
         }
     }
 
-    public function getExternalAttachements(): array
+    public function getExternalAttachments(): array
     {
-        return $this->externalAttachements;
+        return $this->externalAttachments;
     }
 
-    public function setExternalAttachements(array $externalAttachements): void
+    public function setExternalAttachments(array $externalAttachments): void
     {
-        $this->externalAttachements = $externalAttachements;
+        $this->externalAttachments = $externalAttachments;
     }
 
     public function getCorrData() {

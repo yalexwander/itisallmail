@@ -2,7 +2,7 @@
 
 /**
   Fake editor to put needed body into email file. Now it is only suitable to
-  work with simple emails without attachements or any MIME parts.
+  work with simple emails without attachments or any MIME parts.
 
   Command line usage:
 

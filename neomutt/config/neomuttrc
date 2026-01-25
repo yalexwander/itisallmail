@@ -27,7 +27,7 @@ source "display"
 # show IAM headers
 unignore x-iam-statusline
 
-# needed for replying with attachements work
+# needed for replying with attachments work
 set mime_forward=yes
 
 # to prevent citation date comment

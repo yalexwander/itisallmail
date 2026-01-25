@@ -135,7 +135,7 @@ class SourceManager
         }
 
         foreach ($sources as $source) {
-            if (isset($fileMap[ $source["source_file"] ])) {
+            if (isset($source["source_file"]) and isset($fileMap[ $source["source_file"] ])) {
                 $fileMap[ $source["source_file"] ][] = $source;
             } else {
                 $fileMap[ $defaultFile ][] = $source;

@@ -14,6 +14,6 @@
 
   create a single html page, or set of pages(if there are too many messages), friendly for SEO and viewing in browser
 
-- attachement view feature.
+- attachment view feature.
 
-  Idea is to make possible viewing attachements from posts in neomutt by single button press. For example on pager view you press ",v" and there is a popup menu which propose to chose which attachement must be downloaded/opened. This feature must be supported by driver as a special subdriver like Fetcher or Poster.
+  Idea is to make possible viewing attachments from posts in neomutt by single button press. For example on pager view you press ",v" and there is a popup menu which propose to chose which attachment must be downloaded/opened. This feature must be supported by driver as a special subdriver like Fetcher or Poster.

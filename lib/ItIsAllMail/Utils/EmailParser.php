@@ -21,7 +21,7 @@ class EmailParser
 
         $parsedMessage = new ParsedMessage([
             "headers"      => [],
-            "attachements" => [],
+            "attachments" => [],
             "body"         => "",
             // 95% of cases it will be command message or citation here
             "referenced_message" => null,

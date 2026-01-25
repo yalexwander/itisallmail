@@ -2,15 +2,15 @@
 
 /**
  * !!! Seems the only correct(but slow) way to update message headers is to:
- * 1) fully parse old message and extract attachements from it
+ * 1) fully parse old message and extract attachments from it
  * 2) Create completely new message with changed headers
- * 3) Attach all attachements from old message
+ * 3) Attach all attachments from old message
  * 4) Rewrite the old message file with serialized data
  *
  * Here is a function that works more or less:
  *
  * - updateMessageHeaders:
- * fast but dirty way with preserving attachements and with dirty header update, can
+ * fast but dirty way with preserving attachments and with dirty header update, can
  * break if parser or serializer will be changed or new headers to update added
  *
  */

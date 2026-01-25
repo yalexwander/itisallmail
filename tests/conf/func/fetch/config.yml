@@ -1,11 +1,11 @@
 mailbox : "default"
 mailbox_base_dir: "/tmp/iam_test_mailboxes"
 catalog_mailbox : "catalog"
-change_subject_if_attachements: true
+change_subject_if_attachments: true
 change_subject_if_score: true
 add_statusline_header : true
-download_attachements: "none"
-attach_attachements_links: true
+download_attachments: "none"
+attach_attachments_links: true
 nickname_transformation: "readable"
 catalog_default_driver : "habr.com"
 source_update_interval: 180
