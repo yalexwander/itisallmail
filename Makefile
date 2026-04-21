@@ -12,12 +12,13 @@ lint_phpstan:
 lint_phpstan_emacs:
 	vendor/bin/phpstan --error-format=raw
 
+PHPCS_EXLUDES=--ignore='vendor/*,/discord/,/rocketchat/,/max-android/'
 
 lint_phpcs:
-	vendor/bin/phpcs lib/ scripts/
+	vendor/bin/phpcs lib/ scripts/ $(PHPCS_EXLUDES)
 
 lint_phpcs_emacs:
-	vendor/bin/phpcs --report=emacs lib/ scripts/
+	vendor/bin/phpcs --report=emacs lib/ scripts/ $(PHPCS_EXLUDES)
 
 precommit_fix:
 	vendor/bin/php-cs-fixer fix scripts/

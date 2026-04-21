@@ -7,7 +7,6 @@ use ItIsAllMail\Interfaces\VisitedMessagesInterface;
 use ItIsAllMail\Interfaces\HierarchicConfigInterface;
 use ItIsAllMail\Utils\URLProcessor;
 
-
 class VisitedMessages implements VisitedMessagesInterface
 {
     protected array $visitedIds;
@@ -43,7 +42,8 @@ class VisitedMessages implements VisitedMessagesInterface
         return !empty($this->visitedIds[$id]);
     }
 
-    protected function getFileWithIDs() : string {
+    protected function getFileWithIDs(): string
+    {
         $filename = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
             . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR . ".visited" . DIRECTORY_SEPARATOR .
             URLProcessor::sanitizeFilename($this->source->getOpt('url')) . ".ids";
@@ -57,11 +57,13 @@ class VisitedMessages implements VisitedMessagesInterface
         Debug::log("Persisted visited messages for source " . $this->source->getOpt('url') . " into $outFile");
     }
 
-    protected function loadStoredIds(): void {
+    protected function loadStoredIds(): void
+    {
         $outFile = $this->getFileWithIDs();
 
-        if (! file_exists($outFile))
+        if (! file_exists($outFile)) {
             return;
+        }
 
         $fp = fopen($outFile, "r");
         while ($line = fgets($fp) and $line !== false) {

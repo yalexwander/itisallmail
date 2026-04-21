@@ -6,17 +6,17 @@ namespace ItIsAllMail\Utils;
   For getting configs from user based folder
 */
 
-class UserConfigDir {
-
+class UserConfigDir
+{
     protected static string $dirName = "iam";
 
-    public static function getDir(): string {
+    public static function getDir(): string
+    {
         $dirPath = "";
 
         if (PHP_OS_FAMILY === 'Windows') {
             $dirPath = (getenv("HOMEDRIVE") . getenv("HOMEPATH") . DIRECTORY_SEPARATOR . self::$dirName);
-        }
-        else {
+        } else {
             $dirName = getenv("HOME") . DIRECTORY_SEPARATOR . ".config" . DIRECTORY_SEPARATOR . self::$dirName;
         }
 
@@ -26,5 +26,4 @@ class UserConfigDir {
 
         return $dirName;
     }
-
 }

@@ -34,7 +34,7 @@ class AbstractAddressMapper implements AddressMapperInterface
 
         if (
             ! empty($address) and
-            mb_strpos($address, $this->driverCode) === (mb_strlen($address) - mb_strlen($this->driverCode)) 
+            mb_strpos($address, $this->driverCode) === (mb_strlen($address) - mb_strlen($this->driverCode))
         ) {
             return true;
         }

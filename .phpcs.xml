@@ -2,5 +2,6 @@
 <ruleset name="Custom Standard">
   <rule ref="PSR12">
     <type>warning</type>
+    <exclude name="Generic.Files.LineLength"/>
   </rule>
 </ruleset>

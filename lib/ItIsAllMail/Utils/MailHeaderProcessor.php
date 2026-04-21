@@ -1,12 +1,12 @@
 <?php
 
-namespace ItIsAllMail\Utils;
-
 /**
  * Mail headers are pretty strict when it comes to symbols it can contain. So
  * putting the data you parsed from site into a header is not a good
  * idea. There are we have few functions to solve thise issue.
  */
+
+namespace ItIsAllMail\Utils;
 
 use ItIsAllMail\Constants;
 
@@ -49,7 +49,8 @@ class MailHeaderProcessor
         );
     }
 
-    public static function sanitizeSubjectHeader(string $subject): string {
+    public static function sanitizeSubjectHeader(string $subject): string
+    {
         if (mb_strlen($subject) > Constants::IAM_HEADER_SUBJECT_TRUNCATE_LENGTH) {
             $subject = mb_substr($subject, 0, Constants::IAM_HEADER_SUBJECT_TRUNCATE_LENGTH) . "...";
         }

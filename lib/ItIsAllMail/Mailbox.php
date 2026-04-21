@@ -120,7 +120,6 @@ class Mailbox implements MessageStorageInterface
                 $this->localMessages[$msg->getId()] = 1;
                 file_put_contents($newMessageFilepath, $msg->toMIMEString($this->sourceConfig));
             } else {
-
                 $messageWasModified = 0;
 
                 if (! empty($this->sourceConfig->getOpt("revisions"))) {

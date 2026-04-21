@@ -75,5 +75,4 @@ EOT;
     public static function logExceptionForStat(\Exception $e): void
     {
     }
-
 }
