@@ -9,6 +9,7 @@
 namespace ItIsAllMail\Utils;
 
 use GuzzleHttp\Client;
+use ItIsAllMail\Utils\UserConfigDir;
 
 class Browser
 {
@@ -26,6 +27,11 @@ class Browser
 
     public static function get(string $url, array $headers = [], array $cookies = []): array
     {
+        $userUAfile = UserConfigDir::getDir() . DIRECTORY_SEPARATOR . "UserAgents.txt";
+        if (file_exists($userUAfile)) {
+            self::$userAgents = mb_split("\n", file_get_contents($userUAfile));
+        }
+
         $client = new Client([
             'headers' => array_merge(
                 [
