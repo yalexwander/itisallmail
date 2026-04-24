@@ -109,9 +109,47 @@ class Monitor
         return $newMap;
     }
 
-    // TODO: make time limit
-    protected function controlableExecute(string $execs): string {
-        return system($execs);
+    // to prevent single fetcher from stopping others
+    protected function controlableExecute(string $execString): ?int
+    {
+        $maxExecTime = 30;
+
+        $descriptorspec = [
+            0 => ["pipe", "r"], // stdin
+            1 => ["pipe", "w"], // stdout
+            2 => ["pipe", "w"]  // stderr
+        ];
+
+        $process = proc_open($execString, $descriptorspec, $pipes);
+        if (!is_resource($process)) {
+            return null;
+        }
+
+        $startTime = time();
+
+        $status = null;
+        while (true) {
+            $status = proc_get_status($process);
+
+            if (!$status['running']) {
+                break;
+            }
+
+            if ((time() - $startTime) > $maxExecTime) {
+                break;
+            }
+
+            usleep(100000);
+        }
+
+        if ($status['running']) {
+            $status = null;
+            proc_terminate($process, 15);
+        } else {
+            $status = proc_close($process);
+        }
+
+        return $status;
     }
 
     public function runSourceUpdate(Source $source): array
@@ -133,13 +171,18 @@ class Monitor
         Debug::debug("Starting command:\n" . $execString);
 
         $result = $this->controlableExecute($execString);
-        $resultExtended = '';
-        $portOut = null;
-        $address = $this->socketFile;
-        socket_recvfrom($this->socket, $resultExtended, 1024 * 1024 * 1000, MSG_DONTWAIT, $address, $portOut);
-        $resultExtended = json_decode($resultExtended, true);
-        if ($resultExtended === null) {
-            $resultExtended = [ "status" => false ];
+        $resultExtended = [ "status" => false ];
+
+        if ($result !== null) {
+            $portOut = null;
+            $address = $this->socketFile;
+            socket_recvfrom($this->socket, $resultExtended, 1024 * 1024 * 1000, MSG_DONTWAIT, $address, $portOut);
+            $resultExtended = json_decode($resultExtended, true);
+            if ($resultExtended === null) {
+                $resultExtended = [ "status" => false ];
+            }
+        } else {
+            Debug::debug("Fetch execution timeout");
         }
 
         Debug::debug("Fetch result:\n" . print_r($resultExtended));

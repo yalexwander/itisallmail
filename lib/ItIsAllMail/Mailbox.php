@@ -10,6 +10,9 @@ use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\CoreTypes\MessageCorrData;
 use ItIsAllMail\Interfaces\VisitedMessagesInterface;
 use ItIsAllMail\VisitedMessages;
+use ItIsAllMail\Hooks;
+use ItIsAllMail\Interfaces\Hooks\HookType;
+
 
 class Mailbox implements MessageStorageInterface
 {
@@ -46,6 +49,8 @@ class Mailbox implements MessageStorageInterface
         $this->mailboxUpdater = new MailboxUpdater($this->sourceConfig);
 
         $this->visitedMessages = new VisitedMessages($sourceConfig);
+
+        $this->hooks = new Hooks();
     }
 
     /**
@@ -115,6 +120,12 @@ class Mailbox implements MessageStorageInterface
 
             if ($messageFilepath === null) {
                 $newMessageFilepath = $this->mailSubdirs["new"] . DIRECTORY_SEPARATOR . $msg->getId();
+
+                $this->hooks->runAvailableHooks(HookType::NewMessage, $this->sourceConfig, [
+                    'newMessageFilepath' => $newMessageFilepath,
+                    'msg' => $msg
+                ]);
+
                 Debug::log("Adding " . $msg->getId() . " as " . $newMessageFilepath);
                 $mergeStats["added"]++;
                 $this->localMessages[$msg->getId()] = 1;
