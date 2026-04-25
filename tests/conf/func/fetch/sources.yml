@@ -1,5 +1,6 @@
 ---
-- url: test_rss_url
+- url: http://localhost:3344/rss_test_feed.php
   driver: rss
   source_update_interval: 60
+  fetcher_proxy: ""
 ...

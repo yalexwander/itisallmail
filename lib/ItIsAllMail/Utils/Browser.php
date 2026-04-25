@@ -25,17 +25,22 @@ class Browser
         'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:108.0) Gecko/20100101 Firefox/108.0',
     ];
 
-    public static function get(string $url, array $headers = [], array $cookies = []): array
+    public static function get(string $url, array $headers = [], array $cookies = [], array $opts = []): array
     {
         $userUAfile = UserConfigDir::getDir() . DIRECTORY_SEPARATOR . "UserAgents.txt";
         if (file_exists($userUAfile)) {
             self::$userAgents = mb_split("\n", file_get_contents($userUAfile));
         }
 
+        $userAgent = self::$userAgents[0];
+        if (! empty($opts['user_agent']) and $opts['user_agent'] === 'random') {
+            $userAgents = array_rand(self::$userAgents);
+        }
+
         $client = new Client([
             'headers' => array_merge(
                 [
-                    'User-Agent' => self::$userAgents[0],
+                    'User-Agent' => $userAgent,
                 ],
                 $headers
             )
@@ -69,7 +74,7 @@ class Browser
         ];
     }
 
-    public static function getAsString(string $url, array $headers = [], array $cookies = []): ?string
+    public static function getAsString(string $url, array $headers = [], array $cookies = [], array $opts = []): ?string
     {
         $result = self::get($url, $headers, $cookies);
         return $result["data"];

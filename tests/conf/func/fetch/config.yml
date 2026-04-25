@@ -1,5 +1,5 @@
 mailbox : "default"
-mailbox_base_dir: "/tmp/iam_test_mailboxes"
+mailbox_base_dir: ""
 catalog_mailbox : "catalog"
 change_subject_if_attachments: true
 change_subject_if_score: true
@@ -7,7 +7,7 @@ add_statusline_header : true
 download_attachments: "none"
 attach_attachments_links: true
 nickname_transformation: "readable"
-catalog_default_driver : "habr.com"
+catalog_default_driver : "rss"
 source_update_interval: 180
 between_source_update_interval: 3
 fetcher_proxy : ""
@@ -18,6 +18,7 @@ update_statusline_header_on_changed_messages: true
 fetch_disabled: false
 max_fetch_time: 120
 attach_raw_message: false
+hooks: []
 
 drivers:
   - "rss"

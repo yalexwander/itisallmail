@@ -1,4 +1,7 @@
 <phpunit bootstrap="func/bootstrap.php">
+  <php>
+    <env name="IAM_FUNC_TEST_SERVER_PORT" value="3344" force="true" />
+  </php>
   <testsuites>
     <testsuite name="func">
       <directory>func</directory>

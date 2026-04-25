@@ -19,9 +19,6 @@ class RSSFetcher extends AbstractFetcherDriver implements FetchDriverInterface
 {
     protected string $driverCode = "rss";
 
-    /**
-     * Return array of all posts in thread, including original article
-     */
     public function getPosts(Source $source): array
     {
         $data = simplexml_load_string(Browser::getAsString($source["url"]));

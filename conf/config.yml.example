@@ -23,6 +23,7 @@ curl_impersonated_bin: "/opt/bin/curl_ff91esr"
 revisions: false
 revisions_dir: ""
 store_visited: true
+hooks: []
 extra_sources:
   - "%config_dir%/sources.d/*"
 

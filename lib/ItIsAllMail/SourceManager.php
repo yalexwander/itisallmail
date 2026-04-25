@@ -13,8 +13,7 @@ class SourceManager
     {
         $this->appConfig = $appConfig;
 
-        $confDir = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".."
-            . DIRECTORY_SEPARATOR . "conf";
+        $confDir = $GLOBALS['__AppConfigDir'];
 
         if ($sourceFiles !== null) {
             $this->sourceFiles = $sourceFiles;
