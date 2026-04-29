@@ -50,6 +50,13 @@ $testEnv = [
     'http_server_pid' => spawnServer()
 ];
 
+register_shutdown_function(function ($testEnv) {
+    system("kill " . $testEnv['http_server_pid']);
+
+    @rmdir($testEnv['mailbox_base_dir']);
+
+}, $testEnv);
+
+
 $testEnvFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "iam-test-data.json";
 file_put_contents( $testEnvFile, json_encode($testEnv, true) );
-

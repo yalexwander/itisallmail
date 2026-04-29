@@ -60,12 +60,4 @@ final class FetcherDummyTest extends TestCase {
         $this->assertEquals($mergeResult["added"], 2, 'All posts saved to files');
     }
 
-
-    // TODO: move this outside test file
-    public function tearDown(): void
-    {
-        system("kill " . $this->testEnv['http_server_pid']);
-
-        rmdir($this->testEnv['mailbox_base_dir']);
-    }
 }
