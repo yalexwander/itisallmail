@@ -5,6 +5,7 @@ namespace ItIsAllMail\DriverCommon;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\Interfaces\PosterDriverInterface;
+use ItIsAllMail\CoreTypes\PostResult;
 
 class AbstractPosterDriver implements PosterDriverInterface
 {
@@ -28,7 +29,7 @@ class AbstractPosterDriver implements PosterDriverInterface
         return $this->code;
     }
 
-    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): array
+    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): PostResult
     {
         throw new \Exception("Not implemented");
     }

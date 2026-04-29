@@ -1,0 +1,7 @@
+Date: Thu, 01 Jan 2026 13:30:31 +0000 (GMT)
+From: yyyy@aaa.com
+To: t1@dummy
+Subject: Test message
+%%URI_PLACEHOLDER%%
+
+Body message.

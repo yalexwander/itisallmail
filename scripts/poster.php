@@ -12,6 +12,7 @@ use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\Factory\PosterDriverFactory;
+use ItIsAllMail\CoreTypes\PostStatus;
 
 $appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
 
@@ -36,7 +37,7 @@ try {
     $poster->checkBeforePost($msg, $source);
     $result = $poster->post($msg, $source);
 
-    if ($result["status"]) {
+    if ($result->status === PostStatus::Ok) {
         exit(0);
     } else {
         print_r($result);

@@ -9,7 +9,7 @@ use ItIsAllMail\Constants;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
 
-class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperInterface
+class DummyAddressMapper extends AbstractAddressMapper implements AddressMapperInterface
 {
     public function canMapThis(ParsedMessage $msg, string $mapType = null): ?bool
     {
@@ -31,14 +31,9 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
         $uri = $msg["headers"][Constants::IAM_HEADER_URI] ?? $msg["referenced_message"]["headers"][Constants::IAM_HEADER_URI];
         $sourceManager = new SourceManager($this->appConfig);
 
-        if (
-            ! empty($uri) and
-            preg_match('/(https:\/\/habr.com\/[^#]+)/', $uri, $matches)
-        ) {
-            $msgUrl = $matches[0];
-            $source = $sourceManager->getSourceById($msgUrl);
-        } else {
-            return null;
+        $source = null;
+        if ( ! empty($uri) ) {
+            $source = $sourceManager->getSourceById($uri);
         }
 
         return $source;

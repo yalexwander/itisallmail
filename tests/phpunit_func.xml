@@ -4,7 +4,8 @@
   </php>
   <testsuites>
     <testsuite name="func">
-      <directory>func</directory>
+      <file>func/FetcherDummyTest.php</file>
+      <file>func/PosterDummyTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

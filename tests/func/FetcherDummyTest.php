@@ -11,7 +11,7 @@ use ItIsAllMail\SourceManager;
 use ItIsAllMail\Mailbox;
 
 
-final class FetcherRssTest extends TestCase {
+final class FetcherDummyTest extends TestCase {
 
     public function setUp(): void {
         $testEnvFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "iam-test-data.json";

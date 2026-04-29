@@ -6,6 +6,7 @@ use ItIsAllMail\SendMailProcessor;
 use ItIsAllMail\CoreTypes\ParsedMessage;
 use ItIsAllMail\CoreTypes\Source;
 use ItIsAllMail\Config\PosterConfig;
+use ItIsAllMail\CoreTypes\PostResult;
 
 interface PosterDriverInterface
 {
@@ -36,7 +37,7 @@ interface PosterDriverInterface
      *
      * The only "status" field is required
      */
-    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): array;
+    public function post(ParsedMessage $msg, Source $source = null, array $opts = []): PostResult;
 
     /**
      * Execute all needed check before posting, to ensure data is correct. exit(1) in case of some problems
