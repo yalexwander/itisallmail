@@ -19,7 +19,7 @@ class HabrAddressMapper extends AbstractAddressMapper implements AddressMapperIn
             throw new \Exception("No attached message to reply to");
         }
 
-        if (preg_match('/habr\.com\//', $uri)) {
+        if (preg_match('/dummy/', $uri)) {
             return true;
         }
 

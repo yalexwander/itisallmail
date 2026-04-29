@@ -1,6 +1,6 @@
 ---
-- url: http://localhost:3344/rss_test_feed.php
-  driver: rss
+- url: http://localhost:3344/dummy_fetch.php
+  driver: dummy
   source_update_interval: 60
   fetcher_proxy: ""
 ...

@@ -1,5 +1,6 @@
 <?php
 
+
 namespace ItIsAllMail\Driver;
 
 use ItIsAllMail\Interfaces\FetchDriverInterface;
@@ -24,25 +25,27 @@ class DummyFetcherDriver extends AbstractFetcherDriver implements FetchDriverInt
         parent::__construct($appConfig, $opts);
     }
 
-    /**
-     * Return array of all posts in thread
-     */
     public function getPosts(Source $source): array
     {
         $posts = [];
 
-        $posts = [
-            new SerializationMessage([
-                "from" => "example" . "@" . $this->getCode(),
-                "subject" => "example subject",
-                "parent" => null,
-                "created" => new \DateTime(),
-                "id" => "some id",
-                "body" => "text here",
-                "thread" => "thread id",
-                "uri" => "url where can be fetched"
-            ])
-        ];
+        $data = json_decode(Browser::getAsString($source["url"]), true);
+
+        foreach ($data as $msg) {
+            $posts[] =
+                new SerializationMessage([
+                    "from" => $msg["from"],
+                    "subject" => $msg["title"],
+                    "parent" => $msg["parent"],
+                    "created" => new \DateTime($msg["date"]),
+                    "id" => $msg["id"] . "@" . $this->getCode(),
+                    "body" => $msg["data"],
+                    "thread" => $msg["thread"],
+                    "uri" => "http://dummy.me/" . $msg["id"]
+                ]);
+        }
+
+        // print_r($posts);die("\n");
 
         return $posts;
     }
