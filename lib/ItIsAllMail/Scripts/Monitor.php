@@ -65,6 +65,15 @@ class Monitor
 
             $sId = $source["url"];
 
+            // check if source must be removed because it is oudated
+            if ($joinedConfig->getOpt('auto_delete_source_after') and !empty($source["created"])) {
+                if ( ( time() - intval($source["created"]) ) >= intval($joinedConfig->getOpt('auto_delete_source_after'))) {
+                    $this->sourceManager->deleteSource($source);
+                    Debug::debug("Deleting source because 'auto_delete_source_after' triggered: $sId");
+                    continue;
+                }
+            }
+
             // new source
             if (empty($oldMap[$sId])) {
                 $totalAwaitInterval = $betweenSourceUpdateInterval;

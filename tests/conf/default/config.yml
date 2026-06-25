@@ -19,6 +19,8 @@ update_statusline_header_on_changed_messages: true
 fetch_disabled: false
 max_fetch_time: 120
 attach_raw_message: false
+hooks: []
+auto_delete_source_after: 0
 
 drivers:
   - "rss"

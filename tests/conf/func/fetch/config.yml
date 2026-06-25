@@ -19,6 +19,7 @@ fetch_disabled: false
 max_fetch_time: 120
 attach_raw_message: false
 hooks: []
+auto_delete_source_after: 0
 
 drivers:
   - "rss"

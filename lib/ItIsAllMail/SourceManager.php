@@ -40,7 +40,7 @@ class SourceManager
         }
     }
 
-    public function addSource(Source $source): int
+    public function addSource(Source $source): bool
     {
         $this->validateSource($source);
 
@@ -56,11 +56,12 @@ class SourceManager
         }
 
         if (! $sourceExists) {
+            $source["created"] = time();
             array_push($sources, $source);
             $this->saveSources($sources);
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 

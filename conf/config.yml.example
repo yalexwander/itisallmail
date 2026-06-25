@@ -26,6 +26,7 @@ store_visited: true
 hooks: []
 extra_sources:
   - "%config_dir%/sources.d/*"
+auto_delete_source_after: 0
 
 drivers :
   - "habr.com"
