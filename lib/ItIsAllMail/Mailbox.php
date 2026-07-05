@@ -106,13 +106,22 @@ class Mailbox implements MessageStorageInterface
 
         foreach ($messages as $msg) {
             // skipping already visited messages.
-            // if ( ! $this->visitedMessages->check($msg->getId()) ) {
-            //     $this->visitedMessages->add($msg->getId(), true);
-            // }
-            // else {
-            //     Debug::log("Skipping " . $msg->getId() . " as it was in Visted Messages already");
-            //     continue;
-            // }
+            if ( ! $this->visitedMessages->check($msg->getId()) ) {
+                $this->visitedMessages->add($msg->getId(), true);
+            }
+            else {
+                if (
+                    empty($this->sourceConfig->getOpt("update_subject_header_on_changed_messages"))
+                    and empty($this->sourceConfig->getOpt("update_statusline_header_on_changed_messages"))
+                ) {
+                    Debug::log("Skipping " . $msg->getId() . " as it was in Visted Messages already");
+                    continue;
+                }
+                else {
+                    Debug::log("Cannot use VistedMessagesInterface because some visited messages can be updated. Msg id is: " . $msg->getId());
+                }
+            }
+
             $this->visitedMessages->add($msg->getId(), true);
             $messageFilepath = $this->getMessageFileById($msg->getId());
 
