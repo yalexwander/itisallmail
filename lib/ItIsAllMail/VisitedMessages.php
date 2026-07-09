@@ -10,6 +10,7 @@ use ItIsAllMail\Utils\URLProcessor;
 class VisitedMessages implements VisitedMessagesInterface
 {
     protected array $visitedIds;
+    protected int $visitedIDsInitialCount;
     protected HierarchicConfigInterface $source;
 
     public function __construct(HierarchicConfigInterface $source)
@@ -52,6 +53,9 @@ class VisitedMessages implements VisitedMessagesInterface
 
     public function persist(): void
     {
+        if (count($this->visitedIds) === $this->visitedIDsInitialCount)
+            return;
+
         $outFile = $this->getFileWithIDs();
         file_put_contents($outFile, implode("\n", array_keys($this->visitedIds)));
         Debug::log("Persisted visited messages for source " . $this->source->getOpt('url') . " into $outFile");
@@ -62,6 +66,7 @@ class VisitedMessages implements VisitedMessagesInterface
         $outFile = $this->getFileWithIDs();
 
         if (! file_exists($outFile)) {
+            $this->visitedIDsInitialCount = 0;
             return;
         }
 
@@ -70,5 +75,7 @@ class VisitedMessages implements VisitedMessagesInterface
             $this->visitedIds[rtrim($line)] = 1;
         }
         fclose($fp);
+
+        $this->visitedIDsInitialCount = count($this->visitedIds);
     }
 }
