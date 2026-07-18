@@ -18,3 +18,8 @@ $__AppConfigFile = $__AppConfigDir . "config.yml";
 $GLOBALS['__AppConfigDir'] = $__AppConfigDir;
 $GLOBALS['__AppConfigFile'] = $__AppConfigFile;
 $GLOBALS['__AppMainDir'] = $__AppMainDir;
+
+// this means we want to load autoload for ItsAllMail itself, it can conflict with driver autoloads
+if (defined('__AppVendorAutoload')) {
+    require_once($GLOBALS['__AppMainDir'] . "vendor" . DIRECTORY_SEPARATOR . "autoload.php");
+}

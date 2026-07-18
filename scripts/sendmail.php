@@ -6,11 +6,12 @@
   -r - if set use data from register
  */
 
-require_once("includes.php");
+define('__AppVendorAutoload', true); require_once("includes.php");
 
 use ItIsAllMail\SendMailProcessor;
+use Symfony\Component\Yaml\Yaml;
 
-$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+$config = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 
 $processor = new SendMailProcessor($config);
 

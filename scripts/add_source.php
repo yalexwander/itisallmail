@@ -1,10 +1,11 @@
 <?php
 
-require_once("includes.php");
+define('__AppVendorAutoload', true); require_once("includes.php");
 
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\CoreTypes\Source;
+use Symfony\Component\Yaml\Yaml;
 
 // script adds new source to list of sources
 
@@ -20,7 +21,7 @@ if (empty($url)) {
 
 $url = $url[0];
 
-$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+$config = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 $sourceManager = new SourceManager($config);
 
 $newSourceConfig = [

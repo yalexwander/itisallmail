@@ -1,6 +1,7 @@
 <?php
 
 namespace ItIsAllMail\Config;
+use Symfony\Component\Yaml\Yaml;
 
 class DriverConfig
 {
@@ -13,6 +14,6 @@ class DriverConfig
             throw new \Exception("Driver config \"$configPath\" not found");
         }
 
-        return yaml_parse_file($configPath);
+        return Yaml::parseFile($configPath);
     }
 }

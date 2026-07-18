@@ -6,15 +6,16 @@
  * -r - load refernced message from reply register
  */
 
-require_once("includes.php");
+define('__AppVendorAutoload', true); require_once("includes.php");
 
 use ItIsAllMail\PostingQueue;
 use ItIsAllMail\Utils\EmailParser;
 use ItIsAllMail\Factory\AddressMapperFactory;
 use ItIsAllMail\Factory\PosterDriverFactory;
 use ItIsAllMail\CoreTypes\PostStatus;
+use Symfony\Component\Yaml\Yaml;
 
-$appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+$appConfig = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 
 $options = getopt("m:r");
 

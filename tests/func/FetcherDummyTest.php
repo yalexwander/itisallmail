@@ -9,6 +9,7 @@ use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Mailbox;
+use Symfony\Component\Yaml\Yaml;
 
 
 final class FetcherDummyTest extends TestCase {
@@ -19,7 +20,7 @@ final class FetcherDummyTest extends TestCase {
     }
 
     public function testFectchCycle(): void {
-        $appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+        $appConfig = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 
         $monitor = new Monitor($appConfig);
 

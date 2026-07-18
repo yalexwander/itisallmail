@@ -1,19 +1,20 @@
 <?php
 
-require_once("includes.php");
+define('__AppVendorAutoload', true); require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Config\FetcherSourceConfig;
 use ItIsAllMail\Factory\FetcherDriverFactory;
 use ItIsAllMail\SourceManager;
 use ItIsAllMail\Mailbox;
+use Symfony\Component\Yaml\Yaml;
 
 if (empty($argv[1])) {
     print "You must specify source url/id";
     exit(1);
 }
 
-$config = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+$config = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 
 $sourceManager = new SourceManager($config);
 $driverFactory = new FetcherDriverFactory($config);

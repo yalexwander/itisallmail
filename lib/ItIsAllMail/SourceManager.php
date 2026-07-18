@@ -3,6 +3,7 @@
 namespace ItIsAllMail;
 
 use ItIsAllMail\CoreTypes\Source;
+use Symfony\Component\Yaml\Yaml;
 
 class SourceManager
 {
@@ -97,7 +98,7 @@ class SourceManager
         $sources = [];
 
         foreach ($this->sourceFiles as $sourceFile) {
-            foreach (yaml_parse_file($sourceFile) as $config) {
+            foreach (Yaml::parseFile($sourceFile) as $config) {
                 $config["source_file"] = $sourceFile;
                 $sources[] = new Source($config);
             }
@@ -143,7 +144,7 @@ class SourceManager
         }
 
         foreach ($fileMap as $sourceFile => $fileSources) {
-            yaml_emit_file($sourceFile, $this->preSerialize($fileSources));
+            file_put_contents($sourceFile, Yaml::dump($this->preSerialize($fileSources)) );
         }
     }
 }

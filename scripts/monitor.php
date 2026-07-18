@@ -2,12 +2,13 @@
 
 namespace ItIsAllMail\Script;
 
-require_once("includes.php");
+define('__AppVendorAutoload', true); require_once("includes.php");
 
 use ItIsAllMail\Utils\Debug;
 use ItIsAllMail\Scripts\Monitor;
+use Symfony\Component\Yaml\Yaml;
 
-$appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+$appConfig = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 $monitor = new Monitor($appConfig);
 
 $timeMap = [];

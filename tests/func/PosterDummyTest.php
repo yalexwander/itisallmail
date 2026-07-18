@@ -12,12 +12,13 @@ use ItIsAllMail\Mailbox;
 
 use ItIsAllMail\SendMailProcessor;
 use ItIsAllMail\Constants;
+use Symfony\Component\Yaml\Yaml;
 
 
 final class PosterDummyTest extends TestCase {
 
     public function testSendmailCodes() {
-        $appConfig = yaml_parse_file($GLOBALS["__AppConfigFile"]);
+        $appConfig = Yaml::parseFile($GLOBALS["__AppConfigFile"]);
 
         $processor = new SendMailProcessor($appConfig);
 
