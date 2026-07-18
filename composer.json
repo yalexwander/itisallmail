@@ -2,6 +2,7 @@
     "name": "yalexwander/itisallmail",
     "type": "project",
     "require": {
+        "symfony/yaml": "*",
 	    "nesbot/carbon" : "^3",
         "voku/simple_html_dom" : "^4",
         "egulias/email-validator": "^4",
