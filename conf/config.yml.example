@@ -29,7 +29,4 @@ extra_sources:
 auto_delete_source_after: 0
 
 drivers :
-  - "habr.com"
-  - "forumhouse.ru"
-  - "linux.org.ru"
-  - "telegram-web"
+  - "rss"
